@@ -94,6 +94,8 @@
   select:focus-visible{outline:3px solid var(--vert); outline-offset:1px; border-color:var(--c);}
   input.qnum{width:80px; font-family:inherit; font-size:15px; font-weight:800; color:var(--ink); padding:9px 12px; border:1.5px solid var(--line); border-radius:11px; background:#fff;}
   input.qnum:focus-visible{outline:3px solid var(--vert); outline-offset:1px; border-color:var(--c);}
+  .tranche-opt{display:flex; align-items:center; gap:7px; font-size:12.5px; font-weight:700; color:var(--muted); margin:2px 0 10px; cursor:pointer;}
+  .tranche-opt input{width:15px; height:15px; accent-color:var(--vert-deep); flex:none;}
   .check{display:flex; align-items:center; gap:11px; cursor:pointer; font-weight:700; font-size:14.5px; padding:12px 14px; border:1.5px solid var(--line); border-radius:12px; background:#fff;}
   .check input{width:18px; height:18px; accent-color:var(--vert-deep); flex:none;}
   .check:has(input:checked){border-color:var(--vert-deep); background:var(--vert-soft); color:#4d5400;}
@@ -500,7 +502,7 @@ const PRODUITS = [
 },
 {
 "gamme": "P'tit Dej",
-"nom": "Briochette pure beurre",
+"nom": "Briochette pur beurre",
 "unite": "pièce",
 "bouchees": 1,
 "minimum": 1,
@@ -518,7 +520,7 @@ const PRODUITS = [
 "tarifTTC": 1.2,
 "tva": 0.055,
 "type": "sucre",
-"photo": null
+"photo": "https://1drv.ms/i/c/4f74d3dbb0a1e998/IQBA38yEzklIRJOAa1NlflfhAb4qFvYAqQdXwjXssbBKiZk?e=K77VNY"
 },
 {
 "gamme": "P'tit Dej",
@@ -555,17 +557,6 @@ const PRODUITS = [
 },
 {
 "gamme": "P'tit Dej",
-"nom": "Delice au chocolat noir",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 0.95,
-"tva": 0.055,
-"type": "sucre",
-"photo": null
-},
-{
-"gamme": "P'tit Dej",
 "nom": "Chausson aux pommes",
 "unite": "pièce",
 "bouchees": 1,
@@ -577,7 +568,7 @@ const PRODUITS = [
 },
 {
 "gamme": "P'tit Dej",
-"nom": "Grande brioche pure beurre",
+"nom": "Grande brioche pur beurre",
 "unite": "pièce",
 "bouchees": 1,
 "minimum": 1,
@@ -588,7 +579,7 @@ const PRODUITS = [
 },
 {
 "gamme": "P'tit Dej",
-"nom": "Madeleine pure beurre",
+"nom": "Madeleine pur beurre",
 "unite": "pièce",
 "bouchees": 1,
 "minimum": 1,
@@ -599,7 +590,7 @@ const PRODUITS = [
 },
 {
 "gamme": "P'tit Dej",
-"nom": "Madeleine fourrée choco noisette",
+"nom": "Madeleine fourrée choco noisettes",
 "unite": "pièce",
 "bouchees": 1,
 "minimum": 1,
@@ -1083,7 +1074,7 @@ const PRODUITS = [
 },
 {
 "gamme": "Sucré",
-"nom": "Mini Verrines (selon envie du chef)",
+"nom": "Mini Verrines (au choix du chef)",
 "unite": "pièce",
 "bouchees": 1,
 "minimum": 5,
@@ -1138,7 +1129,7 @@ const PRODUITS = [
 },
 {
 "gamme": "Sucré",
-"nom": "Mini mignardises  (selon envie du chef)",
+"nom": "Mini mignardises (au choix du chef)",
 "unite": "pièce",
 "bouchees": 1,
 "minimum": 5,
@@ -1160,7 +1151,7 @@ const PRODUITS = [
 },
 {
 "gamme": "Sucré",
-"nom": "Mini mignardises multifruit",
+"nom": "Mini mignardises multifruits",
 "unite": "pièce",
 "bouchees": 1,
 "minimum": 5,
@@ -1259,18 +1250,18 @@ const PRODUITS = [
 },
 {
 "gamme": "Pains",
-"nom": "Baguette au levain maison Ange",
+"nom": "Baguette au levain maison",
 "unite": "pièce",
 "bouchees": 1,
 "minimum": 1,
 "tarifTTC": 1.0,
 "tva": 0.055,
 "type": null,
-"photo": null
+"photo": "https://1drv.ms/b/c/4f74d3dbb0a1e998/IQCY6aGw29N0IIBPFsYDAAAAAZNyI5pXSGkZyp9f0MwWcwk?e=PJygHL"
 },
 {
 "gamme": "Pains",
-"nom": "Baguettine céréales au levain maison Ange",
+"nom": "Baguettine céréales au levain maison",
 "unite": "pièce",
 "bouchees": 1,
 "minimum": 1,
@@ -1457,7 +1448,7 @@ const PRODUITS = [
 },
 {
 "gamme": "Accessoires",
-"nom": "Serviettes",
+"nom": "Serviettes en papier",
 "unite": "pièce",
 "bouchees": 1,
 "minimum": 1,
@@ -1468,7 +1459,7 @@ const PRODUITS = [
 },
 {
 "gamme": "Accessoires",
-"nom": "Gobelet 12cl (expresso)",
+"nom": "Gobelets 12cl (expresso)",
 "unite": "pièce",
 "bouchees": 1,
 "minimum": 1,
@@ -1479,18 +1470,7 @@ const PRODUITS = [
 },
 {
 "gamme": "Accessoires",
-"nom": "Gobelet 24cl (thé et cafés si allongés)",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 0.1,
-"tva": 0.055,
-"type": null,
-"photo": null
-},
-{
-"gamme": "Accessoires",
-"nom": "Gobelet 36cl (jus de fruit)",
+"nom": "Gobelets 24cl (jus de fruit)",
 "unite": "pièce",
 "bouchees": 1,
 "minimum": 1,
@@ -1545,7 +1525,7 @@ const PRODUITS = [
 },
 {
 "gamme": "Accessoires",
-"nom": "Nappe 2m papier fête noir",
+"nom": "Nappe papier 2m noire",
 "unite": "pièce",
 "bouchees": 1,
 "minimum": 1,
@@ -1556,7 +1536,7 @@ const PRODUITS = [
 },
 {
 "gamme": "Accessoires",
-"nom": "Nappe 2m papier renforcé noir",
+"nom": "Nappe papier renforcé 2m noire",
 "unite": "pièce",
 "bouchees": 1,
 "minimum": 1,
@@ -1573,6 +1553,7 @@ const PRODUITS = [
 const euro = n => n.toLocaleString('fr-FR',{style:'currency',currency:'EUR'});
 const $ = id => document.getElementById(id);
 const state = new Map();
+const tranche = new Map();
 let lastPDF=null;
 
 const GAMMES=[...new Set(PRODUITS.map(p=>p.gamme))].map((nom,idx)=>({nom,id:'g'+idx,couleur:GAMME_COULEURS[nom]||PALETTE[idx%PALETTE.length]}));
@@ -1640,8 +1621,9 @@ GAMMES.forEach(g=>{
       :`<div class="photo"><div class="ph"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.8"/><path d="m21 15-5-5L5 21"/></svg><span>Photo à venir</span></div></div>`;
     const htU=p.tarifTTC/(1+p.tva), tvaU=p.tarifTTC-htU;
     const unitWord=isPiece?'pièce':p.unite;
+    const trancheOpt=p.gamme==='Pains'?`<label class="tranche-opt"><input type="checkbox" class="tr" data-i="${p.i}"> Je le souhaite tranché</label>`:'';
     card.innerHTML=`${photo}<div class="card-body"><h3>${p.nom}</h3>
-      <div class="meta"><div class="price"><span class="ttc">${euro(p.tarifTTC)} <small>TTC / ${unitWord}</small></span><span class="htline">HT ${euro(htU)} · TVA ${euro(tvaU)}</span></div>${badge}</div>
+      <div class="meta"><div class="price"><span class="ttc">${euro(p.tarifTTC)} <small>TTC / ${unitWord}</small></span><span class="htline">HT ${euro(htU)} · TVA ${euro(tvaU)}</span></div>${badge}</div>${trancheOpt}
       <div class="card-foot"><div class="qty"><label for="q${p.i}">${uLabel}</label>${control}</div><div class="subtotal zero" id="s${p.i}">0,00 €</div></div></div>`;
     grid.appendChild(card);
   });
@@ -1660,7 +1642,7 @@ function onQty(t){
   render();
 }
 catalogue.addEventListener('input',e=>onQty(e.target));
-catalogue.addEventListener('change',e=>onQty(e.target));
+catalogue.addEventListener('change',e=>{ if(e.target.classList.contains('tr')){ const i=+e.target.dataset.i; if(e.target.checked)tranche.set(i,true); else tranche.delete(i); render(); return;} onQty(e.target); });
 
 function compute(){
   let ttc=0,ht=0,tva=0,minBase=0,count=0,bSale=0,bSucre=0; const lignes=[];
@@ -1668,7 +1650,7 @@ function compute(){
     const p=PRODUITS[i],sub=qty*p.tarifTTC,subHT=sub/(1+p.tva);
     ttc+=sub; ht+=subHT; tva+=sub-subHT; count+=qty; minBase+=sub;
     if(p.type){ const b=qty*p.bouchees; if(p.type==='sale')bSale+=b; else bSucre+=b; }
-    lignes.push({p,qty,sub});
+    lignes.push({p,qty,sub,i});
   }
   const livraison=(document.querySelector('input[name=mode]:checked')?.value)==='Livraison';
   const installation=!!($('installation')&&$('installation').checked);
@@ -1682,10 +1664,11 @@ function render(){
   const c=compute(); const conv=parseInt(convives.value)||0; const totalBites=c.bSale+c.bSucre;
   const recap=$('recap'); recap.innerHTML='';
   if(!c.lignes.length){ recap.innerHTML='<div class="empty">Votre sélection est vide pour le moment.</div>'; }
-  else c.lignes.forEach(({p,qty,sub})=>{
+  else c.lignes.forEach(({p,qty,sub,i})=>{
     const detail=p.unite==='pièce'?`${qty} × ${euro(p.tarifTTC)}`:`${qty} ${p.unite}${qty>1?'s':''} × ${euro(p.tarifTTC)}`;
+    const tr=tranche.get(i)?' · tranché':'';
     const r=document.createElement('div'); r.className='rline';
-    r.innerHTML=`<div class="n">${p.nom}<small>${detail}</small></div><div class="a">${euro(sub)}</div>`;
+    r.innerHTML=`<div class="n">${p.nom}${tr}<small>${detail}</small></div><div class="a">${euro(sub)}</div>`;
     recap.appendChild(r);
   });
   bites.style.display=c.lignes.length?'flex':'none'; biteSale.textContent=c.bSale; biteSucre.textContent=c.bSucre;
@@ -1775,7 +1758,7 @@ function buildPDF(d){
   if(d.acompte>0){ doc.setTextColor(91,99,0); rr('Acompte à verser (50 %)',euro(d.acompte),true,11); doc.setTextColor(26,26,22); }
   y+=2; doc.setFontSize(9.5); doc.setFont('helvetica','normal');
   doc.text(`Bouchées salées : ${d.bSale}   ·   sucrées : ${d.bSucre}`,M,y); y+=5;
-  if(d.convives){ doc.text(`Par personne : ${d.ppBites} bouchées · ${euro(d.ht/d.convives)} HT · ${euro(d.ttc/d.convives)} TTC`,M,y); y+=6; }
+  if(d.convives){ doc.text(`Par personne : ${d.ppBites} bouchées/pers · ${euro(d.ht/d.convives)} HT · ${euro(d.ttc/d.convives)} TTC`,M,y); y+=6; }
   if(d.facture){ y+=2; doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.text('Adresse de facturation',M,y); y+=5;
     doc.setFont('helvetica','normal'); doc.setFontSize(9.5);
     doc.text(d.facture.raison,M,y); y+=5;
@@ -1818,11 +1801,11 @@ function emailHTML(d){
      <tr><td style="font-weight:bold;font-size:17px;padding-top:4px">Total TTC</td><td style="text-align:right;font-weight:bold;font-size:17px;padding-top:4px">${euro(d.ttc)}</td></tr>
      ${d.acompte?`<tr><td style="color:#5b6300;font-weight:bold">Acompte 50 %</td><td style="text-align:right;color:#5b6300;font-weight:bold">${euro(d.acompte)}</td></tr>`:''}
    </table>
-   <p style="font-size:13px;color:#555;margin:14px 0 0">Bouchées : ${d.bSale} salées · ${d.bSucre} sucrées${d.convives?' · '+d.ppBites+' /personne':''}</p>
+   <p style="font-size:13px;color:#555;margin:14px 0 0">Bouchées : ${d.bSale} salées · ${d.bSucre} sucrées${d.convives?' · '+d.ppBites+' bouchées/pers':''}</p>
    ${d.facture?`<p style="font-size:13px;line-height:1.5;margin:12px 0 0"><b>Facturation</b><br>${d.facture.raison}<br>${addr(d.facture)}</p>`:''}
    ${d.note?`<p style="font-size:13px;margin:12px 0 0"><b>Précisions :</b> ${d.note}</p>`:''}
    <div style="background:#F3F7CF;border-radius:10px;padding:13px 15px;margin-top:18px;font-size:13px;color:#3f4600;line-height:1.5">
-     <b>À faire :</b> rappeler le client pour confirmer la faisabilité, la date et l'acompte de 50 %. La commande n'est pas confirmée tant que tu ne l'as pas validée.</div>
+     <b style="font-size:14px;display:block;margin-bottom:6px">Traitement de la commande</b>&#9744; Vérifier la disponibilité et la faisabilité pour le ${d.dateSouhaitee}<br>&#9744; Contacter le client pour confirmer la commande<br>${d.acompte?`&#9744; Encaisser l'acompte de 50 % (${euro(d.acompte)})<br>`:''}&#9744; Planifier la production<br>&#9744; Organiser le ${d.mode==='Livraison'?'transport (adresse ci-dessus)':'retrait en boutique'} — pris en charge par : ______________<br>&#9744; Adresser la confirmation au client (tél. ${d.tel} · ${d.email})</div>
    <p style="font-size:12px;color:#999;margin-top:16px">PDF détaillé en pièce jointe. Répondre à cet e-mail écrit directement au client.</p>
  </div></div>`;
 }
@@ -1842,7 +1825,7 @@ $('orderForm').addEventListener('submit',async e=>{
     const a=same?deliv:{rue:$('facRue').value,comp:$('facComp').value,cp:$('facCp').value,ville:$('facVille').value};
     facture={raison:$('raison').value,rue:a?.rue||'',comp:a?.comp||'',cp:a?.cp||'',ville:a?.ville||''};
   }
-  const lignes=c.lignes.map(({p,qty,sub})=>{const puHT=p.tarifTTC/(1+p.tva);return{qty,des:p.nom+(p.unite!=='pièce'?` (${p.unite} de ${p.bouchees})`:''),pu:p.tarifTTC,tot:sub,puHT,totHT:sub/(1+p.tva)};});
+  const lignes=c.lignes.map(({p,qty,sub,i})=>{const puHT=p.tarifTTC/(1+p.tva);return{qty,des:p.nom+(p.unite!=='pièce'?` (${p.unite} de ${p.bouchees})`:'')+(tranche.get(i)?' — tranché':''),pu:p.tarifTTC,tot:sub,puHT,totHT:sub/(1+p.tva)};});
   if(c.delFee){const h=c.delFee/(1+CONFIG.feeTva); lignes.push({qty:1,des:'Livraison',pu:c.delFee,tot:c.delFee,puHT:h,totHT:h});}
   if(c.instFee){const h=c.instFee/(1+CONFIG.feeTva); lignes.push({qty:1,des:'Installation (estimation)',pu:c.instFee,tot:c.instFee,puHT:h,totHT:h});}
   const now=new Date(),pad=n=>String(n).padStart(2,'0');
