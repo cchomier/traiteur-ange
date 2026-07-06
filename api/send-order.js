@@ -18,7 +18,7 @@ export default async function handler(req, res) {
   if (!apiKey) return res.status(500).json({ error: "RESEND_API_KEY manquante sur Vercel" });
 
   try {
-    const { ref, clientName, bakeryName, bakeryEmail, replyTo, text, pdfBase64, filename } = req.body || {};
+    const { ref, clientName, bakeryName, bakeryEmail, replyTo, text, html, pdfBase64, filename } = req.body || {};
 
     // Multi-boulangeries : quand tu auras vérifié un domaine dans Resend, tu pourras router
     // vers la boîte de chaque boulangerie -> remplace RECIPIENT par (bakeryEmail || RECIPIENT).
@@ -30,6 +30,7 @@ export default async function handler(req, res) {
       subject: `Commande traiteur${bakeryName ? " [" + bakeryName + "]" : ""} ${ref || ""} — ${clientName || "client"}`,
       text: text || "Nouvelle commande traiteur.",
     };
+    if (html) payload.html = html;
     if (replyTo) payload.reply_to = replyTo;
     if (pdfBase64) payload.attachments = [{ filename: filename || "commande.pdf", content: pdfBase64 }];
 
