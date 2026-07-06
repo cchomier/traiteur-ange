@@ -42,9 +42,12 @@
   .halo{position:absolute; right:-70px; top:-70px; width:300px; height:300px; border:26px solid var(--vert); border-radius:50%; opacity:.16; transform:rotate(-12deg);}
 
   .perks{background:var(--paper); border-bottom:1px solid var(--line);}
-  .perks .wrap{padding:26px 22px; display:grid; grid-template-columns:repeat(5,1fr); gap:16px;}
-  @media(max-width:860px){ .perks .wrap{grid-template-columns:repeat(2,1fr);} }
-  @media(max-width:480px){ .perks .wrap{grid-template-columns:1fr;} }
+  .perks .wrap{padding:24px 22px 18px;}
+  .perkgrid{display:grid; grid-template-columns:repeat(5,1fr); gap:16px;}
+  @media(max-width:860px){ .perkgrid{grid-template-columns:repeat(2,1fr);} }
+  @media(max-width:480px){ .perkgrid{grid-template-columns:1fr;} }
+  .crc-note{font-size:11.5px; color:var(--muted); margin:14px 0 0;}
+  .hours-note{font-size:12.5px; color:var(--muted); margin:-6px 0 14px;}
   .perk{display:flex; gap:11px; align-items:flex-start;}
   .perk .ic{flex:none; width:36px; height:36px; border-radius:10px; background:var(--vert-soft); color:#5b6300; display:grid; place-items:center;}
   .perk b{display:block; font-size:14px; line-height:1.2;}
@@ -62,10 +65,10 @@
 
   main .wrap{padding:10px 22px 30px;}
   .cat{margin-top:44px; scroll-margin-top:130px;}
-  .cat-head{display:flex; align-items:center; gap:13px; margin:0 0 20px;}
-  .cat-head .b{width:8px; height:30px; border-radius:6px; background:var(--c);}
-  .cat-head h2{font-family:"Fraunces",serif; font-weight:600; font-size:27px; letter-spacing:-.01em; margin:0;}
-  .cat-head .tag{margin-left:auto; font-size:12px; font-weight:800; color:#fff; background:var(--c); padding:5px 11px; border-radius:999px; text-transform:uppercase; letter-spacing:.04em;}
+  .cat-head{display:flex; align-items:center; gap:13px; margin:0 0 20px; background:var(--c); border-radius:16px; padding:16px 22px; box-shadow:var(--shadow);}
+  .cat-head .b{display:none;}
+  .cat-head h2{font-family:"Fraunces",serif; font-weight:600; font-size:26px; letter-spacing:-.01em; margin:0; color:#fff;}
+  .cat-head .tag{margin-left:auto; font-size:12px; font-weight:800; color:#fff; background:rgba(255,255,255,.22); padding:5px 12px; border-radius:999px; text-transform:uppercase; letter-spacing:.04em;}
 
   .grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px;}
   @media(max-width:1000px){ .grid{grid-template-columns:repeat(3,1fr);} }
@@ -225,11 +228,11 @@
   <div class="wrap head-in">
     <div class="brand">
       <img src="data:image/png;base64,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WOfOnavjx4/XE044wTwQdvs0wm6g3T3FS/sWFlysm2++Wd99911NVX7//XedMmWKHnXUUb7jpQI3LUyOOOIIU+ewww7TadOm6V9//WVX8clLL72kxxxzjO88xYGbePvtt+sXX3xhHz5UfvnlF3300Ud19OjRRiF+/PFHu4qR5s2b+85nU7VqVT3llFP0zTfftJuHyieffGIUNEMKyJsb2a9HOqR7t6jjjjtOP/roI/v3pCx//PGH6QUbNmzoO3YURx55pH2oQnn88cdNT/bbb7/ZRZHCd0EBSjIU9u7dW1euXGkfMi3CqFGtWjXfOZPh4Z89e7bdNGWhF+7Vq5fvuKWEXd+7oXi7i8jXARWKDcPkNddco3/++af9G0okzz//vG6++ea+84RxwAEH2IdIm9x111266aab+s4ZBkP1N998Yx9mPfnnn3/sP6Us1113ne+cyey2227FGm3C5Ouvv9a+ffv6jl8KWG/RDMVrkw7Fo0dgSIkSLvSvv/6qP//8s4GhtSjhhrOjlH2+ILAlMyV89379+vnOGUSzZs102bJl9iEKBVvuwAMP1M6dO+t+++1nemKuS5jwINvX6qSTTvKd1wNnhd4qXcLQ26pVK995SsjDIrIxitc28TY9u0KxQDkuvPBC+zsbQcmmT59u7KvttttOGzdubNh111312muvjbR/fvrpJ91333195wuia9eudvNAWbdunS5YsMAMvwyj2DM4GR9++KFddT1ZtWqVcZbs8yZTUFCg119/vd3UCMqDQ7Pxxhv72nXq1EnXrl1rNzFCz4VzgeLzfZ9++mnt2LGj7xiA4/Twww/bhygUTA3sxhtuuEFPP/10veSSS8zxvvvuO7vqevLqq69q3bp1fecrASYlCumUrq1occ25icnCRcPWCbrYHoceeqgxqMPkyiuv9LUJIkrxcCZefvllPfHEE43XmOzleuy4446RN+3vv/829qvdLpn69euH2rd4zVFeOx5rkHBezznyQMHt9sAQH2bH4qQMHjzYKGdyGzoNzJTPPvvMblIo//77r1500UW+85UAs9AHSes2ZfwoQgYIT9IWW2zhqxMEPV+YzJ8/33hndhubKMUjTJKKjVa7du1QxUHuvvvuyKG/S5cudpNCiRoeYeutt9bvv//ebmZk0qRJvvo2XPswZwLlPe2003xtkolyzhDCP8WxuUMgA9lI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" alt="Boulangerie Ange">
-      <div class="txt"><b>Boulangerie Ange</b><span id="brandSub">au Grand Epagny</span></div>
+      <div class="txt"><b>Boulangerie Ange</b><span id="brandSub">du Grand Epagny</span></div>
     </div>
     <a class="head-phone" id="phoneHead" href="#">
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></svg>
-      <span class="col"><small>Un doute ? Appelez-nous</small><span id="phoneHeadNum">04 50 24 89 05</span></span>
+      <span class="col"><small>Une question ? Appelez-nous</small><span id="phoneHeadNum">04 50 24 89 05</span></span>
     </a>
   </div>
 </header>
@@ -238,12 +241,12 @@
   <div class="halo" aria-hidden="true"></div>
   <div class="wrap">
     <p class="kicker">🥖 Commande traiteur</p>
-    <h1>Faites votre <em>composition</em>,<br>on cuisine, vous recevez.</h1>
-    <p class="lead">Composez votre buffet en quelques clics : plateaux salés, sucrés, viennoiseries et boissons, faits maison et cuits sur place. On s'occupe du reste — vous profitez de vos invités.</p>
+    <h1>Faites votre <em>composition</em>,<br>on s'occupe du reste.</h1>
+    <p class="lead">Plateaux salés, sucrés, viennoiseries et boissons — faits maison et cuits sur place. Composez votre buffet en quelques clics, et profitez pleinement de vos invités.</p>
   </div>
 </section>
 
-<section class="perks"><div class="wrap" id="perks"></div></section>
+<section class="perks"><div class="wrap"><div class="perkgrid" id="perks"></div><p class="crc-note">* CRC&nbsp;: Culture Raisonnée Contrôlée</p></div></section>
 
 <nav class="catnav" aria-label="Gammes"><div class="catnav-in" id="catnav"></div></nav>
 
@@ -314,6 +317,7 @@
             <div class="field"><label class="lb" for="date">Date souhaitée — retrait/livraison <span class="req">*</span></label><input type="date" id="date" name="date" required></div>
             <div class="field"><label class="lb" for="heure">Heure souhaitée <span class="req">*</span></label><input type="time" id="heure" name="heure" required></div>
           </div>
+          <p class="hours-note" id="hoursNote"></p>
           <div class="datealert" id="dateAlert">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
             <div><b>Commande à moins de 72 h</b><p>Pour une date aussi proche, votre commande doit <b>impérativement être validée par téléphone</b> au <b class="bkphone2">04 50 24 89 05</b>. Vous pouvez continuer, mais appelez-nous pour confirmer la faisabilité.</p></div>
@@ -372,7 +376,7 @@
 
           <div class="notice" id="confirmNotice">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg>
-            <p><b>Votre devis en un clic.</b> En validant, vous téléchargez votre devis : il sera <b>confirmé dès que la boulangerie l'aura validé</b>. Vous ne payez rien maintenant — une question ? Appelez-nous au <b class="bkphone2">04 50 24 89 05</b>.</p>
+            <p><b>Votre devis en un clic.</b> En validant, vous téléchargez votre devis. La boulangerie vous recontacte ensuite <b>par e-mail, téléphone ou WhatsApp</b> pour confirmer votre commande. Vous ne payez rien maintenant — une question ? Appelez-nous au <b class="bkphone2">04 50 24 89 05</b>.</p>
           </div>
 
           <button type="submit" class="submit" id="submitBtn" disabled>Valider et envoyer ma commande</button>
@@ -393,7 +397,7 @@
 
 <footer>
   <div class="wrap">
-    <div class="col"><b>Boulangerie Ange</b><br>au Grand Epagny</div>
+    <div class="col" id="footBrand"><b>Boulangerie Ange</b><br>du Grand Epagny<br>300 rue des Peupliers<br>74330 Epagny</div>
     <div class="col"><b>Contact</b><br>Tél. <a id="phoneFoot" href="#">04 50 24 89 05</a><br><a id="mailFoot" href="#">commandes.ange74@gmail.com</a></div>
     <div class="col"><b>Traiteur</b><br>Retrait gratuit en boutique<br>Livraison 30 € · rayon 5 km<br>Minimum 100 € TTC · TVA 5,5 %</div>
   </div>
@@ -424,7 +428,7 @@ const CONFIG = {
   deliveryFee:30, installationFee:30, feeTva:0.055,
   maxLots:20,             // max 20 lots/plaques
   bakeries:[
-    {id:"epagny", nom:"Grand Epagny", adresse:"300 rue des Peupliers, 74330 Epagny Metz Tessy", phone:"04 50 24 89 05", email:"commandes.ange74@gmail.com"},
+    {id:"epagny", nom:"Grand Epagny", adresse:"300 rue des Peupliers, 74330 Epagny", phone:"04 50 24 89 05", email:"commandes.ange74@gmail.com", horaires:"tous les jours 6h30\u201319h30, dimanche 8h\u201313h. Jours f\u00e9ri\u00e9s : nous contacter."},
     // 2e boulangerie : ajoute une entrée ici quand elle ouvre.
   ],
 };
@@ -1566,8 +1570,10 @@ function applyBakery(b){
   phoneHead.href=tel; phoneHeadNum.textContent=b.phone; gatePhone.textContent=b.phone;
   phoneFoot.href=tel; phoneFoot.textContent=b.phone;
   mailFoot.href="mailto:"+b.email; mailFoot.textContent=b.email;
-  const bs=$('brandSub'); if(bs) bs.textContent="au "+b.nom;
+  const bs=$('brandSub'); if(bs) bs.textContent="du "+b.nom;
   document.querySelectorAll('.bkphone2').forEach(el=>el.textContent=b.phone);
+  const hn=$('hoursNote'); if(hn) hn.textContent="Horaires : "+(b.horaires||"");
+  const fb=$('footBrand'); if(fb) fb.innerHTML='<b>Boulangerie Ange</b><br>du '+b.nom+'<br>'+b.adresse.replace(', ','<br>');
   livReminder.innerHTML=`\uD83D\uDCCD Livraison : ${euro(CONFIG.deliveryFee)} TTC dans un rayon maximum de 5 km autour de la boulangerie Ange ${b.nom}.`;
   render();
 }
@@ -1586,11 +1592,11 @@ if(CONFIG.bakeries.length>1){
 }
 
 const PERKS=[
-  ["Fait maison","Pétri, façonné et cuit sur place.","M12 2 3 7v10l9 5 9-5V7l-9-5Z"],
-  ["Produits frais","Préparés le matin, comme en boutique.","M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"],
-  ["Prix justes","La qualité Ange, à prix accessible.","M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"],
+  ["Fait maison","Farines CRC*, pains pétris et cuits sur place.","M12 2 3 7v10l9 5 9-5V7l-9-5Z"],
+  ["Produits frais","Préparés sur place le matin.","M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"],
+  ["Prix justes","La qualité Ange à des prix abordables.","M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"],
   ["Tous événements","Réunions, anniversaires, pots pro ou privés.","M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"],
-  ["Vous recevez","Profitez de vos invités, on gère le buffet.","M3 11l19-9-9 19-2-8-8-2Z"],
+  ["Livraison possible","Jusqu'à 5 km autour de la boulangerie.","M10 17h4V5H2v12h3M15 17h6v-5l-3-3h-3v8M6 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM17.5 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"],
 ];
 perks.innerHTML=PERKS.map(p=>`<div class="perk"><div class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${p[2]}"/></svg></div><div><b>${p[0]}</b><span>${p[1]}</span></div></div>`).join('');
 
@@ -1614,7 +1620,7 @@ GAMMES.forEach(g=>{
       : `<select id="q${p.i}" data-i="${p.i}" aria-label="Quantité pour ${p.nom}">${opts}</select>`;
     let hint='';
     if(p.unite==='plaque') hint=`1 plaque = ${p.bouchees} bouchées`;
-    else if(p.unite==='lot') hint=`1 lot = ${p.bouchees} bouchée${p.bouchees>1?'s':''}`;
+    else if(p.unite==='lot' && p.gamme!=='Pains') hint=`1 lot = ${p.bouchees} bouchée${p.bouchees>1?'s':''}`;
     else if(p.minimum>1) hint=`min. ${p.minimum} pièces`;
     const badge=hint?`<span class="minq">${hint}</span>`:'';
     const photo=p.photo?`<div class="photo"><img src="${p.photo}" alt="${p.nom}" loading="lazy"></div>`
