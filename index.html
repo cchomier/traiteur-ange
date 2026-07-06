@@ -1,0 +1,1778 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Commande traiteur — Boulangerie Ange au Grand Epagny</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Nunito+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  :root{
+    --noir:#0B0B0A; --vert:#CDDB00; --vert-deep:#B4C000; --vert-soft:#F3F7CF;
+    --creme:#FAF7EF; --creme-2:#FDFBF5; --paper:#FFFFFF;
+    --ink:#1A1A16; --muted:#6E6A5E; --line:#E9E4D6; --ok:#2E7D5B; --danger:#C0392B;
+    --shadow:0 1px 2px rgba(20,20,10,.05), 0 10px 30px rgba(20,20,10,.07); --radius:18px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0; background:var(--creme-2); color:var(--ink); font-family:"Nunito Sans",system-ui,sans-serif; font-size:16px; line-height:1.5; padding-bottom:88px; -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1040px; margin:0 auto; padding:0 22px;}
+  a{color:inherit;}
+
+  header{position:sticky; top:0; z-index:50; background:var(--noir); color:#fff;}
+  .head-in{display:flex; align-items:center; justify-content:space-between; gap:16px; height:64px;}
+  .brand{display:flex; align-items:center; gap:12px;}
+  .brand img{height:42px; width:auto; display:block;}
+  .brand .txt b{font-family:"Fraunces",serif; font-weight:600; font-size:16px; line-height:1;}
+  .brand .txt span{display:block; font-size:10.5px; color:var(--vert); font-weight:800; letter-spacing:.16em; text-transform:uppercase; margin-top:3px;}
+  @media(max-width:520px){ .brand .txt{display:none;} }
+  .head-phone{text-decoration:none; font-weight:800; font-size:15px; color:#fff; white-space:nowrap; display:flex; align-items:center; gap:8px;}
+  .head-phone svg{color:var(--vert);}
+  .head-phone small{display:none;}
+  @media(min-width:560px){ .head-phone .col{display:flex;flex-direction:column;line-height:1.15;} .head-phone small{display:block;font-size:10px;color:#ffffff88;font-weight:700;text-transform:uppercase;letter-spacing:.05em;} }
+
+  .hero{position:relative; background:var(--noir); color:#fff; overflow:hidden;}
+  .hero .wrap{padding:56px 22px 52px; position:relative; z-index:2;}
+  .kicker{display:inline-flex; align-items:center; gap:8px; font-weight:900; font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--noir); background:var(--vert); padding:7px 15px; border-radius:999px; margin:0 0 20px;}
+  .hero h1{font-family:"Fraunces",serif; font-weight:600; font-size:clamp(36px,6.4vw,60px); line-height:1.0; letter-spacing:-.02em; margin:0 0 16px;}
+  .hero h1 em{font-style:italic; color:var(--vert);}
+  .hero p.lead{max-width:56ch; margin:0; color:#EDE9DE; font-size:18px;}
+  .halo{position:absolute; right:-70px; top:-70px; width:300px; height:300px; border:26px solid var(--vert); border-radius:50%; opacity:.16; transform:rotate(-12deg);}
+
+  .perks{background:var(--paper); border-bottom:1px solid var(--line);}
+  .perks .wrap{padding:26px 22px; display:grid; grid-template-columns:repeat(5,1fr); gap:16px;}
+  @media(max-width:860px){ .perks .wrap{grid-template-columns:repeat(2,1fr);} }
+  @media(max-width:480px){ .perks .wrap{grid-template-columns:1fr;} }
+  .perk{display:flex; gap:11px; align-items:flex-start;}
+  .perk .ic{flex:none; width:36px; height:36px; border-radius:10px; background:var(--vert-soft); color:#5b6300; display:grid; place-items:center;}
+  .perk b{display:block; font-size:14px; line-height:1.2;}
+  .perk span{font-size:12.5px; color:var(--muted); line-height:1.3;}
+
+  .catnav{position:sticky; top:64px; z-index:40; background:rgba(253,251,245,.95); backdrop-filter:blur(8px); border-bottom:1px solid var(--line);}
+  .catnav-in{display:flex; gap:9px; overflow-x:auto; padding:12px 22px; max-width:1040px; margin:0 auto; scrollbar-width:none;}
+  .catnav-in::-webkit-scrollbar{display:none;}
+  .pill{flex:none; border:1.5px solid var(--line); background:#fff; color:var(--ink); font-family:inherit; font-weight:800; font-size:14px; padding:9px 15px; border-radius:999px; cursor:pointer; white-space:nowrap; display:flex; align-items:center; gap:8px; transition:.15s;}
+  .pill .dot{width:10px; height:10px; border-radius:50%; background:var(--c);}
+  .pill:hover{border-color:var(--c);}
+  .pill.active{background:var(--c); border-color:var(--c); color:#fff;}
+  .pill.active .dot{background:#fff;}
+  .pill:focus-visible{outline:3px solid var(--vert); outline-offset:2px;}
+
+  main .wrap{padding:10px 22px 30px;}
+  .cat{margin-top:44px; scroll-margin-top:130px;}
+  .cat-head{display:flex; align-items:center; gap:13px; margin:0 0 20px;}
+  .cat-head .b{width:8px; height:30px; border-radius:6px; background:var(--c);}
+  .cat-head h2{font-family:"Fraunces",serif; font-weight:600; font-size:27px; letter-spacing:-.01em; margin:0;}
+  .cat-head .tag{margin-left:auto; font-size:12px; font-weight:800; color:#fff; background:var(--c); padding:5px 11px; border-radius:999px; text-transform:uppercase; letter-spacing:.04em;}
+
+  .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+  @media(max-width:860px){ .grid{grid-template-columns:repeat(2,1fr);} }
+  @media(max-width:560px){ .grid{grid-template-columns:1fr;} }
+  .card{background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; display:flex; flex-direction:column; transition:border-color .15s, box-shadow .15s;}
+  .card.active{border-color:var(--c); box-shadow:var(--shadow);}
+  .photo{aspect-ratio:16/10; background:var(--vert-soft); display:grid; place-items:center; border-bottom:1px solid var(--line);}
+  .photo .ph{display:flex; flex-direction:column; align-items:center; gap:6px; color:#9aa06a;}
+  .photo .ph span{font-size:11px; font-weight:800; letter-spacing:.05em; text-transform:uppercase;}
+  .photo img{width:100%; height:100%; object-fit:cover;}
+  .card-body{padding:15px 16px 14px; display:flex; flex-direction:column; flex:1;}
+  .card h3{font-family:"Fraunces",serif; font-weight:600; font-size:17px; line-height:1.15; margin:0 0 10px; flex:1;}
+  .card .meta{display:flex; align-items:flex-start; justify-content:space-between; gap:8px; margin-bottom:12px;}
+  .card .price{display:flex; flex-direction:column; gap:2px;}
+  .card .price .ttc{font-weight:900; font-size:16px;}
+  .card .price .ttc small{font-weight:700; color:var(--muted); font-size:11px;}
+  .card .price .htline{font-size:11.5px; color:var(--muted); font-weight:700;}
+  .card .minq{font-size:11px; font-weight:800; color:#fff; background:var(--c); padding:4px 9px; border-radius:999px; white-space:nowrap;}
+  .card-foot{display:flex; align-items:center; justify-content:space-between; gap:10px; padding-top:12px; border-top:1px dashed var(--line);}
+  .qty{display:flex; align-items:center; gap:8px;}
+  .qty label{font-size:12px; color:var(--muted); font-weight:800;}
+  select{font-family:inherit; font-size:15px; font-weight:800; color:var(--ink); padding:9px 30px 9px 12px; border:1.5px solid var(--line); border-radius:11px; background:#fff; appearance:none; cursor:pointer;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23555' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 11px center;}
+  select:focus-visible{outline:3px solid var(--vert); outline-offset:1px; border-color:var(--c);}
+  input.qnum{width:80px; font-family:inherit; font-size:15px; font-weight:800; color:var(--ink); padding:9px 12px; border:1.5px solid var(--line); border-radius:11px; background:#fff;}
+  input.qnum:focus-visible{outline:3px solid var(--vert); outline-offset:1px; border-color:var(--c);}
+  .check{display:flex; align-items:center; gap:11px; cursor:pointer; font-weight:700; font-size:14.5px; padding:12px 14px; border:1.5px solid var(--line); border-radius:12px; background:#fff;}
+  .check input{width:18px; height:18px; accent-color:var(--vert-deep); flex:none;}
+  .check:has(input:checked){border-color:var(--vert-deep); background:var(--vert-soft); color:#4d5400;}
+  .subtotal{font-weight:900; font-size:15px; min-width:70px; text-align:right; color:var(--c);}
+  .subtotal.zero{color:#d9cfb8;}
+
+  .infobox{margin-top:44px; background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:20px 22px; display:flex; gap:15px; align-items:flex-start;}
+  .infobox .ic{flex:none; width:42px; height:42px; border-radius:12px; background:var(--vert-soft); color:#5b6300; display:grid; place-items:center;}
+  .infobox h3{margin:0 0 4px; font-family:"Fraunces",serif; font-size:19px;}
+  .infobox p{margin:0; color:var(--muted); font-size:14.5px;}
+
+  #commande{margin-top:52px; background:var(--creme); border:1px solid var(--line); border-radius:26px; padding:32px 28px;}
+  @media(max-width:600px){ #commande{padding:24px 18px;} }
+  #commande h2.title{font-family:"Fraunces",serif; font-weight:600; font-size:28px; margin:0 0 4px;}
+  #commande .sub{color:var(--muted); margin:0 0 20px; font-size:15px;}
+
+  .bakerypick{margin-bottom:16px;}
+  .bk-title{font-weight:800; font-size:13.5px; margin:0 0 8px;}
+  .bk-single{display:flex; align-items:center; gap:12px; background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px 16px;}
+  .bk-single .bk-ic{width:40px; height:40px; border-radius:11px; background:var(--vert-soft); display:grid; place-items:center; font-size:20px; flex:none;}
+  .bk-single b{display:block; font-size:15px;}
+  .bk-single span{font-size:13px; color:var(--muted);}
+  .convives{display:flex; align-items:center; gap:12px; background:#fff; border:1px solid var(--line); border-radius:14px; padding:12px 16px; margin-bottom:16px; flex-wrap:wrap;}
+  .convives label{font-weight:800; font-size:14.5px;}
+  .convives input{width:90px; font-family:inherit; font-size:16px; font-weight:800; padding:9px 12px; border:1.5px solid var(--line); border-radius:10px;}
+  .convives input:focus-visible{outline:3px solid var(--vert); border-color:var(--vert-deep);}
+  .convives .hint{color:var(--muted); font-size:13px;}
+
+  .recap{background:#fff; border:1px solid var(--line); border-radius:16px; padding:6px 18px; margin-bottom:16px;}
+  .recap .empty{color:var(--muted); padding:22px 0; text-align:center; font-size:15px;}
+  .rline{display:flex; align-items:baseline; justify-content:space-between; gap:12px; padding:13px 0; border-bottom:1px solid var(--line);}
+  .rline:last-child{border-bottom:0;}
+  .rline .n{font-weight:800;}
+  .rline .n small{display:block; color:var(--muted); font-weight:600; font-size:12.5px; margin-top:2px;}
+  .rline .a{font-weight:900; white-space:nowrap;}
+
+  .bites{display:flex; gap:10px; flex-wrap:wrap; margin:14px 0 2px;}
+  .bite{flex:1; min-width:140px; background:#fff; border:1px solid var(--line); border-radius:13px; padding:12px 14px;}
+  .bite .l{font-size:11.5px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; color:var(--muted);}
+  .bite .v{font-family:"Fraunces",serif; font-weight:700; font-size:21px;}
+
+  .perperson{display:none; margin:12px 0 2px; background:var(--vert-soft); border:1px solid #dfe6a8; border-radius:14px; padding:13px 16px;}
+  .perperson.show{display:block;}
+  .perperson .t{font-weight:900; font-size:12.5px; text-transform:uppercase; letter-spacing:.05em; color:#5b6300; margin-bottom:6px;}
+  .perperson .row{display:flex; flex-wrap:wrap; gap:18px;}
+  .perperson .row div b{font-family:"Fraunces",serif; font-size:19px; font-weight:700;}
+  .perperson .row div span{display:block; font-size:12px; color:#6a7000; font-weight:700;}
+
+  .totals{margin:16px 2px 2px;}
+  .totals .tr{display:flex; justify-content:space-between; padding:4px 0; font-size:14.5px; color:var(--muted); font-weight:700;}
+  .totals .tr.grand{border-top:2px solid var(--line); margin-top:6px; padding-top:12px;}
+  .totals .tr.grand .l{font-family:"Fraunces",serif; font-weight:600; font-size:21px; color:var(--ink);}
+  .totals .tr.grand .v{font-family:"Fraunces",serif; font-weight:700; font-size:30px; color:var(--ink);}
+  .totals .tr.acompte{color:#5b6300; font-weight:900; font-size:15px;}
+  .totals .tr.acompte .v{color:#5b6300;}
+
+  .gate{display:none; align-items:flex-start; gap:12px; background:#FDECE9; border:1.5px solid var(--danger); border-radius:14px; padding:15px 17px; margin:14px 0 2px; color:#7a241b;}
+  .gate.show{display:flex;}
+  .gate svg{flex:none; color:var(--danger); margin-top:1px;}
+  .gate b{display:block; margin-bottom:2px;} .gate p{margin:0; font-size:14px;}
+
+  form{margin-top:24px;}
+  .frow{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media(max-width:520px){ .frow{grid-template-columns:1fr;} }
+  .field{margin-bottom:14px;}
+  .field label.lb{display:block; font-weight:800; font-size:13.5px; margin:0 0 6px;}
+  .field label.lb .req{color:var(--vert-deep);}
+  input[type=text],input[type=email],input[type=tel],input[type=date],textarea{width:100%; font-family:inherit; font-size:16px; color:var(--ink); padding:12px 14px; border:1.5px solid var(--line); border-radius:12px; background:#fff;}
+  textarea{min-height:76px; resize:vertical;}
+  input:focus-visible,textarea:focus-visible{outline:3px solid var(--vert); outline-offset:1px; border-color:var(--vert-deep);}
+  .seg{display:flex; gap:10px;}
+  .seg label{flex:1; margin:0; cursor:pointer; position:relative;}
+  .seg input{position:absolute; opacity:0; inset:0; cursor:pointer;}
+  .seg span{display:block; text-align:center; padding:12px; border:1.5px solid var(--line); border-radius:12px; font-weight:800; font-size:15px; transition:.12s;}
+  .seg input:checked + span{border-color:var(--vert-deep); background:var(--vert-soft); color:#4d5400;}
+  .seg input:focus-visible + span{outline:3px solid var(--vert); outline-offset:1px;}
+  .cond{display:none;} .cond.show{display:block;}
+  .liv-reminder{display:none; margin:0 0 14px; font-size:13.5px; color:#4d5400; font-weight:700; background:var(--vert-soft); border-radius:10px; padding:10px 13px;}
+  .liv-reminder.show{display:block;}
+
+  .submit{width:100%; margin-top:6px; font-family:inherit; font-weight:900; font-size:17px; color:var(--noir); background:var(--vert); border:0; border-radius:14px; padding:17px; cursor:pointer; transition:.15s;}
+  .submit:hover{background:var(--vert-deep);}
+  .submit:disabled{background:#e7e3d3; color:#aaa596; cursor:not-allowed;}
+  .submit:focus-visible{outline:3px solid var(--noir); outline-offset:2px;}
+  .legal{font-size:12.5px; color:var(--muted); text-align:center; margin:12px 2px 0;}
+
+  .done{display:none; text-align:center; padding:22px 8px;}
+  .done.show{display:block;}
+  .done .check{width:68px; height:68px; margin:0 auto 18px; border-radius:50%; background:var(--ok); display:grid; place-items:center;}
+  .done h2{font-family:"Fraunces",serif; font-weight:600; font-size:27px; margin:0 0 8px;}
+  .done p{color:var(--muted); max-width:48ch; margin:0 auto 14px;}
+  .done .dl{display:inline-flex; align-items:center; gap:9px; font-weight:800; color:var(--noir); background:var(--vert); border:0; padding:13px 22px; border-radius:12px; text-decoration:none; cursor:pointer;}
+
+  footer{margin-top:56px; background:var(--noir); color:#fff;}
+  footer .wrap{padding:34px 22px; display:flex; flex-wrap:wrap; gap:24px; justify-content:space-between; align-items:flex-start;}
+  footer b{font-family:"Fraunces",serif; font-weight:600; font-size:18px; color:var(--vert);}
+  footer .col{font-size:14px; color:#ffffffcc; line-height:1.8;}
+  footer a{color:var(--vert); text-decoration:none; font-weight:700;}
+
+  .bar{position:fixed; left:0; right:0; bottom:0; z-index:60; background:var(--noir); color:#fff; box-shadow:0 -6px 24px rgba(0,0,0,.25); transform:translateY(120%); transition:transform .25s;}
+  .bar.show{transform:translateY(0);}
+  .bar-in{max-width:1040px; margin:0 auto; padding:11px 22px; display:flex; align-items:center; justify-content:space-between; gap:16px;}
+  .bar .lbl{font-size:12px; color:#ffffff99; font-weight:800; text-transform:uppercase; letter-spacing:.04em;}
+  .bar .tot{font-family:"Fraunces",serif; font-weight:700; font-size:25px; color:var(--vert); line-height:1;}
+  .bar button{font-family:inherit; font-weight:900; font-size:15.5px; color:var(--noir); background:var(--vert); border:0; border-radius:12px; padding:13px 22px; cursor:pointer;}
+  @media(prefers-reduced-motion:reduce){ *{transition:none!important; scroll-behavior:auto!important;} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap head-in">
+    <div class="brand">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJ4AAAB9CAYAAABTVdpXAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFxEAABcRAcom8z8AABv2SURBVHhe7Z0HlBRFE4BrDiWIIEEyggEToiCKihIkSPhFEcwRASUoKmYFc46oKCZQFDFLEBEQA4giBhQFJJhAwJxztv739eycS0+4vbtNd0y997l43T2zO1PTXVVd3SMiUk9EXhMRjYnJIrKFiLwdUBATk0mkmYisCCiIickksqOIrAooiInJJNJSRD4NKIiJySSyu4h8HVAQE5NJpK2I/BBQEBOTSaS9iPwaUBATk0lkXxH5LaAgJiaTxIoXkxPMUPtLQEFMTCYxPd7vAQUxMZlEuorIXwEFMTGZJB5qY3KC7C0iPwUUxMRkEtknVryYHBArXkxOkA7xzEVMDpAuIvJnQEFMTCaRniLyb0BBTEwm8HRNDgoojInJFExWEDeWwwMKY2Iyxd+JXk+ODSiMickUOLL0ejIgoDAmbTi6SVVHN68r2nQr0R1biLbcTbRNW9G27UXb7SvaoYvovl1d+Dd/26ud6O57iu7cSrTZ9qL1G4puWs09nv8cZYrvEuE7OSGgMCZFKlQQrVrV0UZNHN1lV9HO3R09eoCjp50nevkNoqPvcXTCJEefmCX61BzR2QtE5ywUfelt0VeWiL66TPS15aJvrHDh3/xt/hLReYtEn39ddOZLolNmi06cKjp6nKMXXS06aJij3Xo5utMuorVqO+Z72N8tT2F9z/co3vCAwhgfjm5WQ8yN7tRN9KDDRIee7ujt94nOeEn0jZWib30o+tYHoos+FH1nleiSNaJLEyz5WHTxavfvb3/kQj0P0zbp/8HUWyX6zmrRxR+vfyzKvPO9+JbomPscPe5E0X33E23cxP7uecUXXo93Q0BhjIg2aOho526OnjjM0QuucHT8o6Jz33QVaPknokvXuopkFOeD9Xnz/czjnctT9GXrXCWd8qzoeZeIdvufaOXKeTc0/5yIG8sFAYUbHFWqOLp9c9GevUXPGOHofY+Lzl3o9mTc1HfXub0NPY2tAPkEisiDwUPB/z86XfTYga6Naf/mHEEo5R8U77SAwg2C6tUd7Xmg6BkjRW8Z6+jLi0WXf+oqmOnJGM6y2IOlG743QzW/6ZHpjv6vd171fjIw4I/lkooVRbdo6mjfwx294XbRJ59zDfplDJtr3CHLvnnlBexCPi++RrTaZv5rk0W+SSynlaMCCssVW24j2n+I6Kg7HGOIo2QY6559Zt+kKJLtKkPCAWB44+YaB2CtOzSb4Xmt62RQ5kEdU77WLfe+D8cpdDYy0NNyXM556z2iNWr6r1OWmCQik1G8QwIKyzzVqon26iN6+/2iT89zLzjgCdo3JAxPwTybyesVsfteW+aGPZ57TfTxmQzVomdf6Gi/QRX0oEMd7dJTtGNX0fad3bjcPh3/o30nt6xLD9G+R+C8VNArbnTDJS+84R739RWuIhoHZnV6lZDfcfUtoo7jv25Z4AkRub1czdVWqiTauo3r0c2Y5zoC9Db0bPbFD8LrZYwzkbjhL7/jDsljHxQTPxswWHS/no4231m0UWNHq1VLXwzNKWAYdEyguX0nRwef6ujNY93fgsLTW6ZDAU2v+gGhl5zYfCtFZA6K1yegsExRuYro/r1Fxz0s+tIidxhLZQgt9AAZ6laLLnxP9JWlog89KXrq2Y527u4qcpMtRats4j9vNkCpt27mxuduussxvaEZlkvpXfNgjR4nuvHG/nNmGKbMCKnIoQGFZQICpUf1F31qrqtEDEup3BCGMJQTRWMYJnQy/FzRVru5YYdKlf3nygdQwi23dvSSa92emIfF/m2pgvIS72vU2H+eDEMoxWSnHBlQmNfUbeDooFNEp81JRPFXRQ9Bnp3GsIuyTX1OdMRljnbvxY0U3Wgj/znynd33IkTi/ib796YC12zWfEe33zHrwy2ZKT+WqeyUzeu4wVAMcM+TtC9oMiaa/4k7fE6aJXrhVUzSO7n06NJKg4aid04o+joEwbWZPtfRrbbJuuKRmWJmLk4PKMwrKlZ0tPchok/MdJ/wqB4u2QvlwhK3wojG8bCPWx5o2Ng1NVJ1oDywax+YkpOY3peJvXrklIDCvKFla9Hb7v3PEbAvoIeJUa1zQxHjHxc95ChH6zfyH688cvgxTuS1CYL6Z10gKtkNqTDMfi4iC/LWxmM4PH6Q68XRy4V5qSgkCoexfc1o0Xadsz505Jx6DURffDP1GCVBb8yPHAyzKN6aRAhPegVUyCk77CR690TX8wpTOP7OcLpgieil17phjxwFRHNO7Tp4qE7Kwy3X7YwRObtes0XkfyheZxH5I6BCTujVx9FnFzjGBgmz41DI11eSaEnyZdaf2ryjTj3RmS87piezr5UNUYAJk1xHzT5OluCdKsNQvDzZitbRgSe5k/ZhTy4xOp7WByaLdu7htvEfZ8OjRUtHF64UfTPkQfXggSWfcKeWOb1uZB9fjeK1y/VuUQRsmef0MnPtC2Yu2mrRuW+JDjzZ0aqb5vTC5R2XXf9f9kkYPMyk0jMVZ7fPAVegeCzoztn+eI7j6MjLExP4AU+s5zwwjbVrG3/7DR3WeaBQYbYwoJQ8tHt3yAulg3tQvL4BBVmhoEC034nu0ximdPSAl17naK3N/e03dGrWdvSeR5zI2QuGV2Z42uyVN0oHr6B4BwYUZIW27R199d3g4dWL2w0dXn6Dv6WByf3Lr3cDwfa1Ay+bZcx4Zif87XMMIRU5IKAg41SrzpxpcODTpCatFu0/WLQgTSlH5QmU7tyLw9Ok+Dv5fKec5V5nu30eYJIE9g8oyDgsxQtSOmB4IKrOUGy329AhdHL9be7waisd4RSu6YNTRPfcx982z5Ae2d4tqnoN0QmT/1sJZSsdcaY8fVJzCtOHpHDZNp0XZsLJGDpc8mlFWRCEU4iiyMHZVryWrR2dt8gf8OQJxjbp2MXfZkOm6qaihx/r7jJgjxJm9mapmMVLTZr62+YhaxMLfuSsgMKMwnqDIE8WQ/nmux2tXCWvPLCcsktrd3GOt/MA18lzHBa+764pYU1Hjqa/SgKp72xjIecHFGaUrj3cITVZ6TzFG3Kav/6GSNOtRc8c6e6v4tlzYPILl4jeMUG0XSdHK5Y9jx/FW4finRtQmFEwfPG6kns8b5g94jh//Q2Jho0d7T+Y+Wo3cE5Px+jAkDp/iaPX3eZoB5OBU2ZHhYUisgLFOzOgMKM0aOSmnydP85gQyipSofz1NwRY0HPS6e6KMuw4L5mVpFd2mTr7Ijd7uiym6Vs8JyKvo3hkCtiFGWfYmf75RabNRlzur1uewT479xJ3oTmb7mBusOUEa3dH3Sl65PHuNmR2uzLMdBEZi+INDijMOGz59fC09UMqDCvsHdeilb9+eQEnoE5d0SP6OTpmvJiZmw+++m8Ggn30hgwXbb2HlEX7LRWeFpGTULzjAwqzAkv1HnlqfeXDkB73sKO1avvrl2Xq1Rft1dfRy653zO4DOAnvf+maGBOniA4/z91loFL+bSuWblC8o1E8/mMXZg3Wxt56r2MMaewabgRDMF4bK+rt+mUFZl02q+Fon8MdvfEO0cnPukPois/cnv3Bqe5Gint3EK29YSVA3C8iQ1C8IwIKswpJAIcfJzrtBVfpcDL4fGa+u2inZi1/m3wDo79+A9Hd9hQ9YZhjeu35i0UXr3E9eByEq24S7X2oYxyJfF00ngXuEJHbULy8ed0AkXcSA6Y97/Z+GNsMveTiHTfQ0dp18mcYQtFq1nS0YxfHrF8Yc5/o5NluUBcniX2LL77G7fH2aJvTVPN841YRGYfiHRNQmFNq1MLeYQ87R2fNd1f/YxOxkozNcw7oS6/hbjfBnnd2+3TBcMmuU+y4vvW29GaODhjqGDNg+ous23XDH9hsj81ws6hJtmSvlZq1y9RsQjYZJSL3onh5vCOoYzxAQg5MfjN19PSLji58z0kMX65neOZIR4/s5+64zjzwlts4ZtjDQaleXXSTqmw1627uw+Y7zH3iVbM6C6ViGwvWLaDsB/QVPX6w6DkXOTrqTkfvf8JN35oxzzGf9z4qesWNjg4c6miPAxzdobm3M0H+9MZ5zrUicheKx8ILuzAvwRasW5/1oG7vc8xAx9hNeIWTZruw5+9D01wmTnWMET9hsrvlP9zP5xN8uouG2JMOHnzSzYpBsVBw0vGPGeCYNQrsjcwUVt16rhLb3yumWNwiImNQvHMCCsscFTZyezReQsIwV78BQ16Bbt+8QHfapUB3blWgLVoV6I4tCnSb7Qq0cRPH5LYxrNOGHnHjivHwmAWeEZGJKF5eb2ERU+4gSWAKihe/2Scmm3wiIo+jeGVmm7KYcgF7412VV3G8mA0CXhvKixuld0BhTIapUaOGbrPNNrrDDjtokyZNtGLFir46maZSpUoG++9ZgLXc0jWhhXZhWqhXr552795dL774Yn3sscf0hRde0IULF+qiRYv0tdde02eeeUbvvfdeHTZsmLZu3VqrVKniO0aqdOvWTUeMGKHnnntuIeedd54OHz5cq1evXlhvk0020X322cd8p6lTp+orr7xS+H1mzpypo0aN0v33398oh32OkrLtttua3/jII4/oG2+8oatXr9bPP/9cv/zyS/300091+fLl5lpccMEF5jp4irjZZpvp9ttvrz179tShQ4fqpZdeqrfddpved999utNOO/nOE0adOnX0oIMO0ltvvVWfffZZffvtt/WDDz4wLF68WOfOnavjx4/XE044wTwQdvs0wm6g3T3FS/sWFlysm2++Wd99911NVX7//XedMmWKHnXUUb7jpQI3LUyOOOIIU+ewww7TadOm6V9//WVX8clLL72kxxxzjO88xYGbePvtt+sXX3xhHz5UfvnlF3300Ud19OjRRiF+/PFHu4qR5s2b+85nU7VqVT3llFP0zTfftJuHyieffGIUNEMKyJsb2a9HOqR7t6jjjjtOP/roI/v3pCx//PGH6QUbNmzoO3YURx55pH2oQnn88cdNT/bbb7/ZRZHCd0EBSjIU9u7dW1euXGkfMi3CqFGtWjXfOZPh4Z89e7bdNGWhF+7Vq5fvuKWEXd+7oXi7i8jXARWKDcPkNddco3/++af9G0okzz//vG6++ea+84RxwAEH2IdIm9x111266aab+s4ZBkP1N998Yx9mPfnnn3/sP6Us1113ne+cyey2227FGm3C5Ouvv9a+ffv6jl8KWG/RDMVrkw7Fo0dgSIkSLvSvv/6qP//8s4GhtSjhhrOjlH2+ILAlMyV89379+vnOGUSzZs102bJl9iEKBVvuwAMP1M6dO+t+++1nemKuS5jwINvX6qSTTvKd1wNnhd4qXcLQ26pVK995SsjDIrIxitc28TY9u0KxQDkuvPBC+zsbQcmmT59u7KvttttOGzdubNh111312muvjbR/fvrpJ91333195wuia9eudvNAWbdunS5YsMAMvwyj2DM4GR9++KFddT1ZtWqVcZbs8yZTUFCg119/vd3UCMqDQ7Pxxhv72nXq1EnXrl1rNzFCz4VzgeLzfZ9++mnt2LGj7xiA4/Twww/bhygUTA3sxhtuuEFPP/10veSSS8zxvvvuO7vqevLqq69q3bp1fecrASYlCumUrq1occ25icnCRcPWCbrYHoceeqgxqMPkyiuv9LUJIkrxcCZefvllPfHEE43XmOzleuy4446RN+3vv/829qvdLpn69euH2rd4zVFeOx5rkHBezznyQMHt9sAQH2bH4qQMHjzYKGdyGzoNzJTPPvvMblIo//77r1500UW+85UAs9AHSes2ZfwoQgYIT9IWW2zhqxMEPV+YzJ8/33hndhubKMUjTJKKjVa7du1QxUHuvvvuyKG/S5cudpNCiRoeYeutt9bvv//ebmZk0qRJvvo2XPswZwLlPe2003xtkolyzhDCP8WxuUMgA9lI2lPfGUYZdovzJfnRYSEOhjgUwm5jE6V4hGns+mEQLwuTOXPmRMb3+vfvbzcxwo3HtLDrJ0MvRlwtSIgzhvVyHihuWG+HzVnU/WAojQq70Osx5NvtiolJe0dytsosGQK6YU87tg8BULuNTZTiYcNF9VT2ccI8TgKvUb04QeIgISyD02HXT6ZChQq6dOlSu6kReuGiFC/qgSE8ZdcPImrkQcaOHetrU0xGe4p3YkBhxuDi4nXtueeeZqYB+w+nAyMXJyRIsq14GO62F+kJNuuWW27pa+MRdvPpzXfZZRdf/WS4NmHe8Jo1a0y53SYZvOUwOeuss3z1gzj77LPtpuvJiy++6GtTTAoVr18mtynDmCamRPScKRkMfIKq2As//PCDGRq4KWE9DJJtxWvXrl3oQ1CU4uEohQnmhF0/GRQLsyJI3nvvvcger3LlyvrOO+/YzQqFmZCTTz7Z3IcweGgmT55sN11PcJCKegCKoHCoJYDM+6XsCqUCe2LIkCHGJsI2KI2UJcWjVwuzVbmpdv1ksNHCwhrMcUd9f65POmN3YZIGxTOvhUeai8jHARVKDJ4d85ypCr1deenx8L6ZcQkSArE777yzr43HOeecE3odiP/Z9ZPBoXv//fftZmkXEipSvY4hmIU+nuKtDqhQIvDqvv32W/v7ridcIIK3xK0GDBhgovd08wy9QVKWFA9ILAizERkB6NnsNvSUS5Yssasb+fjjj012i90mGRyeMI84nTJjxgzfuYuJeccFsp2IvB9QodjgaofdMIShADuD2Qu7LV5t2DBT1hSPQPr9999vNy0UPOOrrrrK2Hw4VpdddlmoU4GZcsYZZ/jOYdOgQYOMJSQkC9Oi9rmLyXhP8ZqIyDsBFYpFy5YtI6ecnnvuucgb1qFDh3KjeEDcceLEiZEJE5QRZokSHLKNNtrId3wbZmLCQjEIsz+kUdGzloY0TJuxd4qR2iLyckCFlGE67KGHHrJ/a6HgwaKYdrtkypvioSzYbMw1l0Sw9caMGZPSbAtg8JMqFSZFZbNkkQc9xaskIjMCKqQM6dthEXPklltuiQwFQHlSPK4HSRHJvV2YzWcLCodNx9xscXMAyUoOE6YdS+mNpovHPMVzEv9jV0gZUrGjJBUbpbwoHkpn58Hxu3CisG+Zc2VaioAwae/k7PFJG6b1SD0vamorDGzssNAVvwcnzm5TFKnMkReTRxM6Z4Rx166QEjxFpMxECWse7HY2RSleKjcj14rH8SdMmGA30XHjxhXWYQhu1KiRyYTB/CBThk+OWdwezoaM7aiIwgMPPJCSvehBDh4zFVxXu6wUmF0EPGH3HrtCSjAzETWxjJx//vm+djZRc7XEv8pCj4cyYc/acs8995hFO3b9dINSMZcaJQMHDvS1C4K0+bfeesu0IZ0KDzxNQ/VDyYpHbMWukBJ8GVZNRQnB5CjFYXjiaQyL+H/11Velzk7JhuJx/qCFOdh6JF+SC8dvZXrLbpsuGDnCHmCEVPaDDz7Y1y6ZHj16mCm6ZMFJogNJw3JIhlojm4vInIAKKVPUU4YQWuCGErnHLd9rr73MQhJS26MuFMKNO+SQQ0ysikAqq5+ClCjXisdvw16LEhSTADp5fWQU85332GMPkzhRnGEwDJw4spSjhOt50003GSVlHr1NmzbmN7P8kcB+VIgnDesvJolIAYpX6rc3YqNEfVlPyEmj9+KpS6V+suA1Ey4gPYgsjKCcuFwrHmGlWbNm2U2KFLKvmbVg3fEVV1xhnBCmHVPp5YPAHmZONRWhJ+O3hk3VJcu8efMCr3sxmSoiG6F4W5U2gMxTFhWpT0UYZqMWvCQLTkjQYuZcKx7Qk7NAu7SCQrDoGxOkT58+kaZKEDgGJI+mS3igisonTBHec1Gx1DaeB3OFzEOWRPDEyGQpKgkxWY4//njfd0in4oWtASlK8aB9+/ZmMVE6hR6MdRH2uaLAnmT5QWmEkQlzqGbNmr7jl5BnRaQqSldTRJ4PqFBssMHYPYChNBXB3sGmwKOlPQtlSP+JEnpFYmFBPR6JpWFCQDdVxUNxwqa6MLq32morXxsbvFiSW8MSH0oi9MKphKaSYSqNrOgVK1akNJx6woPH+g1ig2nyZj3wJzZD8VqKyGcBFUoMc4IjR440NguT39h19GqERZggZ3qNFUtkIdttUV7akjDKskeGVYKt7PfBtA/KZbfxYChgTtKGnpSMkVQVr2nTpiYNiYn85OOwWJ0bn8rTTxYzNy45oIvSpvpQhgm2bkniarVq1TKZQ8wikbbFvDrBax4MPomVEhYjYZSsIZZbFjXbVEJmisimKB6rzDKyaQ83mhQgPCc8N7zZqPUKyWBYE1xFOVu0aFHkdg35BGETW8EILOOR77777sabP/roo80GQ9hO1A3rYYOEY9nnLA70ggzD3JO2bduaTzxyAtt23QwwTUSqoHjxVrRphBRye9oKJ4EbbdcFhjG8UJySQYMGGaUqKr0J776kHm8ewB7Ipse7IaAwpgTQcwTF8bBJizNsYTKwBjYoGI0wZKfJw8wFOBfVUDw00C6MKSb0XOyBEiRFpa2HgT0WJOxnhy1s1y8jPCkilVG8eQGFMcUE2zVszQMKaddPhRtvvNE+lBE89HTMcuQIkgTMzAUvu7ALY4oJjlBYuIKhEcfKbhMFQykhkCAhTGPXL0Pc7QWP2cvCLowpJkwbRnmmhCq8eGUURAKox/RUkJAkSrjHbleGKFxzwX5ldmFMMSG2R+5alOB4sJUECZl4ufRqpB/RGxL3O/XUU014hbhnkDCtGDRjU8Z4xFO8uQGFMSWAwC7B7lTEW0sMdvglSNhCjPigfc4yCC9XMRnIHwYUxpQQQiphW4WVRFBKnIm9997bd64ySmFa1O8BhTGlgPQoMnZRmKhU9CghO4X2LPopwx5sECheBRTPLohJI2yjy9wz62PZVCcs6wVhXhobj5y8NOxDl6884Q21vE3PLoxJMwSYcUBIqWL+GcUim5fMajbiZs6UWKC9TWw5pHALi/MCCmNiMoV5STLCq7rtwpiYTFGoeLcGFMbEZAr0zQhbg9qFMTGZ4iZP8UYEFMbEZAr0zUj8aviYbMGLfPbzFK+ViHwaUCkmJt287aW9I7zQjKCeXSkmJp3watqDPaXz5KB46iwmw1yTvD1ZsvD+AbtyTExp4R0qN4cpHVIrsU1oWt7kGBOT2NT9pOQtK6KkbyJZ76+AA6UDnoDvMrWWt5yC87cwEy/CKQXox28i8kvCTFsiIrMSm/Kw3+I5ic6sWILD0UtErhORp0VkaSJvb1kCtrzAIUFB6SXJYmY7W6DsRxH5MpGAsFxEPhGRBSIyVES6i8geiffS9xeR0xIhHV7mBwNFZLCIDEl8Xp6YZuG73JlIJCR9mr+zNJMy8vj52wOJ78Pmf3w36vI9PaYkwQV6KrH/Myvt2FrhFRFZLCJrRORbEfkq8W9+87rEjgtcCzYrpx3n4MW/ryduwM+J38xKKq4Dv5vrBrSnB5iduF68t5Uh6EoRuSBxo64WkVEiclXCJmKnVgL8vMy6oYjsKiI9ReTYRE9ydoLhiTl3jgMjE8fj71xHrvORInKIiPROLOLvk7jWXP+zktpfmphGvSVxbbnmzDZw7w5PtGOHsa4i0lFE2ic+2fyJPVHM27eLkv8DM0hdOwdNpqkAAAAASUVORK5CYII=" alt="Boulangerie Ange">
+      <div class="txt"><b>Boulangerie Ange</b><span id="brandSub">au Grand Epagny</span></div>
+    </div>
+    <a class="head-phone" id="phoneHead" href="#">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></svg>
+      <span class="col"><small>Un doute ? Appelez-nous</small><span id="phoneHeadNum">04 50 24 89 05</span></span>
+    </a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="halo" aria-hidden="true"></div>
+  <div class="wrap">
+    <p class="kicker">🥖 Commande traiteur</p>
+    <h1>Faites votre <em>composition</em>,<br>on cuisine, vous recevez.</h1>
+    <p class="lead">Composez votre buffet en quelques clics : plateaux salés, sucrés, viennoiseries et boissons, faits maison et cuits sur place. On s'occupe du reste — vous profitez de vos invités.</p>
+  </div>
+</section>
+
+<section class="perks"><div class="wrap" id="perks"></div></section>
+
+<nav class="catnav" aria-label="Gammes"><div class="catnav-in" id="catnav"></div></nav>
+
+<main>
+  <div class="wrap" id="catalogue"></div>
+
+  <div class="wrap">
+    <div class="infobox">
+      <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17h4V5H2v12h3M15 17h6v-5l-3-3h-3v8M6 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM17.5 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/></svg></div>
+      <div><h3>Livraison</h3><p><b>30 € TTC</b> dans un rayon maximum de <b>5 km</b> autour de votre boulangerie Ange. Sélectionnez « Livraison » dans le formulaire de commande. Sinon, retrait gratuit en boutique.</p></div>
+    </div>
+
+    <section id="commande">
+      <div id="formWrap">
+        <h2 class="title">Votre commande</h2>
+        <p class="sub">Indiquez le nombre de convives, vérifiez votre sélection, puis laissez-nous vos coordonnées.</p>
+
+        <div id="bakeryPick" class="bakerypick"></div>
+
+        <div class="convives">
+          <label for="convives">Pour combien de personnes ?</label>
+          <input type="number" id="convives" min="1" step="1" placeholder="ex. 25">
+          <span class="hint">Sert à calculer les bouchées et le prix par personne.</span>
+        </div>
+
+        <div class="recap" id="recap"><div class="empty">Votre sélection est vide pour le moment.</div></div>
+
+        <div class="bites" id="bites" style="display:none;">
+          <div class="bite"><div class="l">Bouchées salées</div><div class="v" id="biteSale">0</div></div>
+          <div class="bite"><div class="l">Bouchées sucrées</div><div class="v" id="biteSucre">0</div></div>
+        </div>
+
+        <div class="perperson" id="perPerson">
+          <div class="t">Par personne (<span id="ppN">0</span> convives)</div>
+          <div class="row">
+            <div><b id="ppBites">0</b><span>bouchées / pers.</span></div>
+            <div><b id="ppHT">0,00 €</b><span>HT / pers.</span></div>
+            <div><b id="ppTTC">0,00 €</b><span>TTC / pers.</span></div>
+          </div>
+        </div>
+
+        <div class="totals" id="totals" style="display:none;">
+          <div class="tr" id="deliveryRow" style="display:none;"><span>Livraison</span><span id="deliveryVal">30,00 €</span></div>
+          <div class="tr" id="installationRow" style="display:none;"><span>Installation (estimation)</span><span id="installationVal">30,00 €</span></div>
+          <div class="tr"><span>Total HT</span><span id="htVal">0,00 €</span></div>
+          <div class="tr"><span>TVA</span><span id="tvaVal">0,00 €</span></div>
+          <div class="tr grand"><span class="l">Total TTC</span><span class="v" id="grandTotal">0,00 €</span></div>
+          <div class="tr acompte" id="acompteRow" style="display:none;"><span>Acompte à verser (50 %)</span><span class="v" id="acompteVal">0,00 €</span></div>
+        </div>
+
+        <div class="gate" id="gate">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          <div><b>Minimum de commande : 100 € TTC</b><p>Le minimum de commande traiteur en ligne est de 100 € TTC (hors service). Pour toute commande d'un montant inférieur, merci de contacter directement la boulangerie au <b id="gatePhone">04 50 24 89 05</b>.</p></div>
+        </div>
+
+        <div class="liv-reminder" id="livReminder">📍 Livraison : 30 € TTC dans un rayon maximum de 5 km autour de la boulangerie Ange Grand Epagny.</div>
+
+        <form id="orderForm" novalidate>
+          <div class="frow">
+            <div class="field"><label class="lb" for="prenom">Prénom <span class="req">*</span></label><input type="text" id="prenom" name="prenom" autocomplete="given-name" required></div>
+            <div class="field"><label class="lb" for="nom">Nom <span class="req">*</span></label><input type="text" id="nom" name="nom" autocomplete="family-name" required></div>
+          </div>
+          <div class="frow">
+            <div class="field"><label class="lb" for="email">E-mail <span class="req">*</span></label><input type="email" id="email" name="email" autocomplete="email" required></div>
+            <div class="field"><label class="lb" for="tel">Téléphone <span class="req">*</span></label><input type="tel" id="tel" name="tel" autocomplete="tel" required></div>
+          </div>
+          <div class="field"><label class="lb" for="date">Date souhaitée — retrait ou livraison <span class="req">*</span></label><input type="date" id="date" name="date" required></div>
+
+          <div class="field">
+            <label class="lb">Mode <span class="req">*</span></label>
+            <div class="seg">
+              <label><input type="radio" name="mode" value="Retrait" checked><span>Retrait en boutique</span></label>
+              <label><input type="radio" name="mode" value="Livraison"><span>Livraison (+<span class="livfee">30,00 €</span>)</span></label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="lb">Options</label>
+            <label class="check"><input type="checkbox" id="installation"><span>Forfait installation sur place — estimation +<span class="instfee">30,00 €</span> (à affiner selon l'événement)</span></label>
+          </div>
+
+          <div class="field cond" id="adresseField"><label class="lb" for="adresse">Adresse de livraison <span class="req">*</span></label><textarea id="adresse" name="adresse" placeholder="N°, rue, code postal, ville"></textarea></div>
+
+          <div class="field">
+            <label class="lb">Souhaitez-vous une facture ? <span class="req">*</span></label>
+            <div class="seg">
+              <label><input type="radio" name="facture" value="Non" checked><span>Non</span></label>
+              <label><input type="radio" name="facture" value="Oui"><span>Oui</span></label>
+            </div>
+          </div>
+          <div class="cond" id="factureFields">
+            <div class="field"><label class="lb" for="raison">Raison sociale <span class="req">*</span></label><input type="text" id="raison" name="raison"></div>
+            <div class="field"><label class="lb" for="fadresse">Adresse <span class="req">*</span></label><input type="text" id="fadresse" name="fadresse"></div>
+            <div class="frow">
+              <div class="field"><label class="lb" for="cp">Code postal <span class="req">*</span></label><input type="text" id="cp" name="cp" inputmode="numeric"></div>
+              <div class="field"><label class="lb" for="ville">Ville <span class="req">*</span></label><input type="text" id="ville" name="ville"></div>
+            </div>
+          </div>
+          <div class="field"><label class="lb" for="note">Précisions (facultatif)</label><textarea id="note" name="note" placeholder="Allergies, heure souhaitée, occasion…"></textarea></div>
+
+          <button type="submit" class="submit" id="submitBtn" disabled>Valider et envoyer ma commande</button>
+          <p class="legal">Ce n'est pas un paiement. Un PDF récapitulatif est généré, envoyé à la boulangerie et téléchargé pour vous. Nous vous recontactons pour confirmer.</p>
+        </form>
+      </div>
+
+      <div class="done" id="done">
+        <div class="check"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+        <h2>Commande envoyée&nbsp;!</h2>
+        <p id="doneMsg">Merci, nous avons bien reçu votre demande. Nous revenons vers vous très vite pour la confirmer.</p>
+        <button class="dl" id="dlBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Retélécharger mon PDF</button>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="col"><b>Boulangerie Ange</b><br>au Grand Epagny</div>
+    <div class="col"><b>Contact</b><br>Tél. <a id="phoneFoot" href="#">04 50 24 89 05</a><br><a id="mailFoot" href="#">commandes.ange74@gmail.com</a></div>
+    <div class="col"><b>Traiteur</b><br>Retrait gratuit en boutique<br>Livraison 30 € · rayon 5 km<br>Minimum 100 € TTC · TVA 5,5 %</div>
+  </div>
+</footer>
+
+<div class="bar" id="bar">
+  <div class="bar-in">
+    <div><div class="lbl" id="barCount">0 article</div><div class="tot" id="barTotal">0,00 €</div></div>
+    <button type="button" id="barGo">Finaliser ma commande</button>
+  </div>
+</div>
+
+<script>
+/* =====================================================================
+   RÉGLAGES — Christophe
+   ===================================================================== */
+const CONFIG = {
+  apiEndpoint:"/api/send-order",
+  bakeries:[
+    {id:"epagny", nom:"Grand Epagny", adresse:"300 rue des Peupliers, 74330 Epagny Metz Tessy", phone:"04 50 24 89 05", email:"commandes.ange74@gmail.com"},
+    // 2e boulangerie : ajoute une entrée ici quand elle ouvre :
+    // {id:"autre", nom:"Nom", adresse:"Adresse", phone:"04 ...", email:"..."},
+  ],
+  minOrder:100,          // minimum produits € TTC (hors livraison/installation)
+  acompteRate:0.50,      // acompte 50 % au-delà du minimum
+  leadDays:2,
+  deliveryFee:30, installationFee:30, feeTva:0.055,  // boutons livraison/installation
+  maxLots:40,
+};
+
+const GAMME_COULEURS = {"P'tit Dej":"#E0A100","Salé":"#D2542A","Sucré":"#C85A86","Pains":"#A9772E","Boissons":"#2E9C9C","Accessoires":"#7C7A72"};
+const PALETTE=["#E0A100","#D2542A","#C85A86","#A9772E","#2E9C9C","#7C7A72","#5E7CE0","#6BA644"];
+
+/* CATALOGUE — généré depuis ton Excel
+   gamme | nom | unite(pièce/lot/plaque) | bouchees(par unité) | minimum | tarifTTC | tva | type(sale/sucre/null) | photo */
+const PRODUITS = [
+{
+"gamme": "P'tit Dej",
+"nom": "Mini croissant",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 0.6,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "P'tit Dej",
+"nom": "Mini pain choc",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 0.6,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "P'tit Dej",
+"nom": "Mini chausson pommes",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 0.6,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "P'tit Dej",
+"nom": "Mini pain raisin",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 0.6,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "P'tit Dej",
+"nom": "Mini Griffe d'Ange",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 0.6,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "P'tit Dej",
+"nom": "Chouquettes",
+"unite": "lot",
+"bouchees": 10,
+"minimum": 1,
+"tarifTTC": 2.8,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "P'tit Dej",
+"nom": "Briochette pure beurre",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 1.25,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "P'tit Dej",
+"nom": "Croissant",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 1.2,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "P'tit Dej",
+"nom": "Pain au chocolat",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 1.3,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "P'tit Dej",
+"nom": "Griffe d'Ange",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 2.3,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "P'tit Dej",
+"nom": "Pain aux raisins",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 1.7,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "P'tit Dej",
+"nom": "Delice au chocolat noir",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 0.95,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "P'tit Dej",
+"nom": "Chausson aux pommes",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 1.8,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "P'tit Dej",
+"nom": "Grande brioche pure beurre",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 5.5,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "P'tit Dej",
+"nom": "Madeleine pure beurre",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 1.6,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "P'tit Dej",
+"nom": "Madeleine fourrée choco noisette",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 1.6,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "P'tit Dej",
+"nom": "Bulles d'Ange",
+"unite": "lot",
+"bouchees": 5,
+"minimum": 1,
+"tarifTTC": 3.0,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "P'tit Dej",
+"nom": "Pain fruitier tranché (10 tranches env.)",
+"unite": "lot",
+"bouchees": 10,
+"minimum": 1,
+"tarifTTC": 3.2,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Mini burgers",
+"unite": "lot",
+"bouchees": 15,
+"minimum": 1,
+"tarifTTC": 20.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Mini Croques jambon fromage",
+"unite": "lot",
+"bouchees": 30,
+"minimum": 1,
+"tarifTTC": 25.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Mini wraps thon concombre",
+"unite": "lot",
+"bouchees": 24,
+"minimum": 1,
+"tarifTTC": 20.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Mini wraps légumes grillés",
+"unite": "lot",
+"bouchees": 24,
+"minimum": 1,
+"tarifTTC": 20.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Mini wraps jambon tomates",
+"unite": "lot",
+"bouchees": 24,
+"minimum": 1,
+"tarifTTC": 20.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Mini wraps poulet curry",
+"unite": "lot",
+"bouchees": 24,
+"minimum": 1,
+"tarifTTC": 20.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Mini wraps jambon cru",
+"unite": "lot",
+"bouchees": 24,
+"minimum": 1,
+"tarifTTC": 20.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Mini wraps saumon",
+"unite": "lot",
+"bouchees": 24,
+"minimum": 1,
+"tarifTTC": 20.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Mini quiches fromage",
+"unite": "lot",
+"bouchees": 24,
+"minimum": 1,
+"tarifTTC": 30.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Mini quiches légumes",
+"unite": "lot",
+"bouchees": 24,
+"minimum": 1,
+"tarifTTC": 30.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Mini quiches lorraine",
+"unite": "lot",
+"bouchees": 24,
+"minimum": 1,
+"tarifTTC": 30.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Mini quiches pizza",
+"unite": "lot",
+"bouchees": 24,
+"minimum": 1,
+"tarifTTC": 30.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Mini quiches saumon",
+"unite": "lot",
+"bouchees": 24,
+"minimum": 1,
+"tarifTTC": 30.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Aper'Ange saumon crème aneth",
+"unite": "lot",
+"bouchees": 16,
+"minimum": 1,
+"tarifTTC": 14.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Aper'Ange jambon chèvre",
+"unite": "lot",
+"bouchees": 16,
+"minimum": 1,
+"tarifTTC": 14.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Aper'Ange thon mayo",
+"unite": "lot",
+"bouchees": 16,
+"minimum": 1,
+"tarifTTC": 14.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Malicettes jambon",
+"unite": "lot",
+"bouchees": 9,
+"minimum": 1,
+"tarifTTC": 15.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Malicettes thon concombre",
+"unite": "lot",
+"bouchees": 9,
+"minimum": 1,
+"tarifTTC": 15.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Malicettes saumon fumé",
+"unite": "lot",
+"bouchees": 9,
+"minimum": 1,
+"tarifTTC": 15.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Malicettes poulet curry",
+"unite": "lot",
+"bouchees": 9,
+"minimum": 1,
+"tarifTTC": 15.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Navettes thon concombre",
+"unite": "lot",
+"bouchees": 12,
+"minimum": 1,
+"tarifTTC": 20.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Navettes saumon fumé",
+"unite": "lot",
+"bouchees": 12,
+"minimum": 1,
+"tarifTTC": 20.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Navettes poulet curry",
+"unite": "lot",
+"bouchees": 12,
+"minimum": 1,
+"tarifTTC": 20.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Navettes pesto chèvre",
+"unite": "lot",
+"bouchees": 12,
+"minimum": 1,
+"tarifTTC": 20.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Navettes jambon",
+"unite": "lot",
+"bouchees": 12,
+"minimum": 1,
+"tarifTTC": 20.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Plaque quiche ratatouille chèvre x48",
+"unite": "plaque",
+"bouchees": 48,
+"minimum": 1,
+"tarifTTC": 50.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Plaque quiche thon frita x48",
+"unite": "plaque",
+"bouchees": 48,
+"minimum": 1,
+"tarifTTC": 50.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Plaque quiche lorraine x48",
+"unite": "plaque",
+"bouchees": 48,
+"minimum": 1,
+"tarifTTC": 50.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Plaque pizza margarita",
+"unite": "plaque",
+"bouchees": 48,
+"minimum": 1,
+"tarifTTC": 25.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Plaque pizza royale",
+"unite": "plaque",
+"bouchees": 48,
+"minimum": 1,
+"tarifTTC": 30.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Plaque pizza kebab",
+"unite": "plaque",
+"bouchees": 48,
+"minimum": 1,
+"tarifTTC": 30.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Plaque pizza chèvre miel",
+"unite": "plaque",
+"bouchees": 48,
+"minimum": 1,
+"tarifTTC": 30.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Plaque pizza 4 fromages",
+"unite": "plaque",
+"bouchees": 48,
+"minimum": 1,
+"tarifTTC": 30.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Mini verrine crème saumon aneth",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 5,
+"tarifTTC": 1.8,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Mini verrine Thon mayo concombre",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 5,
+"tarifTTC": 1.6,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Mini verrine taboulé Légumes grillés",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 5,
+"tarifTTC": 1.5,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Mini Feuilletés cocktail",
+"unite": "lot",
+"bouchees": 32,
+"minimum": 1,
+"tarifTTC": 40.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Plateau charcuterie pour 10 personnes",
+"unite": "lot",
+"bouchees": 10,
+"minimum": 1,
+"tarifTTC": 26.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Plateau 4 fromages pour 10 personnes",
+"unite": "lot",
+"bouchees": 10,
+"minimum": 1,
+"tarifTTC": 22.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Salé",
+"nom": "Plateau légumes pour 10 personnes",
+"unite": "lot",
+"bouchees": 10,
+"minimum": 1,
+"tarifTTC": 18.0,
+"tva": 0.055,
+"type": "sale",
+"photo": null
+},
+{
+"gamme": "Sucré",
+"nom": "Bulles d'Ange",
+"unite": "lot",
+"bouchees": 5,
+"minimum": 1,
+"tarifTTC": 3.0,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "Sucré",
+"nom": "Mini Verrines (selon envie du chef)",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 5,
+"tarifTTC": 1.34,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "Sucré",
+"nom": "Mini Verrines crémeux chocolat",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 5,
+"tarifTTC": 1.34,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "Sucré",
+"nom": "Mini Verrines citron biscuit",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 5,
+"tarifTTC": 1.34,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "Sucré",
+"nom": "Mini Verrines perles de chia",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 5,
+"tarifTTC": 1.34,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "Sucré",
+"nom": "Mini Verrines tiramisu",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 5,
+"tarifTTC": 1.34,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "Sucré",
+"nom": "Mini mignardises  (selon envie du chef)",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 5,
+"tarifTTC": 1.0,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "Sucré",
+"nom": "Mini mignardises citron meringué",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 5,
+"tarifTTC": 1.0,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "Sucré",
+"nom": "Mini mignardises multifruit",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 5,
+"tarifTTC": 1.0,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "Sucré",
+"nom": "Mini mignardises chocolat",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 5,
+"tarifTTC": 1.0,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "Sucré",
+"nom": "Mini mignardises praliné",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 5,
+"tarifTTC": 1.0,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "Sucré",
+"nom": "Plaque fondant chocolat x24 (4x8cm)",
+"unite": "plaque",
+"bouchees": 24,
+"minimum": 1,
+"tarifTTC": 50.0,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "Sucré",
+"nom": "Plaque fondant chocolat x48 (4x4cm)",
+"unite": "plaque",
+"bouchees": 48,
+"minimum": 1,
+"tarifTTC": 50.0,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "Sucré",
+"nom": "Plaque tarte feuilletée fraises (selon saison)",
+"unite": "plaque",
+"bouchees": 48,
+"minimum": 1,
+"tarifTTC": 50.0,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "Sucré",
+"nom": "Plaque tarte feuilletée fruits de saison",
+"unite": "plaque",
+"bouchees": 48,
+"minimum": 1,
+"tarifTTC": 50.0,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "Sucré",
+"nom": "Plaque tarte feuilletée pommes x24",
+"unite": "plaque",
+"bouchees": 24,
+"minimum": 1,
+"tarifTTC": 35.0,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "Sucré",
+"nom": "Plaque tarte feuilletée pommes x48",
+"unite": "plaque",
+"bouchees": 48,
+"minimum": 1,
+"tarifTTC": 35.0,
+"tva": 0.055,
+"type": "sucre",
+"photo": null
+},
+{
+"gamme": "Pains",
+"nom": "Baguette au levain maison Ange",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 1.0,
+"tva": 0.055,
+"type": null,
+"photo": null
+},
+{
+"gamme": "Pains",
+"nom": "Baguettine céréales au levain maison Ange",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 1.3,
+"tva": 0.055,
+"type": null,
+"photo": null
+},
+{
+"gamme": "Pains",
+"nom": "Pavé Ange",
+"unite": "lot",
+"bouchees": 10,
+"minimum": 1,
+"tarifTTC": 2.7,
+"tva": 0.055,
+"type": null,
+"photo": null
+},
+{
+"gamme": "Pains",
+"nom": "Pain au mais",
+"unite": "lot",
+"bouchees": 10,
+"minimum": 1,
+"tarifTTC": 3.2,
+"tva": 0.055,
+"type": null,
+"photo": null
+},
+{
+"gamme": "Pains",
+"nom": "Pain aux noix",
+"unite": "lot",
+"bouchees": 10,
+"minimum": 1,
+"tarifTTC": 2.4,
+"tva": 0.055,
+"type": null,
+"photo": null
+},
+{
+"gamme": "Pains",
+"nom": "Pain aux olives",
+"unite": "lot",
+"bouchees": 10,
+"minimum": 1,
+"tarifTTC": 2.4,
+"tva": 0.055,
+"type": null,
+"photo": null
+},
+{
+"gamme": "Pains",
+"nom": "Pain Burger",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 0.95,
+"tva": 0.055,
+"type": null,
+"photo": null
+},
+{
+"gamme": "Pains",
+"nom": "Pain Oriental",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 1.9,
+"tva": 0.055,
+"type": null,
+"photo": null
+},
+{
+"gamme": "Boissons",
+"nom": "Expresso 12cl",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 1.6,
+"tva": 0.055,
+"type": null,
+"photo": null
+},
+{
+"gamme": "Boissons",
+"nom": "Chocolat chaud onctueux 24cl",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 3.1,
+"tva": 0.055,
+"type": null,
+"photo": null
+},
+{
+"gamme": "Boissons",
+"nom": "Thé Kusmi Tea",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 2.5,
+"tva": 0.055,
+"type": null,
+"photo": null
+},
+{
+"gamme": "Boissons",
+"nom": "Eau plate 50cl",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 1.6,
+"tva": 0.055,
+"type": null,
+"photo": null
+},
+{
+"gamme": "Boissons",
+"nom": "Eau plate 1,5L",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 2.9,
+"tva": 0.055,
+"type": null,
+"photo": null
+},
+{
+"gamme": "Boissons",
+"nom": "Eau pétillante 50cl",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 2.2,
+"tva": 0.055,
+"type": null,
+"photo": null
+},
+{
+"gamme": "Boissons",
+"nom": "Eau pétillante 1L",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 3.5,
+"tva": 0.055,
+"type": null,
+"photo": null
+},
+{
+"gamme": "Boissons",
+"nom": "Soda 1,5L",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 5.0,
+"tva": 0.055,
+"type": null,
+"photo": null
+},
+{
+"gamme": "Boissons",
+"nom": "Jus de fruit pressé Kookabara 1L",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 6.0,
+"tva": 0.055,
+"type": null,
+"photo": null
+},
+{
+"gamme": "Boissons",
+"nom": "Jus de fruit pressé Kookabara 25cl",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 3.0,
+"tva": 0.055,
+"type": null,
+"photo": null
+},
+{
+"gamme": "Accessoires",
+"nom": "Serviettes",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 0.01,
+"tva": 0.055,
+"type": null,
+"photo": null
+},
+{
+"gamme": "Accessoires",
+"nom": "Gobelet 12cl (expresso)",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 0.1,
+"tva": 0.055,
+"type": null,
+"photo": null
+},
+{
+"gamme": "Accessoires",
+"nom": "Gobelet 24cl (thé et cafés si allongés)",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 0.1,
+"tva": 0.055,
+"type": null,
+"photo": null
+},
+{
+"gamme": "Accessoires",
+"nom": "Gobelet 36cl (jus de fruit)",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 0.1,
+"tva": 0.055,
+"type": null,
+"photo": null
+},
+{
+"gamme": "Accessoires",
+"nom": "Touillettes",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 0.02,
+"tva": 0.055,
+"type": null,
+"photo": null
+},
+{
+"gamme": "Accessoires",
+"nom": "Sucrettes",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 0.05,
+"tva": 0.055,
+"type": null,
+"photo": null
+},
+{
+"gamme": "Accessoires",
+"nom": "Cuillères",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 0.05,
+"tva": 0.055,
+"type": null,
+"photo": null
+},
+{
+"gamme": "Accessoires",
+"nom": "Plateau cartonné noir",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 2.0,
+"tva": 0.055,
+"type": null,
+"photo": null
+},
+{
+"gamme": "Accessoires",
+"nom": "Nappe 2m papier fête noir",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 4.0,
+"tva": 0.055,
+"type": null,
+"photo": null
+},
+{
+"gamme": "Accessoires",
+"nom": "Nappe 2m papier renforcé noir",
+"unite": "pièce",
+"bouchees": 1,
+"minimum": 1,
+"tarifTTC": 8.0,
+"tva": 0.055,
+"type": null,
+"photo": null
+}
+];
+
+/* =====================================================================
+   Moteur
+   ===================================================================== */
+const euro = n => n.toLocaleString('fr-FR',{style:'currency',currency:'EUR'});
+const state = new Map();  // index -> quantité (pièces ou lots/plaques)
+let lastPDF=null;
+
+const GAMMES = [...new Set(PRODUITS.map(p=>p.gamme))].map((nom,idx)=>({
+  nom, id:'g'+idx, couleur:GAMME_COULEURS[nom]||PALETTE[idx%PALETTE.length]
+}));
+
+document.querySelectorAll('.livfee').forEach(el=>el.textContent=euro(CONFIG.deliveryFee));
+document.querySelectorAll('.instfee').forEach(el=>el.textContent=euro(CONFIG.installationFee));
+deliveryVal.textContent=euro(CONFIG.deliveryFee); installationVal.textContent=euro(CONFIG.installationFee);
+
+let bakery=CONFIG.bakeries[0];
+function applyBakery(b){
+  bakery=b;
+  const tel="tel:+33"+b.phone.replace(/\D/g,'').slice(1);
+  phoneHead.href=tel; phoneHeadNum.textContent=b.phone; gatePhone.textContent=b.phone;
+  phoneFoot.href=tel; phoneFoot.textContent=b.phone;
+  mailFoot.href="mailto:"+b.email; mailFoot.textContent=b.email;
+  const bs=document.getElementById('brandSub'); if(bs) bs.textContent="au "+b.nom;
+  livReminder.innerHTML=`\uD83D\uDCCD Livraison : ${euro(CONFIG.deliveryFee)} TTC dans un rayon maximum de 5 km autour de la boulangerie Ange ${b.nom}.`;
+  render();
+}
+const bp=document.getElementById('bakeryPick');
+if(CONFIG.bakeries.length>1){
+  bp.innerHTML=`<div class="bk-title">Votre boulangerie</div><div class="seg">`+CONFIG.bakeries.map((b,i)=>`<label><input type="radio" name="bakery" value="${i}" ${i===0?'checked':''}><span>${b.nom}</span></label>`).join('')+`</div>`;
+  bp.querySelectorAll('input[name=bakery]').forEach(rd=>rd.addEventListener('change',e=>applyBakery(CONFIG.bakeries[+e.target.value])));
+}else{
+  bp.innerHTML=`<div class="bk-single"><div class="bk-ic">\uD83D\uDCCD</div><div><b>Boulangerie Ange \u2014 ${bakery.nom}</b><span>${bakery.adresse}</span></div></div>`;
+}
+applyBakery(bakery);
+
+const PERKS=[
+  ["Fait maison","Pétri, façonné et cuit sur place.","M12 2 3 7v10l9 5 9-5V7l-9-5Z"],
+  ["Produits frais","Préparés le matin, comme en boutique.","M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"],
+  ["Prix justes","La qualité Ange, à prix accessible.","M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"],
+  ["Tous événements","Réunions, anniversaires, pots pro ou privés.","M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"],
+  ["Vous recevez","Profitez de vos invités, on gère le buffet.","M3 11l19-9-9 19-2-8-8-2Z"],
+];
+perks.innerHTML=PERKS.map(p=>`<div class="perk"><div class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${p[2]}"/></svg></div><div><b>${p[0]}</b><span>${p[1]}</span></div></div>`).join('');
+
+GAMMES.forEach(g=>{
+  const items=PRODUITS.map((p,i)=>({...p,i})).filter(p=>p.gamme===g.nom);
+  if(!items.length) return;
+  const pill=document.createElement('button'); pill.className='pill'; pill.style.setProperty('--c',g.couleur); pill.dataset.target=g.id;
+  pill.innerHTML=`<span class="dot"></span>${g.nom}`;
+  pill.onclick=()=>document.getElementById('sec-'+g.id).scrollIntoView({behavior:'smooth',block:'start'});
+  catnav.appendChild(pill);
+
+  const sec=document.createElement('section'); sec.className='cat'; sec.id='sec-'+g.id; sec.style.setProperty('--c',g.couleur);
+  sec.innerHTML=`<div class="cat-head"><span class="b"></span><h2>${g.nom}</h2><span class="tag">${items.length} produit${items.length>1?'s':''}</span></div><div class="grid"></div>`;
+  const grid=sec.querySelector('.grid');
+  items.forEach(p=>{
+    const card=document.createElement('article'); card.className='card'; card.style.setProperty('--c',g.couleur); card.dataset.i=p.i;
+    const isPiece=p.unite==='pièce';
+    const uLabel=isPiece?'Pièces':(p.unite==='plaque'?'Plaques':'Lots');
+    const opts=`<option value="0">0</option>`+Array.from({length:CONFIG.maxLots},(_,k)=>`<option value="${k+1}">${k+1}</option>`).join('');
+    const control=isPiece
+      ? `<input type="number" id="q${p.i}" data-i="${p.i}" data-min="${p.minimum}" class="qnum" min="0" step="1" inputmode="numeric" placeholder="0" aria-label="Nombre de pièces pour ${p.nom}">`
+      : `<select id="q${p.i}" data-i="${p.i}" aria-label="Quantité pour ${p.nom}">${opts}</select>`;
+    let hint='';
+    if(p.unite==='plaque') hint=`1 plaque = ${p.bouchees} bouchées`;
+    else if(p.unite==='lot') hint=`1 lot = ${p.bouchees} bouchée${p.bouchees>1?'s':''}`;
+    else if(p.minimum>1) hint=`min. ${p.minimum} pièces`;
+    const badge=hint?`<span class="minq">${hint}</span>`:'';
+    const photo=p.photo?`<div class="photo"><img src="${p.photo}" alt="${p.nom}" loading="lazy"></div>`
+      :`<div class="photo"><div class="ph"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.8"/><path d="m21 15-5-5L5 21"/></svg><span>Photo à venir</span></div></div>`;
+    const htU=p.tarifTTC/(1+p.tva), tvaU=p.tarifTTC-htU;
+    const unitWord=isPiece?'pièce':p.unite;
+    card.innerHTML=`${photo}<div class="card-body"><h3>${p.nom}</h3>
+      <div class="meta"><div class="price"><span class="ttc">${euro(p.tarifTTC)} <small>TTC / ${unitWord}</small></span><span class="htline">HT ${euro(htU)} · TVA ${euro(tvaU)} (${(p.tva*100).toLocaleString('fr-FR')} %)</span></div>${badge}</div>
+      <div class="card-foot"><div class="qty"><label for="q${p.i}">${uLabel}</label>${control}</div><div class="subtotal zero" id="s${p.i}">0,00 €</div></div></div>`;
+    grid.appendChild(card);
+  });
+  catalogue.appendChild(sec);
+});
+
+function onQty(t){
+  if(!t.dataset || t.dataset.i===undefined) return;
+  if(t.tagName!=='SELECT' && !(t.tagName==='INPUT'&&t.type==='number')) return;
+  const i=+t.dataset.i; let q=parseInt(t.value)||0; if(q<0)q=0;
+  const mn=+t.dataset.min||1; if(q>0&&q<mn){ q=mn; t.value=mn; }
+  if(q>0)state.set(i,q); else state.delete(i);
+  const p=PRODUITS[i],sub=q*p.tarifTTC,el=document.getElementById('s'+i);
+  el.textContent=euro(sub); el.classList.toggle('zero',q===0);
+  t.closest('.card').classList.toggle('active',q>0);
+  render();
+}
+catalogue.addEventListener('input',e=>onQty(e.target));
+catalogue.addEventListener('change',e=>onQty(e.target));
+
+function compute(){
+  let ttc=0,ht=0,tva=0,minBase=0,count=0,bSale=0,bSucre=0; const lignes=[];
+  for(const [i,qty] of state){
+    const p=PRODUITS[i],sub=qty*p.tarifTTC,subHT=sub/(1+p.tva);
+    ttc+=sub; ht+=subHT; tva+=sub-subHT; count+=qty; minBase+=sub;
+    if(p.type){ const b=qty*p.bouchees; if(p.type==='sale')bSale+=b; else bSucre+=b; }
+    lignes.push({p,qty,sub});
+  }
+  const livraison=(document.querySelector('input[name=mode]:checked')?.value)==='Livraison';
+  const installation=!!(document.getElementById('installation')&&document.getElementById('installation').checked);
+  const delFee=livraison?CONFIG.deliveryFee:0, instFee=installation?CONFIG.installationFee:0;
+  const extra=delFee+instFee, extraHT=extra/(1+CONFIG.feeTva);
+  return {ttc,ht,tva,minBase,count,bSale,bSucre,lignes,livraison,installation,delFee,instFee,
+    grandTTC:ttc+extra, grandHT:ht+extraHT, grandTVA:tva+(extra-extraHT)};
+}
+
+function render(){
+  const c=compute(); const conv=parseInt(convives.value)||0; const totalBites=c.bSale+c.bSucre;
+
+  const recap=document.getElementById('recap'); recap.innerHTML='';
+  if(!c.lignes.length){ recap.innerHTML='<div class="empty">Votre sélection est vide pour le moment.</div>'; }
+  else c.lignes.forEach(({p,qty,sub})=>{
+    const detail=p.unite==='pièce'?`${qty} × ${euro(p.tarifTTC)}`:`${qty} ${p.unite}${qty>1?'s':''} × ${euro(p.tarifTTC)}`;
+    const r=document.createElement('div'); r.className='rline';
+    r.innerHTML=`<div class="n">${p.nom}<small>${detail}</small></div><div class="a">${euro(sub)}</div>`;
+    recap.appendChild(r);
+  });
+
+  bites.style.display=c.lignes.length?'flex':'none'; biteSale.textContent=c.bSale; biteSucre.textContent=c.bSucre;
+
+  const pp=document.getElementById('perPerson');
+  if(c.lignes.length&&conv>0){ pp.classList.add('show'); ppN.textContent=conv;
+    ppBites.textContent=(totalBites/conv).toFixed(1).replace('.',',');
+    ppHT.textContent=euro(c.ht/conv); ppTTC.textContent=euro(c.ttc/conv);   // par personne = produits (hors frais)
+  } else pp.classList.remove('show');
+
+  totals.style.display=c.lignes.length?'block':'none';
+  deliveryRow.style.display=c.delFee?'flex':'none';
+  installationRow.style.display=c.instFee?'flex':'none';
+  htVal.textContent=euro(c.grandHT); tvaVal.textContent=euro(c.grandTVA); grandTotal.textContent=euro(c.grandTTC);
+  const showAcompte=c.minBase>CONFIG.minOrder;
+  acompteRow.style.display=showAcompte?'flex':'none'; acompteVal.textContent=euro(c.grandTTC*CONFIG.acompteRate);
+
+  adresseField.classList.toggle('show',c.livraison); livReminder.classList.toggle('show',c.livraison); adresse.required=c.livraison;
+
+  bar.classList.toggle('show',c.count>0); barTotal.textContent=euro(c.grandTTC); barCount.textContent=c.count+' article'+(c.count>1?'s':'');
+
+  const under=c.minBase>0&&c.minBase<CONFIG.minOrder;
+  gate.classList.toggle('show',under); submitBtn.disabled=c.minBase<CONFIG.minOrder;
+}
+
+const dmin=new Date(); dmin.setDate(dmin.getDate()+CONFIG.leadDays);
+document.getElementById('date').min=dmin.toISOString().split('T')[0];
+convives.addEventListener('input',render);
+barGo.onclick=()=>document.getElementById('commande').scrollIntoView({behavior:'smooth',block:'start'});
+document.querySelectorAll('input[name=mode]').forEach(r=>r.addEventListener('change',render));
+const instBox=document.getElementById('installation'); if(instBox) instBox.addEventListener('change',render);
+document.querySelectorAll('input[name=facture]').forEach(r=>r.addEventListener('change',()=>{
+  const oui=document.querySelector('input[name=facture]:checked').value==='Oui';
+  factureFields.classList.toggle('show',oui); ['raison','fadresse','cp','ville'].forEach(id=>document.getElementById(id).required=oui);
+}));
+const spy=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ const id=e.target.id.replace('sec-','');
+  document.querySelectorAll('.pill').forEach(p=>p.classList.toggle('active',p.dataset.target===id)); }}),{rootMargin:'-134px 0px -70% 0px'});
+document.querySelectorAll('.cat').forEach(s=>spy.observe(s));
+
+/* ---------- PDF ---------- */
+function buildPDF(d){
+  if(!window.jspdf) return null;
+  const {jsPDF}=window.jspdf; const doc=new jsPDF({unit:'mm',format:'a4'}); const W=210,M=16; let y;
+  doc.setFillColor(11,11,10); doc.rect(0,0,W,30,'F');
+  doc.setFillColor(205,219,0); doc.circle(W-24,15,7,'F');
+  doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(19); doc.text('Boulangerie Ange',M,15);
+  doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.text('au Grand Epagny — Commande traiteur',M,22);
+  doc.setFontSize(8.5); doc.text(d.ref,W-M,25,{align:'right'}); doc.text(d.dateEmission,W-M,29,{align:'right'});
+  y=42; doc.setTextColor(26,26,22);
+  doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.text('Client',M,y);
+  doc.setFont('helvetica','normal'); doc.setFontSize(10); y+=6;
+  doc.text(`${d.prenom} ${d.nom}`,M,y); y+=5; doc.text(`${d.email}  ·  ${d.tel}`,M,y); y+=5;
+  doc.text(`${d.mode} — souhaité le ${d.dateSouhaitee}${d.convives?`  ·  ${d.convives} personnes`:''}`,M,y);
+  y+=5; doc.text(`Boulangerie : ${d.bakeryNom} — ${d.bakeryAdresse}`,M,y);
+  if(d.adresse){ y+=5; const a=doc.splitTextToSize('Livraison : '+d.adresse,W-2*M); doc.text(a,M,y); y+=(a.length-1)*5; }
+  y+=9;
+  const cQ=M,cD=M+14,cP=W-M-46,cT=W-M;
+  doc.setFillColor(243,247,207); doc.rect(M,y-5,W-2*M,8,'F');
+  doc.setFont('helvetica','bold'); doc.setFontSize(9);
+  doc.text('Qté',cQ,y); doc.text('Désignation',cD,y); doc.text('P.U. TTC',cP,y,{align:'right'}); doc.text('Total TTC',cT,y,{align:'right'});
+  y+=7; doc.setFont('helvetica','normal'); doc.setFontSize(9.5);
+  d.lignes.forEach(l=>{ if(y>258){doc.addPage();y=20;} const des=doc.splitTextToSize(l.des,cP-cD-4);
+    doc.text(String(l.qty),cQ,y); doc.text(des,cD,y); doc.text(euro(l.pu),cP,y,{align:'right'}); doc.text(euro(l.tot),cT,y,{align:'right'});
+    y+=Math.max(des.length*4.6,6)+1.5; doc.setDrawColor(233,228,214); doc.line(M,y-3,W-M,y-3); });
+  y+=4;
+  const rr=(lab,val,bold,size)=>{ doc.setFontSize(size||10); doc.setFont('helvetica',bold?'bold':'normal'); doc.text(lab,cP,y,{align:'right'}); doc.text(val,cT,y,{align:'right'}); y+=6; };
+  if(d.delFee) rr('Livraison TTC',euro(d.delFee));
+  if(d.instFee) rr('Installation TTC',euro(d.instFee));
+  rr('Total HT',euro(d.ht)); rr('TVA',euro(d.tva));
+  doc.setTextColor(60,66,0); rr('TOTAL TTC',euro(d.ttc),true,12); doc.setTextColor(26,26,22);
+  if(d.acompte>0){ doc.setTextColor(91,99,0); rr('Acompte à verser (50 %)',euro(d.acompte),true,11); doc.setTextColor(26,26,22); }
+  y+=2; doc.setFontSize(9.5); doc.setFont('helvetica','normal');
+  doc.text(`Bouchées salées : ${d.bSale}   ·   Bouchées sucrées : ${d.bSucre}`,M,y); y+=5;
+  if(d.convives){ doc.text(`Par personne : ${d.ppBites} bouchées · ${euro(d.htProd/d.convives)} HT · ${euro(d.ttcProd/d.convives)} TTC`,M,y); y+=7; } else y+=2;
+  if(d.facture){ doc.setFont('helvetica','bold'); doc.text('Facturation',M,y); y+=5; doc.setFont('helvetica','normal');
+    doc.text(`${d.facture.raison} — ${d.facture.adresse}, ${d.facture.cp} ${d.facture.ville}`,M,y); y+=7; }
+  if(d.note){ doc.setFont('helvetica','italic'); doc.setFontSize(9); const n=doc.splitTextToSize('Précisions : '+d.note,W-2*M); doc.text(n,M,y); }
+  doc.setDrawColor(233,228,214); doc.line(M,283,W-M,283);
+  doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(110,106,94);
+  doc.text(`Boulangerie Ange ${d.bakeryNom} · ${d.bakeryPhone} · ${d.bakeryEmail}`,W/2,289,{align:'center'});
+  doc.text('Devis à confirmer par la boulangerie. Un acompte de 50 % est demandé. Ce document ne vaut pas paiement.',W/2,293,{align:'center'});
+  return doc;
+}
+
+/* ---------- Soumission ---------- */
+document.getElementById('orderForm').addEventListener('submit',async e=>{
+  e.preventDefault(); const f=e.target; const c=compute();
+  if(c.minBase<CONFIG.minOrder){ gate.scrollIntoView({behavior:'smooth',block:'center'}); return; }
+  if(!f.checkValidity()){ f.reportValidity(); return; }
+
+  const conv=parseInt(convives.value)||0;
+  const acompte=c.minBase>CONFIG.minOrder?c.grandTTC*CONFIG.acompteRate:0;
+  const now=new Date(), pad=n=>String(n).padStart(2,'0');
+  const d={
+    ref:`CMD-${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}`,
+    dateEmission:now.toLocaleDateString('fr-FR'),
+    prenom:f.prenom.value,nom:f.nom.value,email:f.email.value,tel:f.tel.value,
+    bakeryNom:bakery.nom, bakeryAdresse:bakery.adresse, bakeryPhone:bakery.phone, bakeryEmail:bakery.email,
+    mode:c.livraison?'Livraison':'Retrait', adresse:c.livraison?f.adresse.value:'',
+    dateSouhaitee:new Date(f.date.value).toLocaleDateString('fr-FR'),
+    convives:conv, delFee:c.delFee, instFee:c.instFee,
+    ttc:c.grandTTC, ht:c.grandHT, tva:c.grandTVA, ttcProd:c.ttc, htProd:c.ht,
+    acompte, bSale:c.bSale, bSucre:c.bSucre,
+    ppBites:conv?((c.bSale+c.bSucre)/conv).toFixed(1).replace('.',','):'0',
+    note:f.note.value,
+    facture:f.facture.value==='Oui'?{raison:f.raison.value,adresse:f.fadresse.value,cp:f.cp.value,ville:f.ville.value}:null,
+    lignes:c.lignes.map(({p,qty,sub})=>({qty,des:p.nom+(p.unite!=='pièce'?` (${p.unite} de ${p.bouchees})`:''),pu:p.tarifTTC,tot:sub})),
+  };
+
+  const btn=submitBtn; btn.disabled=true; btn.textContent='Envoi…';
+  let pdfB64=null;
+  try{ const doc=buildPDF(d); if(doc){ lastPDF=doc; doc.save(`Commande-traiteur-Ange-${d.nom}.pdf`); pdfB64=doc.output('datauristring').split('base64,')[1]; } }catch(err){ console.warn(err); }
+
+  const corps=`Réf : ${d.ref}\nBoulangerie : ${d.bakeryNom}\nClient : ${d.prenom} ${d.nom}\nEmail : ${d.email}\nTél : ${d.tel}\n`+
+    `Mode : ${d.mode}${d.adresse?' — '+d.adresse:''}\nDate souhaitée : ${d.dateSouhaitee}${d.convives?`\nConvives : ${d.convives}`:''}\n`+
+    (d.facture?`Facture : ${d.facture.raison}, ${d.facture.adresse}, ${d.facture.cp} ${d.facture.ville}\n`:'')+
+    `\nDÉTAIL :\n`+d.lignes.map(l=>`• ${l.qty} × ${l.des} (${euro(l.pu)}) = ${euro(l.tot)}`).join('\n')+
+    (d.delFee?`\n• Livraison = ${euro(d.delFee)}`:'')+(d.instFee?`\n• Installation = ${euro(d.instFee)}`:'')+
+    `\n\nTotal HT : ${euro(d.ht)}\nTVA : ${euro(d.tva)}\nTOTAL TTC : ${euro(d.ttc)}`+
+    (d.acompte?`\nAcompte 50 % : ${euro(d.acompte)}`:'')+
+    `\nBouchées salées : ${d.bSale} · sucrées : ${d.bSucre}`+(d.convives?` · ${d.ppBites} bouchées/pers.`:'')+
+    (d.note?`\n\nPrécisions : ${d.note}`:'');
+
+  try{
+    const r=await fetch(CONFIG.apiEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ref:d.ref,clientName:`${d.prenom} ${d.nom}`,bakeryName:d.bakeryNom,bakeryEmail:d.bakeryEmail,replyTo:d.email,text:corps,pdfBase64:pdfB64,filename:`Commande-${d.ref}.pdf`})});
+    if(!r.ok) throw new Error('api');
+  }catch(err){ console.warn('Envoi API indisponible (normal hors Vercel) :',err); }
+
+  formWrap.style.display='none'; bar.classList.remove('show');
+  if(d.acompte>0) doneMsg.innerHTML=`Merci ! Votre commande et son PDF nous ont été transmis. Un <b>acompte de 50 % (${euro(d.acompte)})</b> sera demandé pour la valider. Nous vous recontactons très vite.`;
+  document.getElementById('done').classList.add('show');
+  document.getElementById('commande').scrollIntoView({behavior:'smooth',block:'start'});
+});
+dlBtn.onclick=()=>{ if(lastPDF)lastPDF.save('Commande-traiteur-Ange.pdf'); };
+
+render();
+
+</script>
+</body>
+</html>
