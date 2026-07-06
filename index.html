@@ -67,9 +67,10 @@
   .cat-head h2{font-family:"Fraunces",serif; font-weight:600; font-size:27px; letter-spacing:-.01em; margin:0;}
   .cat-head .tag{margin-left:auto; font-size:12px; font-weight:800; color:#fff; background:var(--c); padding:5px 11px; border-radius:999px; text-transform:uppercase; letter-spacing:.04em;}
 
-  .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
-  @media(max-width:860px){ .grid{grid-template-columns:repeat(2,1fr);} }
-  @media(max-width:560px){ .grid{grid-template-columns:1fr;} }
+  .grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px;}
+  @media(max-width:1000px){ .grid{grid-template-columns:repeat(3,1fr);} }
+  @media(max-width:720px){ .grid{grid-template-columns:repeat(2,1fr);} }
+  @media(max-width:500px){ .grid{grid-template-columns:1fr;} }
   .card{background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; display:flex; flex-direction:column; transition:border-color .15s, box-shadow .15s;}
   .card.active{border-color:var(--c); box-shadow:var(--shadow);}
   .photo{aspect-ratio:16/10; background:var(--vert-soft); display:grid; place-items:center; border-bottom:1px solid var(--line);}
@@ -199,6 +200,21 @@
   .bar .tot{font-family:"Fraunces",serif; font-weight:700; font-size:25px; color:var(--vert); line-height:1;}
   .bar button{font-family:inherit; font-weight:900; font-size:15.5px; color:var(--noir); background:var(--vert); border:0; border-radius:12px; padding:13px 22px; cursor:pointer;}
   @media(prefers-reduced-motion:reduce){ *{transition:none!important; scroll-behavior:auto!important;} }
+
+  /* alertes très visibles */
+  .datealert{display:none; gap:12px; align-items:flex-start; background:#FFF4E5; border:2px solid #E8791A; border-radius:14px; padding:14px 16px; margin:-4px 0 16px;}
+  .datealert.show{display:flex;}
+  .datealert svg{flex:none; color:#C4530A; margin-top:1px;}
+  .datealert b{display:block;} .datealert p{margin:3px 0 0; font-size:14px; color:#7a4a1c;}
+  .notice{display:flex; gap:12px; align-items:flex-start; background:var(--vert-soft); border:2px solid var(--vert-deep); border-radius:14px; padding:14px 16px; margin:8px 0 14px;}
+  .notice svg{flex:none; color:#4d5400; margin-top:1px;} .notice p{margin:0; font-size:14px; color:#3f4600;} .notice b{color:#3f4600;}
+  /* barre enrichie */
+  .bar-stats{display:flex; align-items:center; gap:20px; flex:1; min-width:0;}
+  .bstat{display:flex; flex-direction:column; line-height:1.05;}
+  .bstat b{font-family:"Fraunces",serif; font-weight:700; font-size:18px; color:#fff;}
+  .bstat small{font-size:10px; color:#ffffff99; font-weight:700; text-transform:uppercase; letter-spacing:.03em; margin-top:2px;}
+  .bstat.big b{color:var(--vert); font-size:23px;}
+  @media(max-width:640px){ .bar-stats{gap:14px;} .bstat b{font-size:15px;} .bstat.big b{font-size:18px;} .bstat.mhide{display:none;} }
 </style>
 </head>
 <body>
@@ -293,6 +309,10 @@
             <div class="field"><label class="lb" for="tel">Téléphone <span class="req">*</span></label><input type="tel" id="tel" name="tel" autocomplete="tel" required></div>
           </div>
           <div class="field"><label class="lb" for="date">Date souhaitée — retrait ou livraison <span class="req">*</span></label><input type="date" id="date" name="date" required></div>
+          <div class="datealert" id="dateAlert">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
+            <div><b>Commande à moins de 72 h</b><p>Pour une date aussi proche, votre commande doit <b>impérativement être validée par téléphone</b> au <b class="bkphone2">04 50 24 89 05</b>. Vous pouvez continuer, mais appelez-nous pour confirmer la faisabilité.</p></div>
+          </div>
 
           <div class="field">
             <label class="lb">Mode <span class="req">*</span></label>
@@ -302,12 +322,20 @@
             </div>
           </div>
 
+          <div class="cond" id="adresseField">
+            <label class="lb">Adresse de livraison <span class="req">*</span></label>
+            <div class="field"><input type="text" id="livRue" name="livRue" placeholder="Rue et numéro"></div>
+            <div class="field"><input type="text" id="livComp" name="livComp" placeholder="Complément d'adresse (facultatif)"></div>
+            <div class="frow">
+              <div class="field"><input type="text" id="livCp" name="livCp" inputmode="numeric" placeholder="Code postal"></div>
+              <div class="field"><input type="text" id="livVille" name="livVille" placeholder="Ville"></div>
+            </div>
+          </div>
+
           <div class="field">
             <label class="lb">Options</label>
             <label class="check"><input type="checkbox" id="installation"><span>Forfait installation sur place — estimation +<span class="instfee">30,00 €</span> (à affiner selon l'événement)</span></label>
           </div>
-
-          <div class="field cond" id="adresseField"><label class="lb" for="adresse">Adresse de livraison <span class="req">*</span></label><textarea id="adresse" name="adresse" placeholder="N°, rue, code postal, ville"></textarea></div>
 
           <div class="field">
             <label class="lb">Souhaitez-vous une facture ? <span class="req">*</span></label>
@@ -318,24 +346,41 @@
           </div>
           <div class="cond" id="factureFields">
             <div class="field"><label class="lb" for="raison">Raison sociale <span class="req">*</span></label><input type="text" id="raison" name="raison"></div>
-            <div class="field"><label class="lb" for="fadresse">Adresse <span class="req">*</span></label><input type="text" id="fadresse" name="fadresse"></div>
-            <div class="frow">
-              <div class="field"><label class="lb" for="cp">Code postal <span class="req">*</span></label><input type="text" id="cp" name="cp" inputmode="numeric"></div>
-              <div class="field"><label class="lb" for="ville">Ville <span class="req">*</span></label><input type="text" id="ville" name="ville"></div>
+            <div class="field" id="sameAddrField">
+              <label class="lb">Adresse de facturation identique à la livraison ?</label>
+              <div class="seg">
+                <label><input type="radio" name="sameaddr" value="Oui" checked><span>Oui</span></label>
+                <label><input type="radio" name="sameaddr" value="Non"><span>Non</span></label>
+              </div>
+            </div>
+            <div id="billFields">
+              <div class="field"><input type="text" id="facRue" name="facRue" placeholder="Rue et numéro"></div>
+              <div class="field"><input type="text" id="facComp" name="facComp" placeholder="Complément d'adresse (facultatif)"></div>
+              <div class="frow">
+                <div class="field"><input type="text" id="facCp" name="facCp" inputmode="numeric" placeholder="Code postal"></div>
+                <div class="field"><input type="text" id="facVille" name="facVille" placeholder="Ville"></div>
+              </div>
             </div>
           </div>
+
           <div class="field"><label class="lb" for="note">Précisions (facultatif)</label><textarea id="note" name="note" placeholder="Allergies, heure souhaitée, occasion…"></textarea></div>
 
+          <div class="notice" id="confirmNotice">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg>
+            <p><b>Votre devis en un clic.</b> En validant, vous téléchargez votre devis : il sera <b>confirmé dès que la boulangerie l'aura validé</b>. Vous ne payez rien maintenant — une question ? Appelez-nous au <b class="bkphone2">04 50 24 89 05</b>.</p>
+          </div>
+
           <button type="submit" class="submit" id="submitBtn" disabled>Valider et envoyer ma commande</button>
-          <p class="legal">Ce n'est pas un paiement. Un PDF récapitulatif est généré, envoyé à la boulangerie et téléchargé pour vous. Nous vous recontactons pour confirmer.</p>
+          <p class="legal">Ce n'est pas un paiement. Un PDF récapitulatif est généré et téléchargé — <b>conservez-le, il n'est pas envoyé par e-mail</b>. Nous vous recontactons pour confirmer.</p>
         </form>
       </div>
 
       <div class="done" id="done">
         <div class="check"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
-        <h2>Commande envoyée&nbsp;!</h2>
+        <h2>Merci, c'est envoyé&nbsp;!</h2>
         <p id="doneMsg">Merci, nous avons bien reçu votre demande. Nous revenons vers vous très vite pour la confirmer.</p>
         <button class="dl" id="dlBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Retélécharger mon PDF</button>
+        <div style="margin-top:14px"><button type="button" id="againBtn" style="background:none;border:0;color:var(--muted);font-weight:700;font-size:14px;cursor:pointer;text-decoration:underline">Passer une nouvelle commande</button></div>
       </div>
     </section>
   </div>
@@ -351,8 +396,14 @@
 
 <div class="bar" id="bar">
   <div class="bar-in">
-    <div><div class="lbl" id="barCount">0 article</div><div class="tot" id="barTotal">0,00 €</div></div>
-    <button type="button" id="barGo">Finaliser ma commande</button>
+    <div class="bar-stats">
+      <div class="bstat"><b id="barCount">0</b><small>articles</small></div>
+      <div class="bstat"><b id="barBites">—</b><small>bouchées/pers</small></div>
+      <div class="bstat mhide"><b id="barPP">—</b><small>coût/pers</small></div>
+      <div class="bstat mhide"><b id="barHT">0,00 €</b><small>total HT</small></div>
+      <div class="bstat big"><b id="barTotal">0,00 €</b><small>total TTC</small></div>
+    </div>
+    <button type="button" id="barGo">Finaliser</button>
   </div>
 </div>
 
@@ -362,23 +413,21 @@
    ===================================================================== */
 const CONFIG = {
   apiEndpoint:"/api/send-order",
+  minOrder:100,
+  acompteRate:0.50,
+  alertHours:72,          // en dessous : alerte "valider par téléphone" (sans bloquer)
+  deliveryFee:30, installationFee:30, feeTva:0.055,
+  maxLots:20,             // max 20 lots/plaques
   bakeries:[
     {id:"epagny", nom:"Grand Epagny", adresse:"300 rue des Peupliers, 74330 Epagny Metz Tessy", phone:"04 50 24 89 05", email:"commandes.ange74@gmail.com"},
-    // 2e boulangerie : ajoute une entrée ici quand elle ouvre :
-    // {id:"autre", nom:"Nom", adresse:"Adresse", phone:"04 ...", email:"..."},
+    // 2e boulangerie : ajoute une entrée ici quand elle ouvre.
   ],
-  minOrder:100,          // minimum produits € TTC (hors livraison/installation)
-  acompteRate:0.50,      // acompte 50 % au-delà du minimum
-  leadDays:2,
-  deliveryFee:30, installationFee:30, feeTva:0.055,  // boutons livraison/installation
-  maxLots:40,
 };
-
 const GAMME_COULEURS = {"P'tit Dej":"#E0A100","Salé":"#D2542A","Sucré":"#C85A86","Pains":"#A9772E","Boissons":"#2E9C9C","Accessoires":"#7C7A72"};
 const PALETTE=["#E0A100","#D2542A","#C85A86","#A9772E","#2E9C9C","#7C7A72","#5E7CE0","#6BA644"];
+const GAMME_TYPE={};  // le type vient de l'Excel (colonne Type)
 
-/* CATALOGUE — généré depuis ton Excel
-   gamme | nom | unite(pièce/lot/plaque) | bouchees(par unité) | minimum | tarifTTC | tva | type(sale/sucre/null) | photo */
+/* CATALOGUE — depuis ton Excel */
 const PRODUITS = [
 {
 "gamme": "P'tit Dej",
@@ -1519,17 +1568,13 @@ const PRODUITS = [
    Moteur
    ===================================================================== */
 const euro = n => n.toLocaleString('fr-FR',{style:'currency',currency:'EUR'});
-const state = new Map();  // index -> quantité (pièces ou lots/plaques)
+const $ = id => document.getElementById(id);
+const state = new Map();
 let lastPDF=null;
 
-const GAMMES = [...new Set(PRODUITS.map(p=>p.gamme))].map((nom,idx)=>({
-  nom, id:'g'+idx, couleur:GAMME_COULEURS[nom]||PALETTE[idx%PALETTE.length]
-}));
+const GAMMES=[...new Set(PRODUITS.map(p=>p.gamme))].map((nom,idx)=>({nom,id:'g'+idx,couleur:GAMME_COULEURS[nom]||PALETTE[idx%PALETTE.length]}));
 
-document.querySelectorAll('.livfee').forEach(el=>el.textContent=euro(CONFIG.deliveryFee));
-document.querySelectorAll('.instfee').forEach(el=>el.textContent=euro(CONFIG.installationFee));
-deliveryVal.textContent=euro(CONFIG.deliveryFee); installationVal.textContent=euro(CONFIG.installationFee);
-
+/* boulangerie */
 let bakery=CONFIG.bakeries[0];
 function applyBakery(b){
   bakery=b;
@@ -1537,18 +1582,24 @@ function applyBakery(b){
   phoneHead.href=tel; phoneHeadNum.textContent=b.phone; gatePhone.textContent=b.phone;
   phoneFoot.href=tel; phoneFoot.textContent=b.phone;
   mailFoot.href="mailto:"+b.email; mailFoot.textContent=b.email;
-  const bs=document.getElementById('brandSub'); if(bs) bs.textContent="au "+b.nom;
+  const bs=$('brandSub'); if(bs) bs.textContent="au "+b.nom;
+  document.querySelectorAll('.bkphone2').forEach(el=>el.textContent=b.phone);
   livReminder.innerHTML=`\uD83D\uDCCD Livraison : ${euro(CONFIG.deliveryFee)} TTC dans un rayon maximum de 5 km autour de la boulangerie Ange ${b.nom}.`;
   render();
 }
-const bp=document.getElementById('bakeryPick');
+
+const telHrefInit=""; // placeholder
+document.querySelectorAll('.livfee').forEach(el=>el.textContent=euro(CONFIG.deliveryFee));
+document.querySelectorAll('.instfee').forEach(el=>el.textContent=euro(CONFIG.installationFee));
+deliveryVal.textContent=euro(CONFIG.deliveryFee); installationVal.textContent=euro(CONFIG.installationFee);
+
+const bp=$('bakeryPick');
 if(CONFIG.bakeries.length>1){
   bp.innerHTML=`<div class="bk-title">Votre boulangerie</div><div class="seg">`+CONFIG.bakeries.map((b,i)=>`<label><input type="radio" name="bakery" value="${i}" ${i===0?'checked':''}><span>${b.nom}</span></label>`).join('')+`</div>`;
   bp.querySelectorAll('input[name=bakery]').forEach(rd=>rd.addEventListener('change',e=>applyBakery(CONFIG.bakeries[+e.target.value])));
 }else{
   bp.innerHTML=`<div class="bk-single"><div class="bk-ic">\uD83D\uDCCD</div><div><b>Boulangerie Ange \u2014 ${bakery.nom}</b><span>${bakery.adresse}</span></div></div>`;
 }
-applyBakery(bakery);
 
 const PERKS=[
   ["Fait maison","Pétri, façonné et cuit sur place.","M12 2 3 7v10l9 5 9-5V7l-9-5Z"],
@@ -1564,9 +1615,8 @@ GAMMES.forEach(g=>{
   if(!items.length) return;
   const pill=document.createElement('button'); pill.className='pill'; pill.style.setProperty('--c',g.couleur); pill.dataset.target=g.id;
   pill.innerHTML=`<span class="dot"></span>${g.nom}`;
-  pill.onclick=()=>document.getElementById('sec-'+g.id).scrollIntoView({behavior:'smooth',block:'start'});
+  pill.onclick=()=>$('sec-'+g.id).scrollIntoView({behavior:'smooth',block:'start'});
   catnav.appendChild(pill);
-
   const sec=document.createElement('section'); sec.className='cat'; sec.id='sec-'+g.id; sec.style.setProperty('--c',g.couleur);
   sec.innerHTML=`<div class="cat-head"><span class="b"></span><h2>${g.nom}</h2><span class="tag">${items.length} produit${items.length>1?'s':''}</span></div><div class="grid"></div>`;
   const grid=sec.querySelector('.grid');
@@ -1576,7 +1626,7 @@ GAMMES.forEach(g=>{
     const uLabel=isPiece?'Pièces':(p.unite==='plaque'?'Plaques':'Lots');
     const opts=`<option value="0">0</option>`+Array.from({length:CONFIG.maxLots},(_,k)=>`<option value="${k+1}">${k+1}</option>`).join('');
     const control=isPiece
-      ? `<input type="number" id="q${p.i}" data-i="${p.i}" data-min="${p.minimum}" class="qnum" min="0" step="1" inputmode="numeric" placeholder="0" aria-label="Nombre de pièces pour ${p.nom}">`
+      ? `<input type="number" id="q${p.i}" data-i="${p.i}" data-min="${p.minimum}" class="qnum" min="0" max="999" step="1" inputmode="numeric" placeholder="0" aria-label="Nombre de pièces pour ${p.nom}">`
       : `<select id="q${p.i}" data-i="${p.i}" aria-label="Quantité pour ${p.nom}">${opts}</select>`;
     let hint='';
     if(p.unite==='plaque') hint=`1 plaque = ${p.bouchees} bouchées`;
@@ -1584,11 +1634,11 @@ GAMMES.forEach(g=>{
     else if(p.minimum>1) hint=`min. ${p.minimum} pièces`;
     const badge=hint?`<span class="minq">${hint}</span>`:'';
     const photo=p.photo?`<div class="photo"><img src="${p.photo}" alt="${p.nom}" loading="lazy"></div>`
-      :`<div class="photo"><div class="ph"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.8"/><path d="m21 15-5-5L5 21"/></svg><span>Photo à venir</span></div></div>`;
+      :`<div class="photo"><div class="ph"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.8"/><path d="m21 15-5-5L5 21"/></svg><span>Photo à venir</span></div></div>`;
     const htU=p.tarifTTC/(1+p.tva), tvaU=p.tarifTTC-htU;
     const unitWord=isPiece?'pièce':p.unite;
     card.innerHTML=`${photo}<div class="card-body"><h3>${p.nom}</h3>
-      <div class="meta"><div class="price"><span class="ttc">${euro(p.tarifTTC)} <small>TTC / ${unitWord}</small></span><span class="htline">HT ${euro(htU)} · TVA ${euro(tvaU)} (${(p.tva*100).toLocaleString('fr-FR')} %)</span></div>${badge}</div>
+      <div class="meta"><div class="price"><span class="ttc">${euro(p.tarifTTC)} <small>TTC / ${unitWord}</small></span><span class="htline">HT ${euro(htU)} · TVA ${euro(tvaU)}</span></div>${badge}</div>
       <div class="card-foot"><div class="qty"><label for="q${p.i}">${uLabel}</label>${control}</div><div class="subtotal zero" id="s${p.i}">0,00 €</div></div></div>`;
     grid.appendChild(card);
   });
@@ -1596,12 +1646,12 @@ GAMMES.forEach(g=>{
 });
 
 function onQty(t){
-  if(!t.dataset || t.dataset.i===undefined) return;
+  if(!t.dataset||t.dataset.i===undefined) return;
   if(t.tagName!=='SELECT' && !(t.tagName==='INPUT'&&t.type==='number')) return;
   const i=+t.dataset.i; let q=parseInt(t.value)||0; if(q<0)q=0;
-  const mn=+t.dataset.min||1; if(q>0&&q<mn){ q=mn; t.value=mn; }
+  const mn=+t.dataset.min||1; if(q>0&&q<mn){ q=mn; t.value=mn; } if(q>999){ q=999; t.value=999; }
   if(q>0)state.set(i,q); else state.delete(i);
-  const p=PRODUITS[i],sub=q*p.tarifTTC,el=document.getElementById('s'+i);
+  const p=PRODUITS[i],sub=q*p.tarifTTC,el=$('s'+i);
   el.textContent=euro(sub); el.classList.toggle('zero',q===0);
   t.closest('.card').classList.toggle('active',q>0);
   render();
@@ -1618,7 +1668,7 @@ function compute(){
     lignes.push({p,qty,sub});
   }
   const livraison=(document.querySelector('input[name=mode]:checked')?.value)==='Livraison';
-  const installation=!!(document.getElementById('installation')&&document.getElementById('installation').checked);
+  const installation=!!($('installation')&&$('installation').checked);
   const delFee=livraison?CONFIG.deliveryFee:0, instFee=installation?CONFIG.installationFee:0;
   const extra=delFee+instFee, extraHT=extra/(1+CONFIG.feeTva);
   return {ttc,ht,tva,minBase,count,bSale,bSucre,lignes,livraison,installation,delFee,instFee,
@@ -1627,8 +1677,7 @@ function compute(){
 
 function render(){
   const c=compute(); const conv=parseInt(convives.value)||0; const totalBites=c.bSale+c.bSucre;
-
-  const recap=document.getElementById('recap'); recap.innerHTML='';
+  const recap=$('recap'); recap.innerHTML='';
   if(!c.lignes.length){ recap.innerHTML='<div class="empty">Votre sélection est vide pour le moment.</div>'; }
   else c.lignes.forEach(({p,qty,sub})=>{
     const detail=p.unite==='pièce'?`${qty} × ${euro(p.tarifTTC)}`:`${qty} ${p.unite}${qty>1?'s':''} × ${euro(p.tarifTTC)}`;
@@ -1636,142 +1685,201 @@ function render(){
     r.innerHTML=`<div class="n">${p.nom}<small>${detail}</small></div><div class="a">${euro(sub)}</div>`;
     recap.appendChild(r);
   });
-
   bites.style.display=c.lignes.length?'flex':'none'; biteSale.textContent=c.bSale; biteSucre.textContent=c.bSucre;
-
-  const pp=document.getElementById('perPerson');
+  const pp=$('perPerson');
   if(c.lignes.length&&conv>0){ pp.classList.add('show'); ppN.textContent=conv;
-    ppBites.textContent=(totalBites/conv).toFixed(1).replace('.',',');
-    ppHT.textContent=euro(c.ht/conv); ppTTC.textContent=euro(c.ttc/conv);   // par personne = produits (hors frais)
+    ppBites.textContent=(totalBites/conv).toFixed(1).replace('.',','); ppHT.textContent=euro(c.ht/conv); ppTTC.textContent=euro(c.ttc/conv);
   } else pp.classList.remove('show');
-
   totals.style.display=c.lignes.length?'block':'none';
   deliveryRow.style.display=c.delFee?'flex':'none';
   installationRow.style.display=c.instFee?'flex':'none';
   htVal.textContent=euro(c.grandHT); tvaVal.textContent=euro(c.grandTVA); grandTotal.textContent=euro(c.grandTTC);
-  const showAcompte=c.minBase>CONFIG.minOrder;
-  acompteRow.style.display=showAcompte?'flex':'none'; acompteVal.textContent=euro(c.grandTTC*CONFIG.acompteRate);
-
-  adresseField.classList.toggle('show',c.livraison); livReminder.classList.toggle('show',c.livraison); adresse.required=c.livraison;
-
-  bar.classList.toggle('show',c.count>0); barTotal.textContent=euro(c.grandTTC); barCount.textContent=c.count+' article'+(c.count>1?'s':'');
-
+  acompteRow.style.display=c.minBase>CONFIG.minOrder?'flex':'none'; acompteVal.textContent=euro(c.grandTTC*CONFIG.acompteRate);
+  // barre enrichie
+  bar.classList.toggle('show',c.count>0);
+  barCount.textContent=c.count; barHT.textContent=euro(c.grandHT); barTotal.textContent=euro(c.grandTTC);
+  barBites.textContent=conv?(totalBites/conv).toFixed(1).replace('.',','):'—';
+  barPP.textContent=conv?euro(c.ttc/conv):'—';
   const under=c.minBase>0&&c.minBase<CONFIG.minOrder;
   gate.classList.toggle('show',under); submitBtn.disabled=c.minBase<CONFIG.minOrder;
 }
 
-const dmin=new Date(); dmin.setDate(dmin.getDate()+CONFIG.leadDays);
-document.getElementById('date').min=dmin.toISOString().split('T')[0];
+/* date : pas de blocage, mais alerte < 72h */
+const today=new Date().toISOString().split('T')[0];
+$('date').min=today;
+function checkDate(){
+  const v=$('date').value, al=$('dateAlert');
+  if(!v){ al.classList.remove('show'); return; }
+  const diffH=(new Date(v+'T00:00:00')-new Date())/36e5;
+  al.classList.toggle('show', diffH<CONFIG.alertHours);
+}
+$('date').addEventListener('change',checkDate); $('date').addEventListener('input',checkDate);
+
+/* affichage conditionnel (livraison / facture / adresse identique) */
+function updateFormUI(){
+  const liv=document.querySelector('input[name=mode]:checked').value==='Livraison';
+  adresseField.classList.toggle('show',liv); livReminder.classList.toggle('show',liv);
+  [$('livRue'),$('livCp'),$('livVille')].forEach(el=>el.required=liv);
+  const fac=document.querySelector('input[name=facture]:checked').value==='Oui';
+  factureFields.classList.toggle('show',fac); $('raison').required=fac;
+  const sameField=$('sameAddrField'); sameField.style.display=(fac&&liv)?'block':'none';
+  const same=fac&&liv&&document.querySelector('input[name=sameaddr]:checked')?.value==='Oui';
+  $('billFields').style.display=(fac&&!same)?'block':'none';
+  [$('facRue'),$('facCp'),$('facVille')].forEach(el=>el.required=(fac&&!same));
+}
 convives.addEventListener('input',render);
-barGo.onclick=()=>document.getElementById('commande').scrollIntoView({behavior:'smooth',block:'start'});
-document.querySelectorAll('input[name=mode]').forEach(r=>r.addEventListener('change',render));
-const instBox=document.getElementById('installation'); if(instBox) instBox.addEventListener('change',render);
-document.querySelectorAll('input[name=facture]').forEach(r=>r.addEventListener('change',()=>{
-  const oui=document.querySelector('input[name=facture]:checked').value==='Oui';
-  factureFields.classList.toggle('show',oui); ['raison','fadresse','cp','ville'].forEach(id=>document.getElementById(id).required=oui);
-}));
+barGo.onclick=()=>$('commande').scrollIntoView({behavior:'smooth',block:'start'});
+document.querySelectorAll('input[name=mode]').forEach(r=>r.addEventListener('change',()=>{updateFormUI();render();}));
+document.querySelectorAll('input[name=facture]').forEach(r=>r.addEventListener('change',updateFormUI));
+document.querySelectorAll('input[name=sameaddr]').forEach(r=>r.addEventListener('change',updateFormUI));
+$('installation').addEventListener('change',render);
 const spy=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ const id=e.target.id.replace('sec-','');
   document.querySelectorAll('.pill').forEach(p=>p.classList.toggle('active',p.dataset.target===id)); }}),{rootMargin:'-134px 0px -70% 0px'});
 document.querySelectorAll('.cat').forEach(s=>spy.observe(s));
 
-/* ---------- PDF ---------- */
+/* ---------- PDF (client gauche / Ange droite · lignes HT) ---------- */
 function buildPDF(d){
   if(!window.jspdf) return null;
   const {jsPDF}=window.jspdf; const doc=new jsPDF({unit:'mm',format:'a4'}); const W=210,M=16; let y;
-  doc.setFillColor(11,11,10); doc.rect(0,0,W,30,'F');
-  doc.setFillColor(205,219,0); doc.circle(W-24,15,7,'F');
-  doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(19); doc.text('Boulangerie Ange',M,15);
-  doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.text('au Grand Epagny — Commande traiteur',M,22);
-  doc.setFontSize(8.5); doc.text(d.ref,W-M,25,{align:'right'}); doc.text(d.dateEmission,W-M,29,{align:'right'});
-  y=42; doc.setTextColor(26,26,22);
-  doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.text('Client',M,y);
-  doc.setFont('helvetica','normal'); doc.setFontSize(10); y+=6;
-  doc.text(`${d.prenom} ${d.nom}`,M,y); y+=5; doc.text(`${d.email}  ·  ${d.tel}`,M,y); y+=5;
-  doc.text(`${d.mode} — souhaité le ${d.dateSouhaitee}${d.convives?`  ·  ${d.convives} personnes`:''}`,M,y);
-  y+=5; doc.text(`Boulangerie : ${d.bakeryNom} — ${d.bakeryAdresse}`,M,y);
-  if(d.adresse){ y+=5; const a=doc.splitTextToSize('Livraison : '+d.adresse,W-2*M); doc.text(a,M,y); y+=(a.length-1)*5; }
-  y+=9;
-  const cQ=M,cD=M+14,cP=W-M-46,cT=W-M;
+  doc.setFillColor(11,11,10); doc.rect(0,0,W,26,'F');
+  doc.setFillColor(205,219,0); doc.circle(W-20,13,6,'F');
+  doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(17); doc.text('Boulangerie Ange',M,13);
+  doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.text('Devis — Commande traiteur',M,19.5);
+  doc.setFontSize(8.5); doc.text(d.ref,W-M,20,{align:'right'}); doc.text(d.dateEmission,W-M,24,{align:'right'});
+  y=36; const colR=W/2+8; doc.setTextColor(26,26,22);
+  doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.text('CLIENT',M,y); doc.text('BOULANGERIE',colR,y);
+  doc.setFont('helvetica','normal'); doc.setFontSize(9.5); let yl=y+6,yr=y+6;
+  const L=t=>{doc.text(String(t),M,yl);yl+=5;}, R=t=>{doc.text(String(t),colR,yr);yr+=5;};
+  L(`${d.prenom} ${d.nom}`); L(d.email); L(d.tel); L(`${d.mode} — le ${d.dateSouhaitee}`);
+  if(d.convives) L(`${d.convives} personnes`);
+  if(d.deliv){ if(d.deliv.rue)L(d.deliv.rue); if(d.deliv.comp)L(d.deliv.comp); L(`${d.deliv.cp||''} ${d.deliv.ville||''}`); }
+  const parts=d.bakeryAdresse.split(',');
+  R(`Ange ${d.bakeryNom}`); R(parts[0]); if(parts[1])R(parts.slice(1).join(',').trim()); R('Tél. '+d.bakeryPhone); R(d.bakeryEmail);
+  y=Math.max(yl,yr)+7;
+  const cQ=M,cD=M+13,cP=W-M-46,cT=W-M;
   doc.setFillColor(243,247,207); doc.rect(M,y-5,W-2*M,8,'F');
   doc.setFont('helvetica','bold'); doc.setFontSize(9);
-  doc.text('Qté',cQ,y); doc.text('Désignation',cD,y); doc.text('P.U. TTC',cP,y,{align:'right'}); doc.text('Total TTC',cT,y,{align:'right'});
+  doc.text('Qté',cQ,y); doc.text('Désignation',cD,y); doc.text('P.U. HT',cP,y,{align:'right'}); doc.text('Total HT',cT,y,{align:'right'});
   y+=7; doc.setFont('helvetica','normal'); doc.setFontSize(9.5);
-  d.lignes.forEach(l=>{ if(y>258){doc.addPage();y=20;} const des=doc.splitTextToSize(l.des,cP-cD-4);
-    doc.text(String(l.qty),cQ,y); doc.text(des,cD,y); doc.text(euro(l.pu),cP,y,{align:'right'}); doc.text(euro(l.tot),cT,y,{align:'right'});
+  d.lignes.forEach(l=>{ if(y>248){doc.addPage();y=20;} const des=doc.splitTextToSize(l.des,cP-cD-4);
+    doc.text(String(l.qty),cQ,y); doc.text(des,cD,y); doc.text(euro(l.puHT),cP,y,{align:'right'}); doc.text(euro(l.totHT),cT,y,{align:'right'});
     y+=Math.max(des.length*4.6,6)+1.5; doc.setDrawColor(233,228,214); doc.line(M,y-3,W-M,y-3); });
   y+=4;
-  const rr=(lab,val,bold,size)=>{ doc.setFontSize(size||10); doc.setFont('helvetica',bold?'bold':'normal'); doc.text(lab,cP,y,{align:'right'}); doc.text(val,cT,y,{align:'right'}); y+=6; };
-  if(d.delFee) rr('Livraison TTC',euro(d.delFee));
-  if(d.instFee) rr('Installation TTC',euro(d.instFee));
+  const rr=(lab,val,bold,size)=>{doc.setFontSize(size||10); doc.setFont('helvetica',bold?'bold':'normal'); doc.text(lab,cP,y,{align:'right'}); doc.text(val,cT,y,{align:'right'}); y+=6;};
   rr('Total HT',euro(d.ht)); rr('TVA',euro(d.tva));
   doc.setTextColor(60,66,0); rr('TOTAL TTC',euro(d.ttc),true,12); doc.setTextColor(26,26,22);
   if(d.acompte>0){ doc.setTextColor(91,99,0); rr('Acompte à verser (50 %)',euro(d.acompte),true,11); doc.setTextColor(26,26,22); }
   y+=2; doc.setFontSize(9.5); doc.setFont('helvetica','normal');
-  doc.text(`Bouchées salées : ${d.bSale}   ·   Bouchées sucrées : ${d.bSucre}`,M,y); y+=5;
-  if(d.convives){ doc.text(`Par personne : ${d.ppBites} bouchées · ${euro(d.htProd/d.convives)} HT · ${euro(d.ttcProd/d.convives)} TTC`,M,y); y+=7; } else y+=2;
-  if(d.facture){ doc.setFont('helvetica','bold'); doc.text('Facturation',M,y); y+=5; doc.setFont('helvetica','normal');
-    doc.text(`${d.facture.raison} — ${d.facture.adresse}, ${d.facture.cp} ${d.facture.ville}`,M,y); y+=7; }
-  if(d.note){ doc.setFont('helvetica','italic'); doc.setFontSize(9); const n=doc.splitTextToSize('Précisions : '+d.note,W-2*M); doc.text(n,M,y); }
-  doc.setDrawColor(233,228,214); doc.line(M,283,W-M,283);
-  doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(110,106,94);
-  doc.text(`Boulangerie Ange ${d.bakeryNom} · ${d.bakeryPhone} · ${d.bakeryEmail}`,W/2,289,{align:'center'});
-  doc.text('Devis à confirmer par la boulangerie. Un acompte de 50 % est demandé. Ce document ne vaut pas paiement.',W/2,293,{align:'center'});
+  doc.text(`Bouchées salées : ${d.bSale}   ·   sucrées : ${d.bSucre}`,M,y); y+=5;
+  if(d.convives){ doc.text(`Par personne : ${d.ppBites} bouchées · ${euro(d.ht/d.convives)} HT · ${euro(d.ttc/d.convives)} TTC`,M,y); y+=6; }
+  if(d.facture){ y+=2; doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.text('Adresse de facturation',M,y); y+=5;
+    doc.setFont('helvetica','normal'); doc.setFontSize(9.5);
+    doc.text(d.facture.raison,M,y); y+=5;
+    if(d.facture.rue){doc.text(d.facture.rue,M,y);y+=5;}
+    if(d.facture.comp){doc.text(d.facture.comp,M,y);y+=5;}
+    doc.text(`${d.facture.cp||''} ${d.facture.ville||''}`,M,y); y+=6; }
+  doc.setFont('helvetica','bold'); doc.setFontSize(9.5); doc.setTextColor(196,83,10);
+  doc.text('Ce devis ne vous sera pas envoyé par e-mail : pensez à le conserver.',M,y); y+=4;
+  doc.setTextColor(26,26,22); doc.setFont('helvetica','normal'); doc.setFontSize(9);
+  doc.text('Ce devis sera confirmé dès validation par la boulangerie \u2014 nous revenons vers vous vite.',M,y); y+=6;
+  if(d.note){ doc.setFont('helvetica','italic'); doc.setFontSize(9); const n=doc.splitTextToSize('Précisions : '+d.note,W-2*M); doc.text(n,M,Math.min(y,270)); }
+  doc.setDrawColor(233,228,214); doc.line(M,280,W-M,280);
+  doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(60,66,0);
+  doc.text(`Merci de votre confiance — ${d.bakeryPhone} · ${d.bakeryEmail}`,W/2,286,{align:'center'});
+  doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(110,106,94);
+  doc.text('Devis à confirmer par la boulangerie. Un acompte de 50 % est demandé. Ce document ne vaut pas paiement.',W/2,290,{align:'center'});
   return doc;
 }
 
+/* ---------- e-mail HTML (lisible / commerçant) ---------- */
+function emailHTML(d){
+  const rows=d.lignes.map(l=>`<tr><td style="padding:7px 0;border-bottom:1px solid #eee">${l.qty} × ${l.des}</td><td style="padding:7px 0;border-bottom:1px solid #eee;text-align:right;white-space:nowrap">${euro(l.tot)}</td></tr>`).join('');
+  const addr=a=>[a.rue,a.comp,((a.cp||'')+' '+(a.ville||'')).trim()].filter(Boolean).join('<br>');
+  return `<div style="font-family:Arial,Helvetica,sans-serif;max-width:600px;margin:0 auto;color:#1a1a16">
+ <div style="background:#0B0B0A;padding:16px 20px;border-radius:12px 12px 0 0">
+   <span style="color:#CDDB00;font-weight:bold;font-size:18px">Boulangerie Ange</span>
+   <span style="color:#ffffffcc;font-size:13px"> — ${d.bakeryNom}</span></div>
+ <div style="border:1px solid #eee;border-top:0;border-radius:0 0 12px 12px;padding:22px">
+   <h2 style="margin:0 0 2px;font-size:19px">Nouvelle commande traiteur</h2>
+   <p style="margin:0 0 18px;color:#888;font-size:13px">Réf. ${d.ref} · ${d.dateEmission}</p>
+   <table style="width:100%;font-size:14px;line-height:1.5;margin-bottom:16px"><tr>
+     <td style="vertical-align:top;width:50%"><b>Client</b><br>${d.prenom} ${d.nom}<br>${d.email}<br>${d.tel}</td>
+     <td style="vertical-align:top"><b>${d.mode}</b><br>Souhaité le ${d.dateSouhaitee}${d.convives?'<br>'+d.convives+' personnes':''}</td>
+   </tr></table>
+   ${d.deliv?`<p style="margin:0 0 16px;font-size:14px;line-height:1.5"><b>Adresse de livraison</b><br>${addr(d.deliv)}</p>`:''}
+   <table style="width:100%;font-size:14px;border-collapse:collapse;margin-bottom:14px">${rows}</table>
+   <table style="width:100%;font-size:14px;line-height:1.6">
+     <tr><td style="color:#666">Total HT</td><td style="text-align:right">${euro(d.ht)}</td></tr>
+     <tr><td style="color:#666">TVA</td><td style="text-align:right">${euro(d.tva)}</td></tr>
+     <tr><td style="font-weight:bold;font-size:17px;padding-top:4px">Total TTC</td><td style="text-align:right;font-weight:bold;font-size:17px;padding-top:4px">${euro(d.ttc)}</td></tr>
+     ${d.acompte?`<tr><td style="color:#5b6300;font-weight:bold">Acompte 50 %</td><td style="text-align:right;color:#5b6300;font-weight:bold">${euro(d.acompte)}</td></tr>`:''}
+   </table>
+   <p style="font-size:13px;color:#555;margin:14px 0 0">Bouchées : ${d.bSale} salées · ${d.bSucre} sucrées${d.convives?' · '+d.ppBites+' /personne':''}</p>
+   ${d.facture?`<p style="font-size:13px;line-height:1.5;margin:12px 0 0"><b>Facturation</b><br>${d.facture.raison}<br>${addr(d.facture)}</p>`:''}
+   ${d.note?`<p style="font-size:13px;margin:12px 0 0"><b>Précisions :</b> ${d.note}</p>`:''}
+   <div style="background:#F3F7CF;border-radius:10px;padding:13px 15px;margin-top:18px;font-size:13px;color:#3f4600;line-height:1.5">
+     <b>À faire :</b> rappeler le client pour confirmer la faisabilité, la date et l'acompte de 50 %. La commande n'est pas confirmée tant que tu ne l'as pas validée.</div>
+   <p style="font-size:12px;color:#999;margin-top:16px">PDF détaillé en pièce jointe. Répondre à cet e-mail écrit directement au client.</p>
+ </div></div>`;
+}
+
 /* ---------- Soumission ---------- */
-document.getElementById('orderForm').addEventListener('submit',async e=>{
+$('orderForm').addEventListener('submit',async e=>{
   e.preventDefault(); const f=e.target; const c=compute();
   if(c.minBase<CONFIG.minOrder){ gate.scrollIntoView({behavior:'smooth',block:'center'}); return; }
   if(!f.checkValidity()){ f.reportValidity(); return; }
 
   const conv=parseInt(convives.value)||0;
   const acompte=c.minBase>CONFIG.minOrder?c.grandTTC*CONFIG.acompteRate:0;
-  const now=new Date(), pad=n=>String(n).padStart(2,'0');
+  const deliv=c.livraison?{rue:$('livRue').value,comp:$('livComp').value,cp:$('livCp').value,ville:$('livVille').value}:null;
+  let facture=null;
+  if(f.facture.value==='Oui'){
+    const same=c.livraison&&document.querySelector('input[name=sameaddr]:checked')?.value==='Oui';
+    const a=same?deliv:{rue:$('facRue').value,comp:$('facComp').value,cp:$('facCp').value,ville:$('facVille').value};
+    facture={raison:$('raison').value,rue:a?.rue||'',comp:a?.comp||'',cp:a?.cp||'',ville:a?.ville||''};
+  }
+  const lignes=c.lignes.map(({p,qty,sub})=>{const puHT=p.tarifTTC/(1+p.tva);return{qty,des:p.nom+(p.unite!=='pièce'?` (${p.unite} de ${p.bouchees})`:''),pu:p.tarifTTC,tot:sub,puHT,totHT:sub/(1+p.tva)};});
+  if(c.delFee){const h=c.delFee/(1+CONFIG.feeTva); lignes.push({qty:1,des:'Livraison',pu:c.delFee,tot:c.delFee,puHT:h,totHT:h});}
+  if(c.instFee){const h=c.instFee/(1+CONFIG.feeTva); lignes.push({qty:1,des:'Installation (estimation)',pu:c.instFee,tot:c.instFee,puHT:h,totHT:h});}
+  const now=new Date(),pad=n=>String(n).padStart(2,'0');
   const d={
     ref:`CMD-${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}`,
     dateEmission:now.toLocaleDateString('fr-FR'),
     prenom:f.prenom.value,nom:f.nom.value,email:f.email.value,tel:f.tel.value,
-    bakeryNom:bakery.nom, bakeryAdresse:bakery.adresse, bakeryPhone:bakery.phone, bakeryEmail:bakery.email,
-    mode:c.livraison?'Livraison':'Retrait', adresse:c.livraison?f.adresse.value:'',
+    bakeryNom:bakery.nom,bakeryAdresse:bakery.adresse,bakeryPhone:bakery.phone,bakeryEmail:bakery.email,
+    mode:c.livraison?'Livraison':'Retrait', deliv,
     dateSouhaitee:new Date(f.date.value).toLocaleDateString('fr-FR'),
-    convives:conv, delFee:c.delFee, instFee:c.instFee,
-    ttc:c.grandTTC, ht:c.grandHT, tva:c.grandTVA, ttcProd:c.ttc, htProd:c.ht,
-    acompte, bSale:c.bSale, bSucre:c.bSucre,
-    ppBites:conv?((c.bSale+c.bSucre)/conv).toFixed(1).replace('.',','):'0',
-    note:f.note.value,
-    facture:f.facture.value==='Oui'?{raison:f.raison.value,adresse:f.fadresse.value,cp:f.cp.value,ville:f.ville.value}:null,
-    lignes:c.lignes.map(({p,qty,sub})=>({qty,des:p.nom+(p.unite!=='pièce'?` (${p.unite} de ${p.bouchees})`:''),pu:p.tarifTTC,tot:sub})),
+    convives:conv, ttc:c.grandTTC, ht:c.grandHT, tva:c.grandTVA,
+    acompte, bSale:c.bSale, bSucre:c.bSucre, ppBites:conv?((c.bSale+c.bSucre)/conv).toFixed(1).replace('.',','):'0',
+    note:f.note.value, facture, lignes,
   };
 
   const btn=submitBtn; btn.disabled=true; btn.textContent='Envoi…';
   let pdfB64=null;
   try{ const doc=buildPDF(d); if(doc){ lastPDF=doc; doc.save(`Commande-traiteur-Ange-${d.nom}.pdf`); pdfB64=doc.output('datauristring').split('base64,')[1]; } }catch(err){ console.warn(err); }
 
-  const corps=`Réf : ${d.ref}\nBoulangerie : ${d.bakeryNom}\nClient : ${d.prenom} ${d.nom}\nEmail : ${d.email}\nTél : ${d.tel}\n`+
-    `Mode : ${d.mode}${d.adresse?' — '+d.adresse:''}\nDate souhaitée : ${d.dateSouhaitee}${d.convives?`\nConvives : ${d.convives}`:''}\n`+
-    (d.facture?`Facture : ${d.facture.raison}, ${d.facture.adresse}, ${d.facture.cp} ${d.facture.ville}\n`:'')+
-    `\nDÉTAIL :\n`+d.lignes.map(l=>`• ${l.qty} × ${l.des} (${euro(l.pu)}) = ${euro(l.tot)}`).join('\n')+
-    (d.delFee?`\n• Livraison = ${euro(d.delFee)}`:'')+(d.instFee?`\n• Installation = ${euro(d.instFee)}`:'')+
-    `\n\nTotal HT : ${euro(d.ht)}\nTVA : ${euro(d.tva)}\nTOTAL TTC : ${euro(d.ttc)}`+
-    (d.acompte?`\nAcompte 50 % : ${euro(d.acompte)}`:'')+
-    `\nBouchées salées : ${d.bSale} · sucrées : ${d.bSucre}`+(d.convives?` · ${d.ppBites} bouchées/pers.`:'')+
-    (d.note?`\n\nPrécisions : ${d.note}`:'');
-
+  const textFallback=`Commande ${d.ref} — ${d.prenom} ${d.nom} · ${euro(d.ttc)} TTC · voir PDF joint.`;
+  let sent=false;
   try{
     const r=await fetch(CONFIG.apiEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({ref:d.ref,clientName:`${d.prenom} ${d.nom}`,bakeryName:d.bakeryNom,bakeryEmail:d.bakeryEmail,replyTo:d.email,text:corps,pdfBase64:pdfB64,filename:`Commande-${d.ref}.pdf`})});
-    if(!r.ok) throw new Error('api');
-  }catch(err){ console.warn('Envoi API indisponible (normal hors Vercel) :',err); }
+      body:JSON.stringify({ref:d.ref,clientName:`${d.prenom} ${d.nom}`,bakeryName:d.bakeryNom,bakeryEmail:d.bakeryEmail,replyTo:d.email,html:emailHTML(d),text:textFallback,pdfBase64:pdfB64,filename:`Commande-${d.ref}.pdf`})});
+    sent=r.ok;
+  }catch(err){ console.warn('Envoi API indisponible :',err); }
 
   formWrap.style.display='none'; bar.classList.remove('show');
-  if(d.acompte>0) doneMsg.innerHTML=`Merci ! Votre commande et son PDF nous ont été transmis. Un <b>acompte de 50 % (${euro(d.acompte)})</b> sera demandé pour la valider. Nous vous recontactons très vite.`;
-  document.getElementById('done').classList.add('show');
-  document.getElementById('commande').scrollIntoView({behavior:'smooth',block:'start'});
+  if(sent){
+    doneMsg.innerHTML=`Merci ${d.prenom} ! Votre <b>devis</b> est téléchargé et votre demande nous est bien parvenue. Nous vérifions les disponibilités et revenons vers vous très vite pour <b>confirmer votre commande</b>.`
+      +(d.acompte>0?` Une fois confirmée, un <b>acompte de 50 % (${euro(d.acompte)})</b> vous sera demandé, à déposer en boulangerie.`:``)
+      +`<br><br>Pensez à conserver votre PDF. \uD83E\uDD50`;
+  } else {
+    doneMsg.innerHTML=`Votre <b>devis</b> est bien téléchargé, mais son envoi automatique à la boulangerie n'a pas abouti. Merci de nous <b>appeler au ${d.bakeryPhone}</b> (ou de nous transmettre votre PDF) pour finaliser votre commande. Toutes nos excuses pour ce contretemps.`;
+  }
+  $('done').classList.add('show'); $('commande').scrollIntoView({behavior:'smooth',block:'start'});
 });
 dlBtn.onclick=()=>{ if(lastPDF)lastPDF.save('Commande-traiteur-Ange.pdf'); };
+const againBtn=$('againBtn'); if(againBtn) againBtn.onclick=()=>location.reload();
 
-render();
+applyBakery(bakery); updateFormUI(); render();
 
 </script>
 </body>
