@@ -410,7 +410,7 @@
           <div class="tr"><span>Total HT</span><span id="htVal">0,00 €</span></div>
           <div class="tr"><span>TVA</span><span id="tvaVal">0,00 €</span></div>
           <div class="tr grand"><span class="l">Total TTC</span><span class="v" id="grandTotal">0,00 €</span></div>
-          <div class="tr acompte" id="acompteRow" style="display:none;"><span>Acompte à verser (50 %)</span><span class="v" id="acompteVal">0,00 €</span></div>
+          <div class="tr acompte" id="acompteRow" style="display:none;font-size:12px;font-weight:700;line-height:1.4;"><span id="acompteVal">Pour confirmer votre commande : règlement de la totalité en boutique.</span></div>
         </div>
 
         <div class="gate" id="gate">
@@ -539,7 +539,7 @@
 const CONFIG = {
   apiEndpoint:"/api/send-order",
   minOrder:100,
-  acompteRate:0.50,
+  acompteRate:1.00,       // 100 % : règlement d'avance en boutique pour confirmer (mettre 0.50 pour repasser en arrhes)
   alertHours:72,          // en dessous : alerte "valider par téléphone" (sans bloquer)
   deliveryFee:30, installationFee:30, feeTva:0.055,
   maxLots:20,             // max 20 lots/plaques
@@ -551,6 +551,7 @@ const CONFIG = {
 const GAMME_COULEURS = {"P'tit Dej":"#E0A100","Salé":"#D2542A","Sucré":"#C85A86","Pains":"#A9772E","Boissons":"#2E9C9C","Accessoires":"#7C7A72"};
 const PALETTE=["#E0A100","#D2542A","#C85A86","#A9772E","#2E9C9C","#7C7A72","#5E7CE0","#6BA644"];
 const GAMME_TYPE={};  // le type vient de l'Excel (colonne Type)
+const QR_TRAITEUR="data:image/png;base64,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";  // QR -> https://traiteur-ange.vercel.app/ (repasser commande)
 
 /* CATALOGUE — depuis ton Excel */
 const PRODUITS = [
@@ -1824,7 +1825,7 @@ function render(){
   deliveryRow.style.display=c.delFee?'flex':'none';
   installationRow.style.display=c.instFee?'flex':'none';
   htVal.textContent=euro(c.grandHT); tvaVal.textContent=euro(c.grandTVA); grandTotal.textContent=euro(c.grandTTC);
-  acompteRow.style.display=c.minBase>CONFIG.minOrder?'flex':'none'; acompteVal.textContent=euro(c.grandTTC*CONFIG.acompteRate);
+  acompteRow.style.display=c.minBase>CONFIG.minOrder?'flex':'none';
   // barre enrichie
   bar.classList.toggle('show',c.count>0);
   barCount.textContent=c.count; barHT.textContent=euro(c.grandHT); barTotal.textContent=euro(c.grandTTC);
@@ -1899,14 +1900,28 @@ function buildPDF(d){
   L(d.email); L(d.tel);
   doc.setFont('helvetica','bold'); R('Ange '+d.bakeryNom); doc.setFont('helvetica','normal');
   d.bakeryAdresse.split(', ').forEach(pp=>R(pp)); R('Tél. '+d.bakeryPhone); R(d.bakeryEmail);
-  y=Math.max(yl,yr)+2;
-  doc.setFillColor(243,247,207); doc.roundedRect(M,y-4,W-2*M,9,2,2,'F');
-  doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(63,70,0);
-  let strip=d.mode+'  ·  '+d.dateSouhaitee+(d.convives?('  ·  '+d.convives+' personnes'):'');
-  doc.text(strip,M+4,y+1.5); doc.setTextColor(26,26,22); y+=11;
-  if(d.deliv){ doc.setFont('helvetica','normal'); doc.setFontSize(9);
-    const adr=[d.deliv.rue,d.deliv.comp,((d.deliv.cp||'')+' '+(d.deliv.ville||'')).trim()].filter(Boolean).join(' — ');
-    doc.text('Adresse de livraison : '+adr,M,y); y+=7; } else { y+=1; }
+  y=Math.max(yl,yr)+3;
+  // --- Bloc RETRAIT / LIVRAISON + date, bien visible ---
+  const isLiv=d.mode==='Livraison';
+  const livAdr=d.deliv?[d.deliv.rue,d.deliv.comp,((d.deliv.cp||'')+' '+(d.deliv.ville||'')).trim()].filter(Boolean).join(' — '):'';
+  const modeLabel=isLiv?'LIVRAISON À DOMICILE':'RETRAIT EN BOUTIQUE';
+  const lieuLabel=isLiv?('Livraison à : '+livAdr):('À retirer : Boulangerie Ange du '+d.bakeryNom+' — '+d.bakeryAdresse);
+  const boxH=22;
+  doc.setFillColor(11,11,10); doc.roundedRect(M,y-4,W-2*M,boxH,2.5,2.5,'F');
+  // pastille mode à gauche
+  doc.setFillColor(205,219,0); doc.roundedRect(M+3,y-1.5,53,6.5,1.5,1.5,'F');
+  doc.setTextColor(11,11,10); doc.setFont('helvetica','bold'); doc.setFontSize(8.6);
+  doc.text(modeLabel,M+29.5,y+3,{align:'center'});
+  // convives à droite
+  if(d.convives){ doc.setTextColor(205,219,0); doc.setFont('helvetica','bold'); doc.setFontSize(9.5);
+    doc.text(d.convives+' personnes',W-M-4,y+3,{align:'right'}); }
+  // date/heure en grand
+  doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(13.5);
+  doc.text(d.dateLong||d.dateSouhaitee,M+4,y+11);
+  // lieu
+  doc.setFont('helvetica','normal'); doc.setFontSize(8.4); doc.setTextColor(214,214,208);
+  doc.text(doc.splitTextToSize(lieuLabel,W-2*M-8),M+4,y+16.5);
+  doc.setTextColor(26,26,22); y+=boxH+3;
   const cQ=M+2,cD=M+14,cP=W-M-46,cT=W-M-2;
   doc.setFillColor(11,11,10); doc.rect(M,y-5,W-2*M,8,'F');
   doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(8.5);
@@ -1915,7 +1930,6 @@ function buildPDF(d){
   d.lignes.forEach((l,ix)=>{
     if(y>250){doc.addPage();y=20;}
     const des=doc.splitTextToSize(l.des,cP-cD-6);
-    if(ix%2===1){ doc.setFillColor(250,247,239); doc.rect(M,y-4.2,W-2*M,Math.max(des.length*4.6,6)+1.2,'F'); }
     doc.text(String(l.qty),cQ,y); doc.text(des,cD,y);
     doc.text(euro(l.puHT),cP,y,{align:'right'}); doc.text(euro(l.totHT),cT,y,{align:'right'});
     y+=Math.max(des.length*4.6,6)+1.5;
@@ -1926,23 +1940,74 @@ function buildPDF(d){
     doc.setTextColor(26,26,22); y+=6; };
   rr('Total HT',euro(d.ht)); rr('TVA',euro(d.tva));
   rr('TOTAL TTC',euro(d.ttc),true,13,[26,26,22]);
-  if(d.acompte>0){ doc.setFillColor(243,247,207); doc.roundedRect(cP-42,y-4.3,(cT-cP)+46,7.5,1.5,1.5,'F');
-    rr('Acompte à verser à la confirmation (50 %)',euro(d.acompte),true,10,[63,70,0]); }
+  if(d.acompte>0){ y+=2.5; if(y>248){doc.addPage();y=20;}
+    const payH=d.acompteDeadline?13:9;
+    doc.setFillColor(243,247,207); doc.setDrawColor(205,219,0);
+    doc.roundedRect(M,y-4,W-2*M,payH,2,2,'FD');
+    doc.setFont('helvetica','bold'); doc.setFontSize(9.3); doc.setTextColor(63,70,0);
+    doc.text('Pour confirmer votre commande : règlement de la totalité en boutique.',M+4,y+1.5);
+    if(d.acompteDeadline){ doc.setFont('helvetica','normal'); doc.setFontSize(8.4); doc.setTextColor(90,99,0);
+      doc.text('À régler de préférence avant le '+d.acompteDeadline+' (72 h avant votre événement).',M+4,y+6.7); }
+    doc.setTextColor(26,26,22); y+=payH-2; }
   y+=1;
-  doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(110,106,94);
-  let repr='Bouchées : '+d.bSale+' salées · '+d.bSucre+' sucrées';
-  if(d.convives) repr+='   |   Par personne : '+d.ppBites+' bouchées/pers · '+euro(d.htProd/d.convives)+' HT · '+euro(d.ttcProd/d.convives)+' TTC';
-  doc.text(repr,M,y); doc.setTextColor(26,26,22); y+=7;
+  if(y>232){doc.addPage();y=20;}
+  const totBites=d.bSale+d.bSucre; const dec=n=>n.toFixed(1).replace('.',',');
+  const synH=d.convives?26:14;
+  doc.setFillColor(255,255,255); doc.setDrawColor(233,228,214); doc.roundedRect(M,y-4,W-2*M,synH,2,2,'FD');
+  doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(63,70,0);
+  doc.text('Synthèse bouchées',M+4,y+1.5); doc.setTextColor(26,26,22);
+  doc.setFont('helvetica','normal'); doc.setFontSize(8.7);
+  let sy=y+7.2; const lh=4.6; const cx1=M+4;
+  const line=(t)=>{ doc.text(t,cx1,sy); sy+=lh; };
+  if(d.convives) line('Nombre d\u2019invités : '+d.convives);
+  line('Total bouchées : '+totBites+'  ('+d.bSale+' salées · '+d.bSucre+' sucrées)');
+  if(d.convives){
+    line('Bouchées par invité : '+dec(totBites/d.convives)+'  ('+dec(d.bSale/d.convives)+' salées · '+dec(d.bSucre/d.convives)+' sucrées)');
+    line('Prix par invité : '+euro(d.ttcProd/d.convives)+' TTC  ('+euro(d.htProd/d.convives)+' HT)');
+  }
+  doc.setTextColor(26,26,22); y+=synH+3;
   if(d.facture){ if(y>240){doc.addPage();y=20;}
     doc.setFont('helvetica','bold'); doc.setFontSize(9.5); doc.text('Adresse de facturation',M,y); y+=5;
     doc.setFont('helvetica','normal');
     [d.facture.raison,d.facture.rue,d.facture.comp,((d.facture.cp||'')+' '+(d.facture.ville||'')).trim()].filter(Boolean)
       .forEach(t=>{doc.text(t,M,y);y+=4.8;});
     y+=2; }
-  if(d.note){ if(y>245){doc.addPage();y=20;}
+  if(d.note){
     doc.setFont('helvetica','italic'); doc.setFontSize(9);
-    const nn=doc.splitTextToSize('Précisions : '+d.note,W-2*M); doc.text(nn,M,y); y+=nn.length*4.4+3; }
-  if(y>246){doc.addPage();y=20;}
+    const nn=doc.splitTextToSize(d.note,W-2*M-8);
+    const boxH=nn.length*4.4+11;
+    if(y-4+boxH>252){doc.addPage();y=20;}
+    doc.setFillColor(255,255,255); doc.setDrawColor(198,40,40); doc.setLineWidth(0.55);
+    doc.roundedRect(M,y-4,W-2*M,boxH,2,2,'FD'); doc.setLineWidth(0.200025);
+    doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(198,40,40);
+    doc.text('Précisions',M+4,y+1.5);
+    doc.setFont('helvetica','italic'); doc.setFontSize(9); doc.setTextColor(26,26,22);
+    doc.text(nn,M+4,y+6.8); doc.setTextColor(26,26,22);
+    y+=boxH+3; }
+  // --- Bloc chaleureux + QR "repasser commande" (placé AVANT le rappel orange) ---
+  const qs=27, qx=W-M-qs-4, tw=qx-M-8, mlh=4.3;
+  doc.setFont('helvetica','normal'); doc.setFontSize(8.6);
+  const merci=doc.splitTextToSize('Toute l\u2019équipe de la Boulangerie Ange du '+d.bakeryNom+' a hâte de régaler vos invités. Un déjeuner d\u2019équipe, un pot, un anniversaire ? Scannez le code et composez votre prochaine commande en quelques clics.',tw);
+  const merciTop=12, emailY=merciTop+(merci.length-1)*mlh+mlh+6;   // saut de ligne après le texte, puis l'e-mail
+  const qbH=Math.max(emailY+8, qs+9);                              // marge sous l'e-mail + place pour le QR
+  // pagination : ce bloc + le rappel orange + la ligne légale
+  if(y-4+qbH+5+17 > 286){doc.addPage();y=20;}
+  doc.setFillColor(243,247,207); doc.setDrawColor(205,219,0);
+  doc.roundedRect(M,y-4,W-2*M,qbH,3,3,'FD');
+  const qy=y-1;
+  try{ doc.setFillColor(255,255,255); doc.roundedRect(qx-1.5,qy-1.5,qs+3,qs+3,1.5,1.5,'F');
+    doc.addImage(QR_TRAITEUR,'PNG',qx,qy,qs,qs); }catch(e){}
+  doc.setFont('helvetica','bold'); doc.setFontSize(6.6); doc.setTextColor(63,70,0);
+  doc.text('Repasser commande',qx+qs/2,qy+qs+3.2,{align:'center'});
+  doc.setTextColor(45,50,0); doc.setFont('helvetica','bold'); doc.setFontSize(11.5);
+  doc.text('Merci de votre confiance, '+d.prenom+' !',M+4,y+6);
+  doc.setFont('helvetica','normal'); doc.setFontSize(8.6); doc.setTextColor(63,70,0);
+  doc.text(merci,M+4,y+merciTop);
+  doc.setFont('helvetica','bold'); doc.setFontSize(8.6); doc.setTextColor(11,11,10);
+  doc.text(d.bakeryPhone+'  ·  '+d.bakeryEmail,M+4,y+emailY);
+  doc.setTextColor(26,26,22); y+=qbH+5;
+
+  // --- Rappel orange "à conserver" (après le bloc confiance) ---
   doc.setFillColor(255,244,229); doc.setDrawColor(232,121,26);
   doc.roundedRect(M,y-4,W-2*M,17,2,2,'FD');
   doc.setTextColor(122,74,28); doc.setFont('helvetica','bold'); doc.setFontSize(9);
@@ -1950,12 +2015,12 @@ function buildPDF(d){
   doc.setFont('helvetica','normal'); doc.setFontSize(8.5);
   doc.text('La boulangerie vous recontacte par e-mail, téléphone ou WhatsApp pour confirmer votre commande.',M+4,y+6);
   doc.text('Vous ne payez rien maintenant.',M+4,y+10.5);
-  doc.setTextColor(26,26,22);
-  doc.setDrawColor(233,228,214); doc.line(M,280,W-M,280);
-  doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(63,70,0);
-  doc.text('Merci de votre confiance !  '+d.bakeryPhone+' · '+d.bakeryEmail,W/2,286,{align:'center'});
+  doc.setTextColor(26,26,22); y+=17+5;
+
+  // ligne légale, en pied de page
+  doc.setDrawColor(233,228,214); doc.line(M,290,W-M,290);
   doc.setFont('helvetica','normal'); doc.setFontSize(7.8); doc.setTextColor(150,140,120);
-  doc.text('Devis à confirmer par la boulangerie. Ce document ne vaut pas paiement.',W/2,290.5,{align:'center'});
+  doc.text('Devis à confirmer par la boulangerie. Ce document ne vaut pas paiement.',W/2,294,{align:'center'});
   return doc;
 }
 
@@ -1968,25 +2033,44 @@ function emailHTML(d){
    <span style="color:#CDDB00;font-weight:bold;font-size:18px">Boulangerie Ange</span>
    <span style="color:#ffffffcc;font-size:13px"> — ${d.bakeryNom}</span></div>
  <div style="border:1px solid #eee;border-top:0;border-radius:0 0 12px 12px;padding:22px">
-   <h2 style="margin:0 0 2px;font-size:19px">Nouvelle commande traiteur</h2>
-   <p style="margin:0 0 18px;color:#888;font-size:13px">Réf. ${d.ref} · ${d.dateEmission}</p>
-   <table style="width:100%;font-size:14px;line-height:1.5;margin-bottom:16px"><tr>
-     <td style="vertical-align:top;width:50%"><b>Client</b><br>${d.prenom} ${d.nom}<br>${d.email}<br>${d.tel}</td>
+   <table style="width:100%;border-collapse:collapse"><tr>
+     <td style="vertical-align:top">
+       <h2 style="margin:0 0 2px;font-size:19px">Nouvelle commande traiteur</h2>
+       <p style="margin:0;color:#888;font-size:13px">Réf. ${d.ref} · ${d.dateEmission}</p>
+     </td>
+     <td style="vertical-align:top;text-align:right;white-space:nowrap">
+       <div style="display:inline-block;text-align:left;border:1px solid #CDDB00;background:#F8FBE3;border-radius:8px;padding:9px 12px;font-size:12px;color:#3f4600;line-height:1.7">
+         <div style="font-weight:bold;font-size:11px;letter-spacing:.3px;color:#5b6300;margin-bottom:3px">SUIVI INTERNE</div>
+         Prise en charge par : ______________<br>
+         Validée auprès du client le : ______________
+       </div>
+     </td>
+   </tr></table>
+   <div style="margin-bottom:18px"></div>
+   <table style="font-size:14px;line-height:1.5;margin-bottom:16px" cellpadding="0" cellspacing="0"><tr>
+     <td style="vertical-align:top;padding-right:48px"><b>Client</b><br>${d.prenom} ${d.nom}<br>${d.email}<br>${d.tel}</td>
      <td style="vertical-align:top"><b>${d.mode}</b><br>Souhaité le ${d.dateSouhaitee}${d.convives?'<br>'+d.convives+' personnes':''}</td>
    </tr></table>
    ${d.deliv?`<p style="margin:0 0 16px;font-size:14px;line-height:1.5"><b>Adresse de livraison</b><br>${addr(d.deliv)}</p>`:''}
    <table style="width:100%;font-size:14px;border-collapse:collapse;margin-bottom:14px">${rows}</table>
-   <table style="width:100%;font-size:14px;line-height:1.6">
-     <tr><td style="color:#666">Total HT</td><td style="text-align:right">${euro(d.ht)}</td></tr>
-     <tr><td style="color:#666">TVA</td><td style="text-align:right">${euro(d.tva)}</td></tr>
-     <tr><td style="font-weight:bold;font-size:17px;padding-top:4px">Total TTC</td><td style="text-align:right;font-weight:bold;font-size:17px;padding-top:4px">${euro(d.ttc)}</td></tr>
-     ${d.acompte?`<tr><td style="color:#5b6300;font-weight:bold">Acompte 50 %</td><td style="text-align:right;color:#5b6300;font-weight:bold">${euro(d.acompte)}</td></tr>`:''}
+   <table align="right" cellpadding="0" cellspacing="0" style="font-size:14px;line-height:1.7">
+     <tr><td style="color:#666;padding-right:28px">Total HT</td><td style="text-align:right;white-space:nowrap">${euro(d.ht)}</td></tr>
+     <tr><td style="color:#666;padding-right:28px">TVA</td><td style="text-align:right;white-space:nowrap">${euro(d.tva)}</td></tr>
+     <tr><td style="font-weight:bold;font-size:17px;padding:4px 28px 0 0">Total TTC</td><td style="text-align:right;font-weight:bold;font-size:17px;padding-top:4px;white-space:nowrap">${euro(d.ttc)}</td></tr>
+     ${d.acompte?`<tr><td colspan="2" style="font-size:12px;color:#5b6300;font-weight:bold;text-align:right;padding-top:6px">Règlement de la totalité d'avance en boutique pour confirmer</td></tr>${d.acompteDeadline?`<tr><td colspan="2" style="font-size:12px;color:#7a4a1c;text-align:right;padding-top:1px">avant le ${d.acompteDeadline}</td></tr>`:''}`:''}
    </table>
+   <div style="clear:both"></div>
    <p style="font-size:13px;color:#555;margin:14px 0 0">Bouchées : ${d.bSale} salées · ${d.bSucre} sucrées${d.convives?' · '+d.ppBites+' bouchées/pers':''}</p>
    ${d.facture?`<p style="font-size:13px;line-height:1.5;margin:12px 0 0"><b>Facturation</b><br>${d.facture.raison}<br>${addr(d.facture)}</p>`:''}
    ${d.note?`<p style="font-size:13px;margin:12px 0 0"><b>Précisions :</b> ${d.note}</p>`:''}
-   <div style="background:#F3F7CF;border-radius:10px;padding:13px 15px;margin-top:18px;font-size:13px;color:#3f4600;line-height:1.5">
-     <b style="font-size:14px;display:block;margin-bottom:6px">Traitement de la commande</b>&#9744; Vérifier la disponibilité et la faisabilité pour le ${d.dateSouhaitee}<br>&#9744; Contacter le client pour confirmer la commande<br>${d.acompte?`&#9744; Encaisser l'acompte de 50 % (${euro(d.acompte)})<br>`:''}&#9744; Planifier la production<br>&#9744; Organiser le ${d.mode==='Livraison'?'transport (adresse ci-dessus)':'retrait en boutique'} — pris en charge par : ______________<br>&#9744; Adresser la confirmation au client (tél. ${d.tel} · ${d.email})</div>
+   <div style="background:#F3F7CF;border-radius:10px;padding:14px 16px;margin-top:18px;font-size:13px;color:#3f4600;line-height:1.5">
+     <div style="font-size:14px;font-weight:bold;margin-bottom:8px">Traitement de la commande</div>
+     <div style="margin:5px 0">&#9744; Vérifier la disponibilité et la faisabilité pour le ${d.dateSouhaitee}</div>
+     <div style="margin:5px 0">&#9744; Appeler le client au ${d.tel} pour finaliser la commande</div>
+     ${d.acompte?`<div style="margin:5px 0">&#9744; Encaisser le paiement d'avance en boutique (${euro(d.acompte)})${d.acompteDeadline?` — avant le ${d.acompteDeadline}`:''}</div>`:''}
+     <div style="margin:5px 0">&#9744; Planifier la production</div>
+     <div style="margin:5px 0">&#9744; Organiser le ${d.mode==='Livraison'?'transport (adresse ci-dessus)':'retrait en boutique'}</div>
+   </div>
    <p style="font-size:12px;color:#999;margin-top:16px">PDF détaillé en pièce jointe. Répondre à cet e-mail écrit directement au client.</p>
  </div></div>`;
 }
@@ -2010,6 +2094,15 @@ $('orderForm').addEventListener('submit',async e=>{
   if(c.delFee){const h=c.delFee/(1+CONFIG.feeTva); lignes.push({qty:1,des:'Livraison',pu:c.delFee,tot:c.delFee,puHT:h,totHT:h});}
   if(c.instFee){const h=c.instFee/(1+CONFIG.feeTva); lignes.push({qty:1,des:'Installation (estimation)',pu:c.instFee,tot:c.instFee,puHT:h,totHT:h});}
   const now=new Date(),pad=n=>String(n).padStart(2,'0');
+  const cap=s=>s?s.charAt(0).toUpperCase()+s.slice(1):s;
+  const evDate=f.date.value?new Date(f.date.value):null;
+  const dateLong=evDate?cap(evDate.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'}))+(f.heure.value?` à ${f.heure.value}`:''):'';
+  let acompteDeadline='';
+  if(acompte>0 && f.date.value){
+    const ev=new Date(f.date.value+'T'+(f.heure.value||'12:00'));
+    const dl=new Date(ev.getTime()-CONFIG.alertHours*3600*1000);
+    acompteDeadline=cap(dl.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'}))+(f.heure.value?` à ${f.heure.value}`:'');
+  }
   const d={
     ref:`CMD-${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}`,
     dateEmission:now.toLocaleDateString('fr-FR'),
@@ -2017,6 +2110,7 @@ $('orderForm').addEventListener('submit',async e=>{
     bakeryNom:bakery.nom,bakeryAdresse:bakery.adresse,bakeryPhone:bakery.phone,bakeryEmail:bakery.email,
     mode:c.livraison?'Livraison':'Retrait', deliv,
     dateSouhaitee:new Date(f.date.value).toLocaleDateString('fr-FR')+(f.heure.value?` à ${f.heure.value}`:''),
+    dateLong, acompteDeadline,
     convives:conv, ttc:c.grandTTC, ht:c.grandHT, tva:c.grandTVA, ttcProd:c.ttc, htProd:c.ht,
     acompte, bSale:c.bSale, bSucre:c.bSucre, ppBites:conv?((c.bSale+c.bSucre)/conv).toFixed(1).replace('.',','):'0',
     note:f.note.value, facture, lignes,
@@ -2037,7 +2131,7 @@ $('orderForm').addEventListener('submit',async e=>{
   formWrap.style.display='none'; bar.classList.remove('show');
   if(sent){
     doneMsg.innerHTML=`Merci ${d.prenom} ! Votre <b>devis</b> est téléchargé et votre demande nous est bien parvenue. Nous vérifions les disponibilités et revenons vers vous très vite pour <b>confirmer votre commande</b>.`
-      +(d.acompte>0?` Une fois confirmée, un <b>acompte de 50 % (${euro(d.acompte)})</b> vous sera demandé, à déposer en boulangerie.`:``)
+      +(d.acompte>0?` Pour la confirmer, le <b>règlement de la totalité (${euro(d.acompte)})</b> vous sera demandé en boutique.`:``)
       +`<br><br>Pensez à conserver votre PDF. \uD83E\uDD50`;
   } else {
     doneMsg.innerHTML=`Votre <b>devis</b> est bien téléchargé, mais son envoi automatique à la boulangerie n'a pas abouti. Merci de nous <b>appeler au ${d.bakeryPhone}</b> (ou de nous transmettre votre PDF) pour finaliser votre commande. Toutes nos excuses pour ce contretemps.`;
