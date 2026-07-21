@@ -36,24 +36,26 @@
   @media(min-width:560px){ .head-phone .col{display:flex;flex-direction:column;line-height:1.15;} .head-phone small{display:block;font-size:10px;color:#ffffff88;font-weight:700;text-transform:uppercase;letter-spacing:.05em;} }
 
   .hero{position:relative; background:var(--noir); color:#fff; overflow:hidden;}
-  .hero .wrap{padding:56px 22px 52px; position:relative; z-index:2;}
-  .kicker{display:inline-flex; align-items:center; gap:8px; font-weight:900; font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--noir); background:var(--vert); padding:7px 15px; border-radius:999px; margin:0 0 20px;}
-  .hero h1{font-family:"Fraunces",serif; font-weight:600; font-size:clamp(36px,6.4vw,60px); line-height:1.0; letter-spacing:-.02em; margin:0 0 16px;}
+  .hero .wrap{padding:34px 22px 30px; position:relative; z-index:2;}
+  @media(max-width:680px){ .hero .wrap{padding:24px 20px 22px;} }
+  .kicker{display:inline-flex; align-items:center; gap:8px; font-weight:900; font-size:11.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--noir); background:var(--vert); padding:6px 13px; border-radius:999px; margin:0 0 14px;}
+  .hero h1{font-family:"Fraunces",serif; font-weight:600; font-size:clamp(31px,5.6vw,52px); line-height:1.03; letter-spacing:-.02em; margin:0;}
   .hero h1 em{font-style:italic; color:var(--vert);}
-  .hero p.lead{max-width:56ch; margin:0; color:#EDE9DE; font-size:18px;}
+  .hero p.lead{max-width:52ch; margin:0 0 10px; color:#EDE9DE; font-size:16.5px; line-height:1.4;}
   .halo{position:absolute; right:-70px; top:-70px; width:300px; height:300px; border:26px solid var(--vert); border-radius:50%; opacity:.16; transform:rotate(-12deg);}
 
   .perks{background:var(--paper); border-bottom:1px solid var(--line);}
-  .perks .wrap{padding:24px 22px 18px;}
-  .perkgrid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px;}
-  @media(max-width:860px){ .perkgrid{grid-template-columns:repeat(2,1fr);} }
-  @media(max-width:480px){ .perkgrid{grid-template-columns:1fr;} }
+  .perks .wrap{padding:11px 22px;}
+  .perkgrid{display:flex; gap:9px; overflow-x:auto; scrollbar-width:none; -webkit-overflow-scrolling:touch;}
+  .perkgrid::-webkit-scrollbar{display:none;}
   .crc-note{font-size:11.5px; color:var(--muted); margin:14px 0 0;}
   .hours-note{font-size:12.5px; color:var(--muted); margin:-6px 0 14px;}
-  .perk{display:flex; gap:11px; align-items:flex-start;}
-  .perk .ic{flex:none; width:36px; height:36px; border-radius:10px; background:var(--vert-soft); color:#5b6300; display:grid; place-items:center;}
-  .perk b{display:block; font-size:14px; line-height:1.2;}
+  .perk{flex:none; display:flex; gap:9px; align-items:center; background:#fff; border:1px solid var(--line); border-radius:999px; padding:6px 15px 6px 7px; white-space:nowrap;}
+  .perk .ic{flex:none; width:28px; height:28px; border-radius:50%; background:var(--vert-soft); color:#5b6300; display:grid; place-items:center;}
+  .perk b{font-size:13.5px; line-height:1.2;}
   .perk span{font-size:12.5px; color:var(--muted); line-height:1.3;}
+  .perk span::before{content:"\00b7"; margin:0 6px; color:var(--line);}
+  @media(max-width:760px){ .perk span{display:none;} }
 
   .catnav{position:sticky; top:64px; z-index:40; background:rgba(253,251,245,.95); backdrop-filter:blur(8px); border-bottom:1px solid var(--line);}
   .catnav-in{display:flex; gap:9px; overflow-x:auto; padding:12px 22px; max-width:1040px; margin:0 auto; scrollbar-width:none;}
@@ -124,6 +126,12 @@
   .bk-single b{display:block; font-size:15px;}
   .bk-single span{font-size:13px; color:var(--muted);}
   .convives{display:flex; align-items:center; gap:12px; background:#fff; border:1px solid var(--line); border-radius:14px; padding:12px 16px; margin-bottom:16px; flex-wrap:wrap;}
+  /* variante sombre : champ convives integre au hero */
+  .hero .convives{background:rgba(255,255,255,.07); border:1.5px solid rgba(255,255,255,.20); backdrop-filter:blur(4px); margin:18px 0 0; padding:12px 16px; max-width:560px;}
+  .hero .convives label{color:#fff;}
+  .hero .convives input{background:#fff; border-color:transparent;}
+  .hero .convives .hint{color:#D6D2C6; font-size:12.5px;}
+  .hero .convives .conv-live{background:rgba(205,219,0,.16); color:var(--vert); border:1px solid rgba(205,219,0,.35);}
   .convives label{font-weight:800; font-size:14.5px;}
   .convives input{width:90px; font-family:inherit; font-size:16px; font-weight:800; padding:9px 12px; border:1.5px solid var(--line); border-radius:10px;}
   .convives input:focus-visible{outline:3px solid var(--vert); border-color:var(--vert-deep);}
@@ -131,11 +139,17 @@
   #etapeConvives{scroll-margin-top:80px;}
 
   /* Parcours client — recap visuel en 4 etapes */
-  .parcours-wrap{background:var(--paper); border-bottom:1px solid var(--line);}
-  .parcours-wrap .wrap{padding:26px 22px 24px;}
-  .parcours-title{text-align:center; font-family:"Fraunces",serif; font-weight:600; font-size:20px; margin:0 0 20px; color:var(--ink);}
-  .parcours-title strong{color:var(--vert-deep);}
-  .steps{list-style:none; display:flex; gap:12px; padding:0; margin:0 0 18px;}
+  /* Accordeon "Comment ca marche ?" — replie par defaut */
+  .howto{background:var(--paper); border-bottom:1px solid var(--line);}
+  .howto>summary{list-style:none; cursor:pointer; max-width:1040px; margin:0 auto; padding:13px 22px; display:flex; align-items:center; gap:9px; font-weight:800; font-size:14.5px; color:var(--ink);}
+  .howto>summary::-webkit-details-marker{display:none;}
+  .howto>summary b{color:var(--vert-deep);}
+  .howto>summary .chev{margin-left:auto; transition:transform .2s; color:var(--muted); font-size:12px;}
+  .howto[open]>summary .chev{transform:rotate(180deg);}
+  .howto>summary:hover{background:rgba(205,219,0,.10);}
+  .howto>summary:focus-visible{outline:3px solid var(--vert); outline-offset:-3px;}
+  .howto-in{max-width:1040px; margin:0 auto; padding:8px 22px 22px;}
+  .steps{list-style:none; display:flex; gap:12px; padding:0; margin:14px 0 18px;}
   .steps li{flex:1; display:flex;}
   .step{position:relative; width:100%; display:flex; flex-direction:column; align-items:center; text-align:center; gap:6px; background:var(--creme-2); border:1.5px solid var(--line); border-radius:16px; padding:20px 10px 14px; cursor:pointer; font-family:inherit; transition:transform .15s, border-color .15s, box-shadow .15s;}
   .step:hover{border-color:var(--vert-deep); transform:translateY(-3px); box-shadow:var(--shadow);}
@@ -155,7 +169,7 @@
   .conv-live.show{display:block;}
   .step-info{cursor:default;}
   .step-info:hover{border-color:var(--line); transform:none; box-shadow:none;}
-  .parcours-urgent{text-align:center; font-size:13.5px; color:var(--muted); margin:0 0 18px;}
+  .parcours-urgent{text-align:center; font-size:13.5px; color:var(--muted); margin:0;}
   .cat-sub{display:none; font-size:13px; font-weight:900; color:#fff; background:rgba(255,255,255,.28); padding:5px 12px; border-radius:999px; white-space:nowrap; margin-left:8px;}
   .cat-sub.show{display:inline-block;}
   #recap, #orderForm{scroll-margin-top:120px;}
@@ -252,7 +266,19 @@
   .bstat b{font-family:"Fraunces",serif; font-weight:700; font-size:18px; color:#fff;}
   .bstat small{font-size:10px; color:#ffffff99; font-weight:700; text-transform:uppercase; letter-spacing:.03em; margin-top:2px;}
   .bstat.big b{color:var(--vert); font-size:23px;}
-  @media(max-width:640px){ .bar-stats{gap:14px;} .bstat b{font-size:15px;} .bstat.big b{font-size:18px;} .bstat.mhide{display:none;} }
+  @media(max-width:640px){ .bar-stats{gap:12px;} .bstat b{font-size:15px;} .bstat.big b{font-size:18px;} .bstat.mhide{display:none;} }
+
+  /* Navigation par etapes depuis la barre basse */
+  .bar .barnav{flex:none; background:rgba(255,255,255,.10); color:#fff; border:1px solid rgba(255,255,255,.22); border-radius:12px; padding:9px 13px; display:flex; flex-direction:column; align-items:center; gap:2px; line-height:1; box-shadow:none; margin-right:14px;}
+  .bar .barnav:hover{background:rgba(255,255,255,.18); transform:none; box-shadow:none;}
+  .bar .barnav .ar{font-size:16px; font-weight:900;}
+  .bar .barnav small{font-size:9.5px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; color:#ffffffb3;}
+  .navsheet{position:absolute; left:0; right:0; bottom:100%; background:var(--noir); border-top:1px solid rgba(255,255,255,.12); padding:10px 18px 12px; display:flex; gap:8px; overflow-x:auto; scrollbar-width:none; box-shadow:0 -10px 24px rgba(0,0,0,.35);}
+  .navsheet::-webkit-scrollbar{display:none;}
+  .navsheet[hidden]{display:none;}
+  .bar .navsheet button{flex:none; background:rgba(255,255,255,.09); color:#fff; border:1px solid rgba(255,255,255,.20); border-radius:999px; padding:10px 16px; font-size:13.5px; font-weight:800; box-shadow:none;}
+  .bar .navsheet button:hover{background:var(--vert); color:var(--noir); transform:none; box-shadow:none;}
+  @media(max-width:520px){ .bar .barnav{margin-right:10px; padding:9px 10px;} .bar .barnav small{display:none;} .bar-in{padding:10px 14px;} }
 
   /* ===== Finitions premium ===== */
   .submit{position:relative; overflow:hidden; background:linear-gradient(135deg,#D8E634,var(--vert) 55%,#BFCB00); box-shadow:0 6px 18px rgba(205,219,0,.30); transition:transform .18s cubic-bezier(.34,1.56,.64,1), box-shadow .22s, filter .22s;}
@@ -299,8 +325,8 @@
   .bulle.b3{width:38px;height:38px; right:26%; top:66%; animation-delay:-7s; animation-duration:12s; opacity:.8;}
   @keyframes floatB{0%,100%{transform:translateY(0) translateX(0);}33%{transform:translateY(-16px) translateX(-6px);}66%{transform:translateY(8px) translateX(5px);}}
   @media(max-width:680px){ .bulle.b1{width:78px;height:78px; right:5%;} .bulle.b3{display:none;} }
-  .hero-cta{display:flex; gap:16px; align-items:center; margin-top:26px; flex-wrap:wrap; position:relative; z-index:2;}
-  .cta-main{font-family:inherit; font-weight:900; font-size:16.5px; color:var(--noir); background:linear-gradient(135deg,#D8E634,var(--vert)); border:0; border-radius:999px; padding:16px 30px; cursor:pointer; box-shadow:0 8px 24px rgba(205,219,0,.35); transition:transform .18s cubic-bezier(.34,1.56,.64,1), box-shadow .2s;}
+  .hero-cta{display:flex; gap:14px; align-items:center; margin-top:14px; flex-wrap:wrap; position:relative; z-index:2;}
+  .cta-main{font-family:inherit; font-weight:900; font-size:16px; color:var(--noir); background:linear-gradient(135deg,#D8E634,var(--vert)); border:0; border-radius:999px; padding:14px 28px; cursor:pointer; box-shadow:0 8px 24px rgba(205,219,0,.35); transition:transform .18s cubic-bezier(.34,1.56,.64,1), box-shadow .2s;}
   .cta-main:hover{transform:translateY(-2px) scale(1.02); box-shadow:0 14px 32px rgba(205,219,0,.5);}
   .cta-main:active{transform:scale(.97);}
   .cta-sub{color:#EDE9DE; font-size:14px; font-weight:700;}
@@ -338,9 +364,14 @@
   <div class="halo" aria-hidden="true"></div>
   <div class="bulle b1" aria-hidden="true"></div><div class="bulle b2" aria-hidden="true"></div><div class="bulle b3" aria-hidden="true"></div>
   <div class="wrap">
-    <p class="kicker">🥖 Commande traiteur</p>
+    <p class="lead">Plateaux salés, sucrés, viennoiseries et boissons.</p>
     <h1>Faites votre <em>composition</em>,<br>on s'occupe du reste.</h1>
-    <p class="lead">Plateaux salés, sucrés, viennoiseries et boissons — faits maison et cuits sur place. Composez votre buffet en quelques clics, et profitez pleinement de vos invités.</p>
+    <div class="convives" id="etapeConvives">
+      <label for="convives">&#128101; Pour combien de personnes&nbsp;?</label>
+      <input type="number" id="convives" min="1" step="1" placeholder="ex. 25">
+      <span class="hint"><b>Facultatif.</b> Affiche en direct les <b>bouchées et le prix par personne</b>. Modifiable à tout moment.</span>
+      <span class="conv-live" id="convLive"></span>
+    </div>
     <div class="hero-cta">
       <button type="button" class="cta-main" id="ctaCompose">Composer mon buffet</button>
       <span class="cta-sub">Devis immédiat · <b>sans paiement en ligne</b></span>
@@ -350,9 +381,9 @@
 
 <section class="perks"><div class="wrap"><div class="perkgrid" id="perks"></div></div></section>
 
-<section class="parcours-wrap">
-  <div class="wrap">
-    <p class="parcours-title">Votre commande en <strong>5 &eacute;tapes</strong> &mdash; comptez 2 minutes &#9201;&#65039;</p>
+<details class="howto" id="howto">
+  <summary>&#9201;&#65039; Comment &ccedil;a marche&nbsp;? <b>5 &eacute;tapes, 2 minutes</b><span class="chev">&#9660;</span></summary>
+  <div class="howto-in">
     <ol class="steps">
       <li><button type="button" class="step" data-scroll="#etapeConvives"><span class="num">1</span><span class="ic">&#128101;</span><span class="lbl">Indiquez le nombre de convives</span></button></li>
       <li><button type="button" class="step" data-scroll=".cat"><span class="num">2</span><span class="ic">&#127791;</span><span class="lbl">Composez votre buffet</span></button></li>
@@ -361,14 +392,8 @@
       <li><div class="step step-info"><span class="num">5</span><span class="ic">&#128222;</span><span class="lbl">Ange vous recontacte sous 48&nbsp;h</span></div></li>
     </ol>
     <p class="parcours-urgent">Besoin plus urgent&nbsp;? Appelez-nous au <b class="bkphone2">04 50 24 89 05</b></p>
-    <div class="convives" id="etapeConvives">
-      <label for="convives">&#128101; Pour combien de personnes&nbsp;?</label>
-      <input type="number" id="convives" min="1" step="1" placeholder="ex. 25">
-      <span class="hint"><b>Facultatif et sans engagement.</b> En le renseignant, vous voyez en direct le nombre de <b>bouch&eacute;es et le prix par personne</b> au fil de votre s&eacute;lection. Modifiable &agrave; tout moment.</span>
-      <span class="conv-live" id="convLive"></span>
-    </div>
   </div>
-</section>
+</details>
 
 <nav class="catnav" aria-label="Gammes"><div class="catnav-in" id="catnav"></div></nav>
 
@@ -520,7 +545,15 @@
 </footer>
 
 <div class="bar" id="bar">
+  <div class="navsheet" id="navSheet" hidden>
+    <button type="button" data-go="#etapeConvives">&#128101; Convives</button>
+    <button type="button" data-go=".cat">&#127791; Buffet</button>
+    <button type="button" data-go="#recap">&#127869;&#65039; R&eacute;cap</button>
+    <button type="button" data-go="#orderForm">&#128196; Devis</button>
+    <button type="button" data-go="top">&#11014;&#65039; Haut de page</button>
+  </div>
   <div class="bar-in">
+    <button type="button" class="barnav" id="barNav" aria-expanded="false" aria-controls="navSheet" aria-label="Naviguer entre les étapes"><span class="ar">&#8645;</span><small>&Eacute;tapes</small></button>
     <div class="bar-stats">
       <div class="bstat"><b id="barCount">0</b><small>articles</small></div>
       <div class="bstat"><b id="barBites">—</b><small>bouchées/pers</small></div>
@@ -1827,7 +1860,7 @@ function render(){
   htVal.textContent=euro(c.grandHT); tvaVal.textContent=euro(c.grandTVA); grandTotal.textContent=euro(c.grandTTC);
   acompteRow.style.display=c.minBase>CONFIG.minOrder?'flex':'none';
   // barre enrichie
-  bar.classList.toggle('show',c.count>0);
+  bar.classList.add('show');   // barre toujours visible : sert aussi de navigation
   barCount.textContent=c.count; barHT.textContent=euro(c.grandHT); barTotal.textContent=euro(c.grandTTC);
   barBites.textContent=conv?(totalBites/conv).toFixed(1).replace('.',','):'—';
   barPP.textContent=conv?euro(c.ttc/conv):'—';
@@ -1861,10 +1894,27 @@ function updateFormUI(){
 }
 convives.addEventListener('input',render);
 document.querySelectorAll('.step[data-scroll]').forEach(b=>b.onclick=()=>{
-  const t=document.querySelector(b.dataset.scroll);
-  if(t) t.scrollIntoView({behavior:'smooth',block:'start'});
-  if(b.dataset.scroll==='#etapeConvives') setTimeout(()=>{try{convives.focus();}catch(e){}},450);
+  const ht=$('howto'); if(ht) ht.open=false;
+  goTo(b.dataset.scroll);
 });
+
+/* ---- Navigation par etapes depuis la barre basse ---- */
+function goTo(sel){
+  if(sel==='top'){ window.scrollTo({top:0,behavior:'smooth'}); setTimeout(()=>{try{convives.focus({preventScroll:true});}catch(e){}},500); return; }
+  const t=document.querySelector(sel);
+  if(t) t.scrollIntoView({behavior:'smooth',block:'start'});
+  if(sel==='#etapeConvives') setTimeout(()=>{try{convives.focus({preventScroll:true});}catch(e){}},450);
+}
+const navSheet=$('navSheet'), barNav=$('barNav');
+function closeSheet(){ navSheet.setAttribute('hidden',''); barNav.setAttribute('aria-expanded','false'); }
+barNav.onclick=e=>{
+  e.stopPropagation();
+  const willOpen=navSheet.hasAttribute('hidden');
+  if(willOpen){ navSheet.removeAttribute('hidden'); barNav.setAttribute('aria-expanded','true'); } else closeSheet();
+};
+navSheet.querySelectorAll('button[data-go]').forEach(b=>b.onclick=()=>{ goTo(b.dataset.go); closeSheet(); });
+document.addEventListener('click',e=>{ if(!navSheet.hasAttribute('hidden') && !navSheet.contains(e.target)) closeSheet(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeSheet(); });
 barGo.onclick=()=>$('commande').scrollIntoView({behavior:'smooth',block:'start'});
 document.querySelectorAll('input[name=mode]').forEach(r=>r.addEventListener('change',()=>{updateFormUI();render();}));
 document.querySelectorAll('input[name=facture]').forEach(r=>r.addEventListener('change',updateFormUI));
