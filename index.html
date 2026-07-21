@@ -268,20 +268,17 @@
   .bstat.big b{color:var(--vert); font-size:23px;}
   @media(max-width:640px){ .bar-stats{gap:12px;} .bstat b{font-size:15px;} .bstat.big b{font-size:18px;} .bstat.mhide{display:none;} }
 
-  /* Navigation par etapes depuis la barre basse */
-  .bar .barnav{flex:none; background:rgba(255,255,255,.10); color:#fff; border:1px solid rgba(255,255,255,.22); border-radius:12px; padding:9px 13px; display:flex; flex-direction:column; align-items:center; gap:2px; line-height:1; box-shadow:none; margin-right:14px;}
-  .bar .barnav:hover{background:rgba(255,255,255,.18); transform:none; box-shadow:none;}
-  .bar .barnav .ar{font-size:16px; font-weight:900;}
-  .bar .barnav small{font-size:9.5px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; color:#ffffffb3;}
-  .navsheet{position:absolute; left:0; right:0; bottom:100%; background:var(--noir); border-top:1px solid rgba(255,255,255,.12); padding:10px 18px 12px; display:flex; gap:8px; overflow-x:auto; scrollbar-width:none; box-shadow:0 -10px 24px rgba(0,0,0,.35);}
-  .navsheet::-webkit-scrollbar{display:none;}
-  .navsheet[hidden]{display:none;}
-  .bar .navsheet button{flex:none; background:rgba(255,255,255,.09); color:#fff; border:1px solid rgba(255,255,255,.20); border-radius:999px; padding:10px 16px; font-size:13.5px; font-weight:800; box-shadow:none;}
-  .bar .navsheet button:hover{background:var(--vert); color:var(--noir); transform:none; box-shadow:none;}
-  @media(max-width:520px){ .bar .barnav{margin-right:10px; padding:9px 10px;} .bar .barnav small{display:none;} .bar-in{padding:10px 14px;} }
-
-  /* ===== Finitions premium ===== */
-  .submit{position:relative; overflow:hidden; background:linear-gradient(135deg,#D8E634,var(--vert) 55%,#BFCB00); box-shadow:0 6px 18px rgba(205,219,0,.30); transition:transform .18s cubic-bezier(.34,1.56,.64,1), box-shadow .22s, filter .22s;}
+  /* Navigation par etapes depuis la barre basse — precedent / suivant */
+  .stepnav{flex:none; display:flex; align-items:center; gap:2px; background:rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.20); border-radius:12px; padding:3px; margin-right:14px;}
+  .bar .stepnav button{background:transparent; color:#fff; border:0; border-radius:9px; padding:8px 9px; font-size:15px; font-weight:900; line-height:1; box-shadow:none; transition:background .15s, opacity .15s;}
+  .bar .stepnav button:hover:not(:disabled){background:rgba(255,255,255,.18); transform:none; box-shadow:none;}
+  .bar .stepnav button:disabled{opacity:.28; cursor:default; background:transparent;}
+  .bar .stepnav button:focus-visible{outline:2px solid var(--vert); outline-offset:1px;}
+  .stepnav .cur{display:flex; flex-direction:column; align-items:center; gap:1px; line-height:1; min-width:62px; padding:0 2px;}
+  .stepnav .cur small{font-size:8.5px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:#ffffff8c;}
+  .stepnav .cur b{font-size:12.5px; font-weight:800; color:#fff; white-space:nowrap;}
+  @media(max-width:560px){ .stepnav{margin-right:10px;} .stepnav .cur{min-width:0;} .stepnav .cur small{display:none;} .stepnav .cur b{font-size:11.5px;} .bar-in{padding:10px 14px;} }
+  @media(max-width:430px){ .stepnav .cur{display:none;} .bstat.xhide{display:none;} }
   .submit:hover:not(:disabled){transform:translateY(-2px); box-shadow:0 12px 28px rgba(205,219,0,.42); filter:saturate(1.08);}
   .submit:active:not(:disabled){transform:translateY(0) scale(.985);}
   .submit::after{content:""; position:absolute; top:0; left:-70%; width:45%; height:100%; background:linear-gradient(105deg,transparent,rgba(255,255,255,.5),transparent); transform:skewX(-20deg); transition:left .5s ease;}
@@ -545,18 +542,15 @@
 </footer>
 
 <div class="bar" id="bar">
-  <div class="navsheet" id="navSheet" hidden>
-    <button type="button" data-go="#etapeConvives">&#128101; Convives</button>
-    <button type="button" data-go=".cat">&#127791; Buffet</button>
-    <button type="button" data-go="#recap">&#127869;&#65039; R&eacute;cap</button>
-    <button type="button" data-go="#orderForm">&#128196; Devis</button>
-    <button type="button" data-go="top">&#11014;&#65039; Haut de page</button>
-  </div>
   <div class="bar-in">
-    <button type="button" class="barnav" id="barNav" aria-expanded="false" aria-controls="navSheet" aria-label="Naviguer entre les étapes"><span class="ar">&#8645;</span><small>&Eacute;tapes</small></button>
+    <div class="stepnav" role="group" aria-label="Navigation par étapes">
+      <button type="button" id="stepPrev" aria-label="Étape précédente">&#8249;</button>
+      <span class="cur"><small id="stepNum">&Eacute;tape 1/4</small><b id="stepLbl">Convives</b></span>
+      <button type="button" id="stepNext" aria-label="Étape suivante">&#8250;</button>
+    </div>
     <div class="bar-stats">
       <div class="bstat"><b id="barCount">0</b><small>articles</small></div>
-      <div class="bstat"><b id="barBites">—</b><small>bouchées/pers</small></div>
+      <div class="bstat xhide"><b id="barBites">—</b><small>bouchées/pers</small></div>
       <div class="bstat mhide"><b id="barPP">—</b><small>coût/pers</small></div>
       <div class="bstat mhide"><b id="barHT">0,00 €</b><small>total HT</small></div>
       <div class="bstat big"><b id="barTotal">0,00 €</b><small>total TTC</small></div>
@@ -1755,7 +1749,7 @@ if(CONFIG.bakeries.length>1){
 
 const PERKS=[
   ["Frais & fait maison","Préparés sur place chaque matin.","M12 2 3 7v10l9 5 9-5V7l-9-5Z"],
-  ["Prix justes","La qualité Ange à prix accessibles.","M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"],
+  ["Prix justes","La qualité Ange à prix accessibles.","M18.5 6.4A6.8 6.8 0 0 0 14 4.6c-3.6 0-6.4 3.3-6.4 7.4s2.8 7.4 6.4 7.4a6.8 6.8 0 0 0 4.5-1.8M4.6 10h9M4.6 14h9"],
   ["Pour tous vos événements","Réunions, pots pro, anniversaires.","M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"],
   ["Livraison locale","Jusqu'à 5 km autour de la boulangerie.","M10 17h4V5H2v12h3M15 17h6v-5l-3-3h-3v8M6 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM17.5 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"],
 ];
@@ -1905,16 +1899,25 @@ function goTo(sel){
   if(t) t.scrollIntoView({behavior:'smooth',block:'start'});
   if(sel==='#etapeConvives') setTimeout(()=>{try{convives.focus({preventScroll:true});}catch(e){}},450);
 }
-const navSheet=$('navSheet'), barNav=$('barNav');
-function closeSheet(){ navSheet.setAttribute('hidden',''); barNav.setAttribute('aria-expanded','false'); }
-barNav.onclick=e=>{
-  e.stopPropagation();
-  const willOpen=navSheet.hasAttribute('hidden');
-  if(willOpen){ navSheet.removeAttribute('hidden'); barNav.setAttribute('aria-expanded','true'); } else closeSheet();
-};
-navSheet.querySelectorAll('button[data-go]').forEach(b=>b.onclick=()=>{ goTo(b.dataset.go); closeSheet(); });
-document.addEventListener('click',e=>{ if(!navSheet.hasAttribute('hidden') && !navSheet.contains(e.target)) closeSheet(); });
-document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeSheet(); });
+const STEPS=[
+  {sel:'#etapeConvives', lbl:'Convives'},
+  {sel:'.cat',           lbl:'Buffet'},
+  {sel:'#recap',         lbl:'Récap'},
+  {sel:'#orderForm',     lbl:'Devis'}
+];
+const stepPrev=$('stepPrev'), stepNext=$('stepNext'), stepLbl=$('stepLbl'), stepNum=$('stepNum');
+function stepTop(i){ const e=document.querySelector(STEPS[i].sel); if(!e||!e.offsetParent&&e.offsetHeight===0) return Infinity;
+  return e.getBoundingClientRect().top+window.scrollY; }
+function curStep(){ const y=window.scrollY+170; let k=0; for(let i=0;i<STEPS.length;i++){ if(stepTop(i)<=y) k=i; } return k; }
+function syncStepNav(){ const k=curStep();
+  stepLbl.textContent=STEPS[k].lbl; stepNum.textContent='Étape '+(k+1)+'/'+STEPS.length;
+  stepPrev.disabled=(k<=0); stepNext.disabled=(k>=STEPS.length-1); }
+stepPrev.onclick=()=>{ const k=curStep(); if(k>0) goTo(STEPS[k-1].sel); };
+stepNext.onclick=()=>{ const k=curStep(); if(k<STEPS.length-1) goTo(STEPS[k+1].sel); };
+let _snRaf=0;
+window.addEventListener('scroll',()=>{ cancelAnimationFrame(_snRaf); _snRaf=requestAnimationFrame(syncStepNav); },{passive:true});
+window.addEventListener('resize',syncStepNav);
+syncStepNav();
 barGo.onclick=()=>$('commande').scrollIntoView({behavior:'smooth',block:'start'});
 document.querySelectorAll('input[name=mode]').forEach(r=>r.addEventListener('change',()=>{updateFormUI();render();}));
 document.querySelectorAll('input[name=facture]').forEach(r=>r.addEventListener('change',updateFormUI));
