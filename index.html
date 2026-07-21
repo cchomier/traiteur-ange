@@ -41,21 +41,15 @@
   .kicker{display:inline-flex; align-items:center; gap:8px; font-weight:900; font-size:11.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--noir); background:var(--vert); padding:6px 13px; border-radius:999px; margin:0 0 14px;}
   .hero h1{font-family:"Fraunces",serif; font-weight:600; font-size:clamp(31px,5.6vw,52px); line-height:1.03; letter-spacing:-.02em; margin:0;}
   .hero h1 em{font-style:italic; color:var(--vert);}
-  .hero p.lead{max-width:52ch; margin:0 0 10px; color:#EDE9DE; font-size:16.5px; line-height:1.4;}
+  .hero p.lead{max-width:56ch; margin:0 0 14px; color:#EDE9DE; font-size:16.5px; line-height:1.55;}
+  .hero .lead-devis{display:inline-block; margin-bottom:2px; font-weight:800; color:#fff;}
+  .hero .lead-devis b{color:var(--vert);}
+  .hero .conv-hint{max-width:560px; margin:9px 0 0; color:#C9C5B9; font-size:12.5px; line-height:1.45;}
+  .hero .conv-hint b{color:#E8E4D8;}
   .halo{position:absolute; right:-70px; top:-70px; width:300px; height:300px; border:26px solid var(--vert); border-radius:50%; opacity:.16; transform:rotate(-12deg);}
 
-  .perks{background:var(--paper); border-bottom:1px solid var(--line);}
-  .perks .wrap{padding:11px 22px;}
-  .perkgrid{display:flex; gap:9px; overflow-x:auto; scrollbar-width:none; -webkit-overflow-scrolling:touch;}
-  .perkgrid::-webkit-scrollbar{display:none;}
   .crc-note{font-size:11.5px; color:var(--muted); margin:14px 0 0;}
   .hours-note{font-size:12.5px; color:var(--muted); margin:-6px 0 14px;}
-  .perk{flex:none; display:flex; gap:9px; align-items:center; background:#fff; border:1px solid var(--line); border-radius:999px; padding:6px 15px 6px 7px; white-space:nowrap;}
-  .perk .ic{flex:none; width:28px; height:28px; border-radius:50%; background:var(--vert-soft); color:#5b6300; display:grid; place-items:center;}
-  .perk b{font-size:13.5px; line-height:1.2;}
-  .perk span{font-size:12.5px; color:var(--muted); line-height:1.3;}
-  .perk span::before{content:"\00b7"; margin:0 6px; color:var(--line);}
-  @media(max-width:760px){ .perk span{display:none;} }
 
   .catnav{position:sticky; top:64px; z-index:40; background:rgba(253,251,245,.95); backdrop-filter:blur(8px); border-bottom:1px solid var(--line);}
   .catnav-in{display:flex; gap:9px; overflow-x:auto; padding:12px 22px; max-width:1040px; margin:0 auto; scrollbar-width:none;}
@@ -127,7 +121,7 @@
   .bk-single span{font-size:13px; color:var(--muted);}
   .convives{display:flex; align-items:center; gap:12px; background:#fff; border:1px solid var(--line); border-radius:14px; padding:12px 16px; margin-bottom:16px; flex-wrap:wrap;}
   /* variante sombre : champ convives integre au hero */
-  .hero .convives{background:rgba(255,255,255,.07); border:1.5px solid rgba(255,255,255,.20); backdrop-filter:blur(4px); margin:18px 0 0; padding:12px 16px; max-width:560px;}
+  .hero .convives{background:rgba(255,255,255,.07); border:1.5px solid rgba(255,255,255,.20); backdrop-filter:blur(4px); margin:16px 0 0; padding:12px 16px; max-width:560px;}
   .hero .convives label{color:#fff;}
   .hero .convives input{background:#fff; border-color:transparent;}
   .hero .convives .hint{color:#D6D2C6; font-size:12.5px;}
@@ -361,22 +355,18 @@
   <div class="halo" aria-hidden="true"></div>
   <div class="bulle b1" aria-hidden="true"></div><div class="bulle b2" aria-hidden="true"></div><div class="bulle b3" aria-hidden="true"></div>
   <div class="wrap">
-    <p class="lead">Plateaux salés, sucrés, viennoiseries et boissons.</p>
+    <p class="lead"><span class="lead-devis">Devis immédiat · <b>sans paiement en ligne</b></span><br>
+      Plateaux salés, sucrés, viennoiseries et boissons.<br>
+      Livraison possible jusqu'à 5&nbsp;km autour de la boulangerie.</p>
     <h1>Faites votre <em>composition</em>,<br>on s'occupe du reste.</h1>
     <div class="convives" id="etapeConvives">
       <label for="convives">&#128101; Pour combien de personnes&nbsp;?</label>
       <input type="number" id="convives" min="1" step="1" placeholder="ex. 25">
-      <span class="hint"><b>Facultatif.</b> Affiche en direct les <b>bouchées et le prix par personne</b>. Modifiable à tout moment.</span>
       <span class="conv-live" id="convLive"></span>
     </div>
-    <div class="hero-cta">
-      <button type="button" class="cta-main" id="ctaCompose">Composer mon buffet</button>
-      <span class="cta-sub">Devis immédiat · <b>sans paiement en ligne</b></span>
-    </div>
+    <p class="conv-hint"><b>Facultatif.</b> Affichera en direct les <b>bouchées et le prix par personne</b>. Modifiable à tout moment.</p>
   </div>
 </section>
-
-<section class="perks"><div class="wrap"><div class="perkgrid" id="perks"></div></div></section>
 
 <details class="howto" id="howto">
   <summary>&#9201;&#65039; Comment &ccedil;a marche&nbsp;? <b>5 &eacute;tapes, 2 minutes</b><span class="chev">&#9660;</span></summary>
@@ -1747,14 +1737,6 @@ if(CONFIG.bakeries.length>1){
   bp.innerHTML=`<div class="bk-single"><div class="bk-ic">\uD83D\uDCCD</div><div><b>Boulangerie Ange \u2014 ${bakery.nom}</b><span>${bakery.adresse}</span></div></div>`;
 }
 
-const PERKS=[
-  ["Frais & fait maison","Préparés sur place chaque matin.","M12 2 3 7v10l9 5 9-5V7l-9-5Z"],
-  ["Prix justes","La qualité Ange à prix accessibles.","M18.5 6.4A6.8 6.8 0 0 0 14 4.6c-3.6 0-6.4 3.3-6.4 7.4s2.8 7.4 6.4 7.4a6.8 6.8 0 0 0 4.5-1.8M4.6 10h9M4.6 14h9"],
-  ["Pour tous vos événements","Réunions, pots pro, anniversaires.","M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"],
-  ["Livraison locale","Jusqu'à 5 km autour de la boulangerie.","M10 17h4V5H2v12h3M15 17h6v-5l-3-3h-3v8M6 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM17.5 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"],
-];
-perks.innerHTML=PERKS.map(p=>`<div class="perk"><div class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${p[2]}"/></svg></div><div><b>${p[0]}</b><span>${p[1]}</span></div></div>`).join('');
-
 GAMMES.forEach(g=>{
   const items=PRODUITS.map((p,i)=>({...p,i})).filter(p=>p.gamme===g.nom);
   if(!items.length) return;
@@ -2195,7 +2177,6 @@ dlBtn.onclick=()=>{ if(lastPDF)lastPDF.save('Commande-traiteur-Ange.pdf'); };
 const againBtn=$('againBtn'); if(againBtn) againBtn.onclick=()=>location.reload();
 
 function bump(el){ if(!el) return; el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); }
-const cta=$('ctaCompose'); if(cta) cta.onclick=()=>document.querySelector('.cat')?.scrollIntoView({behavior:'smooth',block:'start'});
 try{
   document.body.classList.add('reveal-on');
   const reveal=new IntersectionObserver(es=>es.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in'); reveal.unobserve(en.target);} }),{rootMargin:'0px 0px -6% 0px'});
