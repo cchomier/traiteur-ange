@@ -339,6 +339,58 @@
   .check, .seg label>span{transition:border-color .15s, background .15s, transform .12s;}
   .seg label:hover>span{border-color:var(--vert-deep);}
   @media(prefers-reduced-motion:reduce){ .halo,.bulle{animation:none!important;} .submit::after{display:none;} body.reveal-on .card{opacity:1!important; transform:none!important;} }
+
+  /* --- Etapes visibles, eyebrow, convives repositionne, stepper, recherche --- */
+  .howsteps{background:var(--paper); border-bottom:1px solid var(--line);}
+  .howsteps .wrap{padding:20px 22px 22px;}
+  .howsteps-head{font-weight:800; font-size:15px; color:var(--ink); margin:0 0 4px; display:flex; align-items:center; gap:9px;}
+  .howsteps-head b{color:var(--vert-deep);}
+  .steps-nav-hint{text-align:center; font-size:12.5px; color:var(--muted); margin:12px 0 0;}
+  .steps-nav-hint b{color:var(--vert-deep);}
+  .convives-wrap{background:var(--creme-2); border-bottom:1px solid var(--line);}
+  .convives-wrap .wrap{padding:18px 22px;}
+  .step-eyebrow{font-weight:900; font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--vert-deep); margin:0 0 10px; display:flex; align-items:center; gap:8px;}
+  .step-eyebrow .n{width:22px; height:22px; border-radius:50%; background:var(--vert); color:var(--noir); display:grid; place-items:center; font-size:12px; font-weight:900; flex:none;}
+  .nores{display:none; margin:0 2px; color:var(--muted); font-size:14px;}
+  .catnav-search{max-width:1040px; margin:0 auto; padding:11px 22px 0;}
+  .catnav-search input{width:100%; font-family:inherit; font-size:15px; font-weight:600; padding:10px 14px; border:1.5px solid var(--line); border-radius:11px; background:#fff;}
+  .catnav-search input:focus-visible{outline:3px solid var(--vert); outline-offset:1px; border-color:var(--vert-deep);}
+  .cat{scroll-margin-top:176px;}
+  .card-foot{flex-wrap:wrap; row-gap:9px;}
+  .subtotal{margin-left:auto;}
+  .stepper{display:inline-flex; align-items:stretch; border:1.5px solid var(--line); border-radius:11px; overflow:hidden; background:#fff;}
+  .stepper .st-btn{width:32px; border:0; background:#fff; font-size:19px; font-weight:900; color:var(--ink); cursor:pointer; line-height:1; display:grid; place-items:center; transition:background .12s,color .12s;}
+  .stepper .st-btn:hover{background:var(--vert-soft); color:var(--vert-deep);}
+  .stepper .st-btn:active{background:var(--vert);}
+  .stepper .st-btn:focus-visible{outline:3px solid var(--vert); outline-offset:-3px;}
+  .stepper .qnum{width:44px; border:0; border-left:1.5px solid var(--line); border-right:1.5px solid var(--line); border-radius:0; text-align:center; font-family:inherit; font-size:15px; font-weight:800; color:var(--ink); padding:9px 2px; background:#fff; -moz-appearance:textfield;}
+  .stepper .qnum:focus-visible{outline:3px solid var(--vert); outline-offset:-3px;}
+  .stepper .qnum::-webkit-outer-spin-button,.stepper .qnum::-webkit-inner-spin-button{-webkit-appearance:none; margin:0;}
+  .allerg-link{display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:13px; color:var(--vert-deep); text-decoration:underline; margin:2px 0 8px;}
+  .card .minq{white-space:normal; text-align:center; line-height:1.2;}
+  .minq-sub{display:block; font-size:9px; font-weight:800; letter-spacing:.02em; opacity:.9; margin-top:1px;}
+  @media(max-width:640px){ .step-eyebrow{font-size:11px;} }
+  /* --- Vue liste : 1 produit par ligne, photo en medaillon zoom au survol --- */
+  .grid{display:flex; flex-direction:column; gap:10px;}
+  .card{flex-direction:row; align-items:center; gap:14px; padding:10px 14px; overflow:visible;}
+  .card .photo{width:88px; height:88px; aspect-ratio:auto; flex:none; border:1px solid var(--line); border-radius:14px; transform-origin:center left; transition:transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .28s; position:relative; z-index:1;}
+  .card:hover{transform:none; box-shadow:var(--shadow);}
+  .card:hover .photo{transform:scale(1.85); z-index:20; box-shadow:0 16px 36px rgba(20,20,10,.30);}
+  .card-main{flex:1; display:flex; align-items:center; gap:18px; flex-wrap:wrap; min-width:0;}
+  .card-info{flex:1 1 240px; min-width:0;}
+  .card-info h3{margin:0 0 6px; font-size:16px; flex:none;}
+  .card-info .meta{margin-bottom:0; align-items:center;}
+  .card-info .tranche-opt{margin:6px 0 0;}
+  .card-controls{display:flex; align-items:center; gap:16px; margin-left:auto;}
+  .card-controls .subtotal{margin-left:0; min-width:74px;}
+  @media(max-width:560px){
+    .card{gap:11px; padding:10px 12px; align-items:flex-start;}
+    .card .photo{width:64px; height:64px;}
+    .card:hover .photo{transform:scale(2.5); z-index:20;}
+    .card-main{gap:9px;}
+    .card-controls{width:100%; justify-content:space-between; margin-left:0;}
+    .card-info{flex-basis:100%;}
+  }
 </style>
 </head>
 <body>
@@ -362,35 +414,45 @@
   <div class="wrap">
     <p class="lead"><span class="lead-devis">Devis immédiat · <b>sans paiement en ligne</b></span><br>
       Plateaux salés, sucrés, viennoiseries et boissons.<br>
-      Livraison possible jusqu'à 5&nbsp;km autour de la boulangerie.</p>
+      Livraison possible à partir de 30&nbsp;€, dans un rayon de 5&nbsp;km.</p>
     <h1>Faites votre <em>composition</em>,<br>on s'occupe du reste.</h1>
+  </div>
+</section>
+
+<section class="howsteps" id="howto">
+  <div class="wrap">
+    <div class="howsteps-head">&#9201;&#65039; Comment &ccedil;a marche&nbsp;? <b>5 &eacute;tapes, 2 minutes</b></div>
+    <ol class="steps">
+      <li><button type="button" class="step" data-scroll="#etapeConvives"><span class="num">1</span><span class="ic">&#128101;</span><span class="lbl">Indiquez le nombre de convives</span></button></li>
+      <li><button type="button" class="step" data-scroll=".cat"><span class="num">2</span><span class="ic">&#127791;</span><span class="lbl">Composez votre buffet</span></button></li>
+      <li><button type="button" class="step" data-scroll="#recap"><span class="num">3</span><span class="ic">&#127869;&#65039;</span><span class="lbl">V&eacute;rifiez pi&egrave;ces &amp; total</span></button></li>
+      <li><button type="button" class="step" data-scroll="#orderForm"><span class="num">4</span><span class="ic">&#128196;</span><span class="lbl">Recevez votre devis</span></button></li>
+      <li><div class="step step-info"><span class="num">5</span><span class="ic">&#128222;</span><span class="lbl">Ange vous recontacte sous 48&nbsp;h</span></div></li>
+    </ol>
+    <p class="steps-nav-hint">Astuce&nbsp;: passez d'une &eacute;tape &agrave; l'autre &agrave; tout moment avec les fl&egrave;ches <b>&#8249;&nbsp;&#8250;</b> visibles en bas de l'&eacute;cran, &agrave; gauche du bandeau noir.</p>
+  </div>
+</section>
+
+<section class="convives-wrap">
+  <div class="wrap">
+    <div class="step-eyebrow"><span class="n">1</span> Indiquez le nombre de convives</div>
     <div class="convives" id="etapeConvives">
       <label for="convives">&#128101; Pour combien de personnes&nbsp;?</label>
       <input type="number" id="convives" min="1" step="1" placeholder="ex. 25">
       <span class="opt">Facultatif</span>
       <span class="conv-live" id="convLive"></span>
     </div>
-    <p class="conv-hint">Affichera en direct les <b>bouchées et le prix par personne</b>. Modifiable à tout moment.</p>
   </div>
 </section>
 
-<details class="howto" id="howto">
-  <summary>&#9201;&#65039; Comment &ccedil;a marche&nbsp;? <b>5 &eacute;tapes, 2 minutes</b><span class="chev">&#9660;</span></summary>
-  <div class="howto-in">
-    <ol class="steps">
-      <li><button type="button" class="step" data-scroll="#etapeConvives"><span class="num">1</span><span class="ic">&#128101;</span><span class="lbl">Indiquez le nombre de convives</span></button></li>
-      <li><button type="button" class="step" data-scroll=".cat"><span class="num">2</span><span class="ic">&#127791;</span><span class="lbl">Composez votre buffet</span></button></li>
-      <li><button type="button" class="step" data-scroll="#recap"><span class="num">3</span><span class="ic">&#127869;&#65039;</span><span class="lbl">V&eacute;rifiez bouch&eacute;es &amp; total</span></button></li>
-      <li><button type="button" class="step" data-scroll="#orderForm"><span class="num">4</span><span class="ic">&#128196;</span><span class="lbl">Recevez votre devis</span></button></li>
-      <li><div class="step step-info"><span class="num">5</span><span class="ic">&#128222;</span><span class="lbl">Ange vous recontacte sous 48&nbsp;h</span></div></li>
-    </ol>
-    <p class="parcours-urgent">Besoin plus urgent&nbsp;? Appelez-nous au <b class="bkphone2">04 50 24 89 05</b></p>
-  </div>
-</details>
-
-<nav class="catnav" aria-label="Gammes"><div class="catnav-in" id="catnav"></div></nav>
+<div class="wrap"><div class="step-eyebrow"><span class="n">2</span> Composez votre buffet</div></div>
+<nav class="catnav" aria-label="Gammes">
+  <div class="catnav-search"><input type="search" id="prodSearch" placeholder="&#128269;&nbsp;Rechercher un produit (ex. quiche, wrap, verrine…)" aria-label="Rechercher un produit" autocomplete="off"></div>
+  <div class="catnav-in" id="catnav"></div>
+</nav>
 
 <main>
+  <div class="wrap"><div class="nores" id="searchNo">Aucun produit ne correspond à votre recherche.</div></div>
   <div class="wrap" id="catalogue"></div>
 
   <div class="wrap">
@@ -406,17 +468,18 @@
 
         <div id="bakeryPick" class="bakerypick"></div>
 
+        <div class="step-eyebrow"><span class="n">3</span> Vérifiez vos pièces &amp; le total</div>
         <div class="recap" id="recap"><div class="empty">Votre sélection est vide pour le moment.</div></div>
 
         <div class="bites" id="bites" style="display:none;">
-          <div class="bite"><div class="l">Bouchées salées</div><div class="v" id="biteSale">0</div></div>
-          <div class="bite"><div class="l">Bouchées sucrées</div><div class="v" id="biteSucre">0</div></div>
+          <div class="bite"><div class="l">Pièces salées</div><div class="v" id="biteSale">0</div></div>
+          <div class="bite"><div class="l">Pièces sucrées</div><div class="v" id="biteSucre">0</div></div>
         </div>
 
         <div class="perperson" id="perPerson">
           <div class="t">Par personne (<span id="ppN">0</span> convives)</div>
           <div class="row">
-            <div><b id="ppBites">0</b><span>bouchées / pers.</span></div>
+            <div><b id="ppBites">0</b><span>pièces / pers.</span></div>
             <div><b id="ppHT">0,00 €</b><span>HT / pers.</span></div>
             <div><b id="ppTTC">0,00 €</b><span>TTC / pers.</span></div>
           </div>
@@ -439,6 +502,7 @@
 
         <div class="liv-reminder" id="livReminder">📍 Livraison : 30 € TTC dans un rayon maximum de 5 km autour de la boulangerie Ange Grand Epagny.</div>
 
+        <div class="step-eyebrow"><span class="n">4</span> Vos coordonnées &amp; votre devis</div>
         <form id="orderForm" novalidate>
           <div class="frow">
             <div class="field"><label class="lb" for="prenom">Prénom <span class="req">*</span></label><input type="text" id="prenom" name="prenom" autocomplete="given-name" required></div>
@@ -507,7 +571,7 @@
             </div>
           </div>
 
-          <div class="field"><label class="lb" for="note">Précisions (facultatif)</label><textarea id="note" name="note" placeholder="Allergies, heure souhaitée, occasion…"></textarea></div>
+          <div class="field"><label class="lb" for="note">Précisions (facultatif)</label><textarea id="note" name="note" placeholder="Allergies, heure souhaitée, occasion…"></textarea><a class="allerg-link" href="allergenes.pdf" target="_blank" rel="noopener">&#128196;&nbsp;Consulter la liste des allerg&egrave;nes (PDF)</a></div>
 
           <div class="notice" id="confirmNotice">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg>
@@ -534,7 +598,7 @@
   <div class="wrap">
     <div class="col" id="footBrand"><b>Boulangerie Ange</b><br>du Grand Epagny<br>300 rue des Peupliers<br>74330 Epagny</div>
     <div class="col"><b>Contact</b><br>Tél. <a id="phoneFoot" href="#">04 50 24 89 05</a><br><a id="mailFoot" href="#">commandes.ange74@gmail.com</a></div>
-    <div class="col"><b>Traiteur</b><br>Retrait gratuit en boutique<br>Livraison 30 € · rayon 5 km<br>Minimum 100 € TTC · TVA 5,5 %</div>
+    <div class="col"><b>Traiteur</b><br>Retrait gratuit en boutique<br>Livraison 30 € · rayon 5 km<br>Minimum 100 € TTC · TVA 5,5 %<br><a href="allergenes.pdf" target="_blank" rel="noopener">Liste des allergènes (PDF)</a></div>
   </div>
 </footer>
 
@@ -547,7 +611,7 @@
     </div>
     <div class="bar-stats">
       <div class="bstat"><b id="barCount">0</b><small>articles</small></div>
-      <div class="bstat xhide"><b id="barBites">—</b><small>bouchées/pers</small></div>
+      <div class="bstat xhide"><b id="barBites">—</b><small>pièces/pers</small></div>
       <div class="bstat mhide"><b id="barPP">—</b><small>coût/pers</small></div>
       <div class="bstat mhide"><b id="barHT">0,00 €</b><small>total HT</small></div>
       <div class="bstat big"><b id="barTotal">0,00 €</b><small>total TTC</small></div>
@@ -579,1128 +643,1128 @@ const QR_TRAITEUR="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAaQAAAGkBAMAAAC
 
 /* CATALOGUE — depuis ton Excel */
 const PRODUITS = [
-{
-"gamme": "P'tit Dej",
-"nom": "Mini croissant",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 0.6,
-"tva": 0.055,
-"type": "sucre",
-"photo": null
-},
-{
-"gamme": "P'tit Dej",
-"nom": "Mini pain choc",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 0.6,
-"tva": 0.055,
-"type": "sucre",
-"photo": null
-},
-{
-"gamme": "P'tit Dej",
-"nom": "Mini chausson pommes",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 0.6,
-"tva": 0.055,
-"type": "sucre",
-"photo": null
-},
-{
-"gamme": "P'tit Dej",
-"nom": "Mini pain raisin",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 0.6,
-"tva": 0.055,
-"type": "sucre",
-"photo": null
-},
-{
-"gamme": "P'tit Dej",
-"nom": "Mini Griffe d'Ange",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 0.6,
-"tva": 0.055,
-"type": "sucre",
-"photo": null
-},
-{
-"gamme": "P'tit Dej",
-"nom": "Chouquettes",
-"unite": "lot",
-"bouchees": 10,
-"minimum": 1,
-"tarifTTC": 2.8,
-"tva": 0.055,
-"type": "sucre",
-"photo": null
-},
-{
-"gamme": "P'tit Dej",
-"nom": "Briochette pur beurre",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 1.25,
-"tva": 0.055,
-"type": "sucre",
-"photo": null
-},
-{
-"gamme": "P'tit Dej",
-"nom": "Croissant",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 1.2,
-"tva": 0.055,
-"type": "sucre",
-"photo": null
-},
-{
-"gamme": "P'tit Dej",
-"nom": "Pain au chocolat",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 1.3,
-"tva": 0.055,
-"type": "sucre",
-"photo": null
-},
-{
-"gamme": "P'tit Dej",
-"nom": "Griffe d'Ange",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 2.3,
-"tva": 0.055,
-"type": "sucre",
-"photo": null
-},
-{
-"gamme": "P'tit Dej",
-"nom": "Pain aux raisins",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 1.7,
-"tva": 0.055,
-"type": "sucre",
-"photo": null
-},
-{
-"gamme": "P'tit Dej",
-"nom": "Chausson aux pommes",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 1.8,
-"tva": 0.055,
-"type": "sucre",
-"photo": null
-},
-{
-"gamme": "P'tit Dej",
-"nom": "Grande brioche pur beurre",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 5.5,
-"tva": 0.055,
-"type": "sucre",
-"photo": null
-},
-{
-"gamme": "P'tit Dej",
-"nom": "Madeleine pur beurre",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 1.6,
-"tva": 0.055,
-"type": "sucre",
-"photo": null
-},
-{
-"gamme": "P'tit Dej",
-"nom": "Madeleine fourrée choco noisettes",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 1.6,
-"tva": 0.055,
-"type": "sucre",
-"photo": null
-},
-{
-"gamme": "P'tit Dej",
-"nom": "Bulles d'Ange",
-"unite": "lot",
-"bouchees": 10,
-"minimum": 1,
-"tarifTTC": 5,
-"tva": 0.055,
-"type": "sucre",
-"photo": null
-},
-{
-"gamme": "P'tit Dej",
-"nom": "Pain fruitier tranché (10 tranches env.)",
-"unite": "lot",
-"bouchees": 10,
-"minimum": 1,
-"tarifTTC": 3.2,
-"tva": 0.055,
-"type": "sucre",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Mini burgers",
-"unite": "lot",
-"bouchees": 15,
-"minimum": 1,
-"tarifTTC": 20,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Mini Croques jambon fromage",
-"unite": "lot",
-"bouchees": 30,
-"minimum": 1,
-"tarifTTC": 25,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Mini Croques au poulet",
-"unite": "lot",
-"bouchees": 30,
-"minimum": 1,
-"tarifTTC": 25,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Mini wraps thon concombre",
-"unite": "lot",
-"bouchees": 24,
-"minimum": 1,
-"tarifTTC": 20,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Mini wraps légumes grillés",
-"unite": "lot",
-"bouchees": 24,
-"minimum": 1,
-"tarifTTC": 20,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Mini wraps jambon tomates",
-"unite": "lot",
-"bouchees": 24,
-"minimum": 1,
-"tarifTTC": 20,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Mini wraps poulet curry",
-"unite": "lot",
-"bouchees": 24,
-"minimum": 1,
-"tarifTTC": 20,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Mini wraps jambon cru",
-"unite": "lot",
-"bouchees": 24,
-"minimum": 1,
-"tarifTTC": 20,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Mini wraps saumon",
-"unite": "lot",
-"bouchees": 24,
-"minimum": 1,
-"tarifTTC": 20,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Mini quiches fromage",
-"unite": "lot",
-"bouchees": 24,
-"minimum": 1,
-"tarifTTC": 30,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Mini quiches légumes",
-"unite": "lot",
-"bouchees": 24,
-"minimum": 1,
-"tarifTTC": 30,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Mini quiches lorraine",
-"unite": "lot",
-"bouchees": 24,
-"minimum": 1,
-"tarifTTC": 30,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Mini quiches pizza",
-"unite": "lot",
-"bouchees": 24,
-"minimum": 1,
-"tarifTTC": 30,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Mini quiches saumon",
-"unite": "lot",
-"bouchees": 24,
-"minimum": 1,
-"tarifTTC": 30,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Aper'Ange saumon crème aneth",
-"unite": "lot",
-"bouchees": 16,
-"minimum": 1,
-"tarifTTC": 14,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Aper'Ange jambon chèvre",
-"unite": "lot",
-"bouchees": 16,
-"minimum": 1,
-"tarifTTC": 14,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Aper'Ange thon mayo",
-"unite": "lot",
-"bouchees": 16,
-"minimum": 1,
-"tarifTTC": 14,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Malicettes jambon",
-"unite": "lot",
-"bouchees": 9,
-"minimum": 1,
-"tarifTTC": 15,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Malicettes magret fumé",
-"unite": "lot",
-"bouchees": 9,
-"minimum": 1,
-"tarifTTC": 15,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Navettes thon concombre",
-"unite": "lot",
-"bouchees": 12,
-"minimum": 1,
-"tarifTTC": 20,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Navettes saumon fumé",
-"unite": "lot",
-"bouchees": 12,
-"minimum": 1,
-"tarifTTC": 20,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Navettes poulet curry",
-"unite": "lot",
-"bouchees": 12,
-"minimum": 1,
-"tarifTTC": 20,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Navettes pesto chèvre",
-"unite": "lot",
-"bouchees": 12,
-"minimum": 1,
-"tarifTTC": 20,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Navettes jambon",
-"unite": "lot",
-"bouchees": 12,
-"minimum": 1,
-"tarifTTC": 20,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Plaque quiche ratatouille chèvre x48",
-"unite": "plaque",
-"bouchees": 48,
-"minimum": 1,
-"tarifTTC": 50,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Plaque quiche thon frita x48",
-"unite": "plaque",
-"bouchees": 48,
-"minimum": 1,
-"tarifTTC": 50,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Plaque quiche lorraine x48",
-"unite": "plaque",
-"bouchees": 48,
-"minimum": 1,
-"tarifTTC": 50,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Plaque pizza margarita",
-"unite": "plaque",
-"bouchees": 48,
-"minimum": 1,
-"tarifTTC": 25,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Plaque pizza royale",
-"unite": "plaque",
-"bouchees": 48,
-"minimum": 1,
-"tarifTTC": 30,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Plaque pizza kebab",
-"unite": "plaque",
-"bouchees": 48,
-"minimum": 1,
-"tarifTTC": 30,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Plaque pizza chèvre miel",
-"unite": "plaque",
-"bouchees": 48,
-"minimum": 1,
-"tarifTTC": 30,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Plaque pizza 4 fromages",
-"unite": "plaque",
-"bouchees": 48,
-"minimum": 1,
-"tarifTTC": 30,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Mini verrine crème saumon aneth",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 5,
-"tarifTTC": 1.8,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Mini verrine Thon mayo concombre",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 5,
-"tarifTTC": 1.6,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Mini verrine taboulé Légumes grillés",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 5,
-"tarifTTC": 1.5,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Mini Feuilletés cocktail",
-"unite": "lot",
-"bouchees": 32,
-"minimum": 1,
-"tarifTTC": 40,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Grand plateau charcuterie (10 personnes)",
-"unite": "lot",
-"bouchees": 10,
-"minimum": 1,
-"tarifTTC": 30,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Grand plateau 4 fromages (10 personnes)",
-"unite": "lot",
-"bouchees": 10,
-"minimum": 1,
-"tarifTTC": 28,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Grand plateau légumes (10 personnes)",
-"unite": "lot",
-"bouchees": 10,
-"minimum": 1,
-"tarifTTC": 25,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Diablotine olives herbes de provence",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 1,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Salé",
-"nom": "Diablotine lardon emmental",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 1,
-"tva": 0.055,
-"type": "sale",
-"photo": null
-},
-{
-"gamme": "Sucré",
-"nom": "Bulles d'Ange",
-"unite": "lot",
-"bouchees": 10,
-"minimum": 1,
-"tarifTTC": 5,
-"tva": 0.055,
-"type": "sucre",
-"photo": null
-},
-{
-"gamme": "Sucré",
-"nom": "Mini Verrines (au choix du chef)",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 5,
-"tarifTTC": 1.34,
-"tva": 0.055,
-"type": "sucre",
-"photo": null
-},
-{
-"gamme": "Sucré",
-"nom": "Mini Verrines crémeux chocolat",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 5,
-"tarifTTC": 1.34,
-"tva": 0.055,
-"type": "sucre",
-"photo": null
-},
-{
-"gamme": "Sucré",
-"nom": "Mini Verrines citron biscuit",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 5,
-"tarifTTC": 1.34,
-"tva": 0.055,
-"type": "sucre",
-"photo": null
-},
-{
-"gamme": "Sucré",
-"nom": "Mini Verrines perles de chia",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 5,
-"tarifTTC": 1.34,
-"tva": 0.055,
-"type": "sucre",
-"photo": null
-},
-{
-"gamme": "Sucré",
-"nom": "Mini Verrines tiramisu",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 5,
-"tarifTTC": 1.34,
-"tva": 0.055,
-"type": "sucre",
-"photo": null
-},
-{
-"gamme": "Sucré",
-"nom": "Mini mignardises (au choix du chef)",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 5,
-"tarifTTC": 1,
-"tva": 0.055,
-"type": "sucre",
-"photo": null
-},
-{
-"gamme": "Sucré",
-"nom": "Mini mignardises citron meringué",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 5,
-"tarifTTC": 1,
-"tva": 0.055,
-"type": "sucre",
-"photo": null
-},
-{
-"gamme": "Sucré",
-"nom": "Mini mignardises multifruits",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 5,
-"tarifTTC": 1,
-"tva": 0.055,
-"type": "sucre",
-"photo": null
-},
-{
-"gamme": "Sucré",
-"nom": "Mini mignardises chocolat",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 5,
-"tarifTTC": 1,
-"tva": 0.055,
-"type": "sucre",
-"photo": null
-},
-{
-"gamme": "Sucré",
-"nom": "Mini mignardises praliné",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 5,
-"tarifTTC": 1,
-"tva": 0.055,
-"type": "sucre",
-"photo": null
-},
-{
-"gamme": "Sucré",
-"nom": "Plaque fondant chocolat x48 (4x4cm)",
-"unite": "plaque",
-"bouchees": 48,
-"minimum": 1,
-"tarifTTC": 50,
-"tva": 0.055,
-"type": "sucre",
-"photo": null
-},
-{
-"gamme": "Sucré",
-"nom": "Plaque tarte feuilletée fraises (selon saison)",
-"unite": "plaque",
-"bouchees": 48,
-"minimum": 1,
-"tarifTTC": 50,
-"tva": 0.055,
-"type": "sucre",
-"photo": null
-},
-{
-"gamme": "Sucré",
-"nom": "Plaque tarte feuilletée fruits de saison",
-"unite": "plaque",
-"bouchees": 48,
-"minimum": 1,
-"tarifTTC": 50,
-"tva": 0.055,
-"type": "sucre",
-"photo": null
-},
-{
-"gamme": "Sucré",
-"nom": "Plaque tarte feuilletée pommes x48",
-"unite": "plaque",
-"bouchees": 48,
-"minimum": 1,
-"tarifTTC": 35,
-"tva": 0.055,
-"type": "sucre",
-"photo": null
-},
-{
-"gamme": "Pains",
-"nom": "Baguette au levain maison",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 1,
-"tva": 0.055,
-"type": null,
-"photo": null
-},
-{
-"gamme": "Pains",
-"nom": "Baguettine céréales au levain maison",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 1.3,
-"tva": 0.055,
-"type": null,
-"photo": null
-},
-{
-"gamme": "Pains",
-"nom": "Pavé Ange",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 2.7,
-"tva": 0.055,
-"type": null,
-"photo": null
-},
-{
-"gamme": "Pains",
-"nom": "Pain au mais",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 3.2,
-"tva": 0.055,
-"type": null,
-"photo": null
-},
-{
-"gamme": "Pains",
-"nom": "Pain aux noix",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 2.4,
-"tva": 0.055,
-"type": null,
-"photo": null
-},
-{
-"gamme": "Pains",
-"nom": "Pain aux olives",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 2.4,
-"tva": 0.055,
-"type": null,
-"photo": null
-},
-{
-"gamme": "Pains",
-"nom": "Pain Burger",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 0.95,
-"tva": 0.055,
-"type": null,
-"photo": null
-},
-{
-"gamme": "Pains",
-"nom": "Pain Oriental",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 1.9,
-"tva": 0.055,
-"type": null,
-"photo": null
-},
-{
-"gamme": "Boissons",
-"nom": "Expresso 12cl",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 1.6,
-"tva": 0.055,
-"type": null,
-"photo": null
-},
-{
-"gamme": "Boissons",
-"nom": "Chocolat chaud onctueux 24cl",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 3.1,
-"tva": 0.055,
-"type": null,
-"photo": null
-},
-{
-"gamme": "Boissons",
-"nom": "Thé Kusmi Tea",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 2.5,
-"tva": 0.055,
-"type": null,
-"photo": null
-},
-{
-"gamme": "Boissons",
-"nom": "Eau plate 50cl",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 1.6,
-"tva": 0.055,
-"type": null,
-"photo": null
-},
-{
-"gamme": "Boissons",
-"nom": "Eau plate 1,5L",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 2.9,
-"tva": 0.055,
-"type": null,
-"photo": null
-},
-{
-"gamme": "Boissons",
-"nom": "Eau pétillante 50cl",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 2.2,
-"tva": 0.055,
-"type": null,
-"photo": null
-},
-{
-"gamme": "Boissons",
-"nom": "Eau pétillante 1L",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 3.5,
-"tva": 0.055,
-"type": null,
-"photo": null
-},
-{
-"gamme": "Boissons",
-"nom": "Soda 1,5L",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 5,
-"tva": 0.055,
-"type": null,
-"photo": null
-},
-{
-"gamme": "Boissons",
-"nom": "Jus de fruit pressé Kookabara 1L",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 6,
-"tva": 0.055,
-"type": null,
-"photo": null
-},
-{
-"gamme": "Boissons",
-"nom": "Jus de fruit pressé Kookabara 25cl",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 3,
-"tva": 0.055,
-"type": null,
-"photo": null
-},
-{
-"gamme": "Boissons",
-"nom": "Vin rouge mondeuse \"La Somptueuse\" 75cl",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 16,
-"tva": 0.055,
-"type": null,
-"photo": null
-},
-{
-"gamme": "Boissons",
-"nom": "Vin blanc de savoie \"Plaisir des Anges\" 75cl",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 16,
-"tva": 0.055,
-"type": null,
-"photo": null
-},
-{
-"gamme": "Accessoires",
-"nom": "Serviettes en papier",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 0.01,
-"tva": 0.055,
-"type": null,
-"photo": null
-},
-{
-"gamme": "Accessoires",
-"nom": "Gobelets 12cl (expresso)",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 0.1,
-"tva": 0.055,
-"type": null,
-"photo": null
-},
-{
-"gamme": "Accessoires",
-"nom": "Gobelets 24cl (jus de fruit)",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 0.1,
-"tva": 0.055,
-"type": null,
-"photo": null
-},
-{
-"gamme": "Accessoires",
-"nom": "Touillettes",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 0.02,
-"tva": 0.055,
-"type": null,
-"photo": null
-},
-{
-"gamme": "Accessoires",
-"nom": "Sucrettes",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 0.05,
-"tva": 0.055,
-"type": null,
-"photo": null
-},
-{
-"gamme": "Accessoires",
-"nom": "Cuillères",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 0.05,
-"tva": 0.055,
-"type": null,
-"photo": null
-},
-{
-"gamme": "Accessoires",
-"nom": "Plateau cartonné noir",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 2,
-"tva": 0.055,
-"type": null,
-"photo": null
-},
-{
-"gamme": "Accessoires",
-"nom": "Nappe papier 2m noire",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 4,
-"tva": 0.055,
-"type": null,
-"photo": null
-},
-{
-"gamme": "Accessoires",
-"nom": "Nappe papier renforcé 2m noire",
-"unite": "pièce",
-"bouchees": 1,
-"minimum": 1,
-"tarifTTC": 8,
-"tva": 0.055,
-"type": null,
-"photo": null
-}
+ {
+  "gamme": "P'tit Dej",
+  "nom": "Mini croissant",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 0.6,
+  "tva": 0.055,
+  "type": "sucre",
+  "photo": null
+ },
+ {
+  "gamme": "P'tit Dej",
+  "nom": "Mini pain choc",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 0.6,
+  "tva": 0.055,
+  "type": "sucre",
+  "photo": null
+ },
+ {
+  "gamme": "P'tit Dej",
+  "nom": "Mini chausson pommes",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 0.6,
+  "tva": 0.055,
+  "type": "sucre",
+  "photo": null
+ },
+ {
+  "gamme": "P'tit Dej",
+  "nom": "Mini pain raisin",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 0.6,
+  "tva": 0.055,
+  "type": "sucre",
+  "photo": null
+ },
+ {
+  "gamme": "P'tit Dej",
+  "nom": "Mini Griffe d'Ange",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 0.6,
+  "tva": 0.055,
+  "type": "sucre",
+  "photo": null
+ },
+ {
+  "gamme": "P'tit Dej",
+  "nom": "Chouquettes",
+  "unite": "lot",
+  "bouchees": 10,
+  "minimum": 1,
+  "tarifTTC": 2.8,
+  "tva": 0.055,
+  "type": "sucre",
+  "photo": null
+ },
+ {
+  "gamme": "P'tit Dej",
+  "nom": "Briochette pur beurre",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 1.25,
+  "tva": 0.055,
+  "type": "sucre",
+  "photo": null
+ },
+ {
+  "gamme": "P'tit Dej",
+  "nom": "Croissant",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 1.2,
+  "tva": 0.055,
+  "type": "sucre",
+  "photo": null
+ },
+ {
+  "gamme": "P'tit Dej",
+  "nom": "Pain au chocolat",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 1.3,
+  "tva": 0.055,
+  "type": "sucre",
+  "photo": null
+ },
+ {
+  "gamme": "P'tit Dej",
+  "nom": "Griffe d'Ange",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 2.3,
+  "tva": 0.055,
+  "type": "sucre",
+  "photo": null
+ },
+ {
+  "gamme": "P'tit Dej",
+  "nom": "Pain aux raisins",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 1.7,
+  "tva": 0.055,
+  "type": "sucre",
+  "photo": null
+ },
+ {
+  "gamme": "P'tit Dej",
+  "nom": "Chausson aux pommes",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 1.8,
+  "tva": 0.055,
+  "type": "sucre",
+  "photo": null
+ },
+ {
+  "gamme": "P'tit Dej",
+  "nom": "Grande brioche pur beurre",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 5.5,
+  "tva": 0.055,
+  "type": "sucre",
+  "photo": null
+ },
+ {
+  "gamme": "P'tit Dej",
+  "nom": "Madeleine pur beurre",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 1.6,
+  "tva": 0.055,
+  "type": "sucre",
+  "photo": null
+ },
+ {
+  "gamme": "P'tit Dej",
+  "nom": "Madeleine fourrée choco noisettes",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 1.6,
+  "tva": 0.055,
+  "type": "sucre",
+  "photo": null
+ },
+ {
+  "gamme": "P'tit Dej",
+  "nom": "Bulles d'Ange",
+  "unite": "lot",
+  "bouchees": 10,
+  "minimum": 1,
+  "tarifTTC": 5,
+  "tva": 0.055,
+  "type": "sucre",
+  "photo": null
+ },
+ {
+  "gamme": "P'tit Dej",
+  "nom": "Pain fruitier tranché (10 tranches env.)",
+  "unite": "lot",
+  "bouchees": 10,
+  "minimum": 1,
+  "tarifTTC": 3.2,
+  "tva": 0.055,
+  "type": "sucre",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Mini burgers",
+  "unite": "lot",
+  "bouchees": 15,
+  "minimum": 1,
+  "tarifTTC": 20,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Mini Croques jambon fromage",
+  "unite": "lot",
+  "bouchees": 30,
+  "minimum": 1,
+  "tarifTTC": 25,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Mini Croques au poulet",
+  "unite": "lot",
+  "bouchees": 30,
+  "minimum": 1,
+  "tarifTTC": 25,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Mini wraps thon concombre",
+  "unite": "lot",
+  "bouchees": 24,
+  "minimum": 1,
+  "tarifTTC": 20,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Mini wraps légumes grillés",
+  "unite": "lot",
+  "bouchees": 24,
+  "minimum": 1,
+  "tarifTTC": 20,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Mini wraps jambon tomates",
+  "unite": "lot",
+  "bouchees": 24,
+  "minimum": 1,
+  "tarifTTC": 20,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Mini wraps poulet curry",
+  "unite": "lot",
+  "bouchees": 24,
+  "minimum": 1,
+  "tarifTTC": 20,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Mini wraps jambon cru",
+  "unite": "lot",
+  "bouchees": 24,
+  "minimum": 1,
+  "tarifTTC": 20,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Mini wraps saumon",
+  "unite": "lot",
+  "bouchees": 24,
+  "minimum": 1,
+  "tarifTTC": 20,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Mini quiches fromage",
+  "unite": "lot",
+  "bouchees": 24,
+  "minimum": 1,
+  "tarifTTC": 30,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Mini quiches légumes",
+  "unite": "lot",
+  "bouchees": 24,
+  "minimum": 1,
+  "tarifTTC": 30,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Mini quiches lorraine",
+  "unite": "lot",
+  "bouchees": 24,
+  "minimum": 1,
+  "tarifTTC": 30,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Mini quiches pizza",
+  "unite": "lot",
+  "bouchees": 24,
+  "minimum": 1,
+  "tarifTTC": 30,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Mini quiches saumon",
+  "unite": "lot",
+  "bouchees": 24,
+  "minimum": 1,
+  "tarifTTC": 30,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Aper'Ange saumon crème aneth",
+  "unite": "lot",
+  "bouchees": 16,
+  "minimum": 1,
+  "tarifTTC": 14,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Aper'Ange jambon chèvre",
+  "unite": "lot",
+  "bouchees": 16,
+  "minimum": 1,
+  "tarifTTC": 14,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Aper'Ange thon mayo",
+  "unite": "lot",
+  "bouchees": 16,
+  "minimum": 1,
+  "tarifTTC": 14,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Malicettes jambon",
+  "unite": "lot",
+  "bouchees": 9,
+  "minimum": 1,
+  "tarifTTC": 15,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Malicettes magret fumé",
+  "unite": "lot",
+  "bouchees": 9,
+  "minimum": 1,
+  "tarifTTC": 15,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Navettes thon concombre",
+  "unite": "lot",
+  "bouchees": 12,
+  "minimum": 1,
+  "tarifTTC": 20,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Navettes saumon fumé",
+  "unite": "lot",
+  "bouchees": 12,
+  "minimum": 1,
+  "tarifTTC": 20,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Navettes poulet curry",
+  "unite": "lot",
+  "bouchees": 12,
+  "minimum": 1,
+  "tarifTTC": 20,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Navettes pesto chèvre",
+  "unite": "lot",
+  "bouchees": 12,
+  "minimum": 1,
+  "tarifTTC": 20,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Navettes jambon",
+  "unite": "lot",
+  "bouchees": 12,
+  "minimum": 1,
+  "tarifTTC": 20,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Plaque quiche ratatouille chèvre x48",
+  "unite": "plaque",
+  "bouchees": 48,
+  "minimum": 1,
+  "tarifTTC": 50,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Plaque quiche thon frita x48",
+  "unite": "plaque",
+  "bouchees": 48,
+  "minimum": 1,
+  "tarifTTC": 50,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Plaque quiche lorraine x48",
+  "unite": "plaque",
+  "bouchees": 48,
+  "minimum": 1,
+  "tarifTTC": 50,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Plaque pizza margarita",
+  "unite": "plaque",
+  "bouchees": 48,
+  "minimum": 1,
+  "tarifTTC": 25,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Plaque pizza royale",
+  "unite": "plaque",
+  "bouchees": 48,
+  "minimum": 1,
+  "tarifTTC": 30,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Plaque pizza kebab",
+  "unite": "plaque",
+  "bouchees": 48,
+  "minimum": 1,
+  "tarifTTC": 30,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Plaque pizza chèvre miel",
+  "unite": "plaque",
+  "bouchees": 48,
+  "minimum": 1,
+  "tarifTTC": 30,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Plaque pizza 4 fromages",
+  "unite": "plaque",
+  "bouchees": 48,
+  "minimum": 1,
+  "tarifTTC": 30,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Mini verrine crème saumon aneth",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 5,
+  "tarifTTC": 1.8,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Mini verrine Thon mayo concombre",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 5,
+  "tarifTTC": 1.6,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Mini verrine taboulé Légumes grillés",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 5,
+  "tarifTTC": 1.5,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Mini Feuilletés cocktail",
+  "unite": "lot",
+  "bouchees": 32,
+  "minimum": 1,
+  "tarifTTC": 40,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Grand plateau charcuterie (10 personnes)",
+  "unite": "lot",
+  "bouchees": 10,
+  "minimum": 1,
+  "tarifTTC": 30,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Grand plateau 4 fromages (10 personnes)",
+  "unite": "lot",
+  "bouchees": 10,
+  "minimum": 1,
+  "tarifTTC": 28,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Grand plateau légumes (10 personnes)",
+  "unite": "lot",
+  "bouchees": 10,
+  "minimum": 1,
+  "tarifTTC": 25,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Diablotine olives herbes de provence",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 1,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Diablotine lardon emmental",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 1,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Sucré",
+  "nom": "Bulles d'Ange",
+  "unite": "lot",
+  "bouchees": 10,
+  "minimum": 1,
+  "tarifTTC": 5,
+  "tva": 0.055,
+  "type": "sucre",
+  "photo": null
+ },
+ {
+  "gamme": "Sucré",
+  "nom": "Mini Verrines (au choix du chef)",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 5,
+  "tarifTTC": 1.34,
+  "tva": 0.055,
+  "type": "sucre",
+  "photo": null
+ },
+ {
+  "gamme": "Sucré",
+  "nom": "Mini Verrines crémeux chocolat",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 5,
+  "tarifTTC": 1.34,
+  "tva": 0.055,
+  "type": "sucre",
+  "photo": null
+ },
+ {
+  "gamme": "Sucré",
+  "nom": "Mini Verrines citron biscuit",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 5,
+  "tarifTTC": 1.34,
+  "tva": 0.055,
+  "type": "sucre",
+  "photo": null
+ },
+ {
+  "gamme": "Sucré",
+  "nom": "Mini Verrines perles de chia",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 5,
+  "tarifTTC": 1.34,
+  "tva": 0.055,
+  "type": "sucre",
+  "photo": null
+ },
+ {
+  "gamme": "Sucré",
+  "nom": "Mini Verrines tiramisu",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 5,
+  "tarifTTC": 1.34,
+  "tva": 0.055,
+  "type": "sucre",
+  "photo": null
+ },
+ {
+  "gamme": "Sucré",
+  "nom": "Mini mignardises (au choix du chef)",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 5,
+  "tarifTTC": 1,
+  "tva": 0.055,
+  "type": "sucre",
+  "photo": null
+ },
+ {
+  "gamme": "Sucré",
+  "nom": "Mini mignardises citron meringué",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 5,
+  "tarifTTC": 1,
+  "tva": 0.055,
+  "type": "sucre",
+  "photo": null
+ },
+ {
+  "gamme": "Sucré",
+  "nom": "Mini mignardises multifruits",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 5,
+  "tarifTTC": 1,
+  "tva": 0.055,
+  "type": "sucre",
+  "photo": null
+ },
+ {
+  "gamme": "Sucré",
+  "nom": "Mini mignardises chocolat",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 5,
+  "tarifTTC": 1,
+  "tva": 0.055,
+  "type": "sucre",
+  "photo": null
+ },
+ {
+  "gamme": "Sucré",
+  "nom": "Mini mignardises praliné",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 5,
+  "tarifTTC": 1,
+  "tva": 0.055,
+  "type": "sucre",
+  "photo": null
+ },
+ {
+  "gamme": "Sucré",
+  "nom": "Plaque fondant chocolat x48 (4x4cm)",
+  "unite": "plaque",
+  "bouchees": 48,
+  "minimum": 1,
+  "tarifTTC": 50,
+  "tva": 0.055,
+  "type": "sucre",
+  "photo": null
+ },
+ {
+  "gamme": "Sucré",
+  "nom": "Plaque tarte feuilletée fraises (selon saison)",
+  "unite": "plaque",
+  "bouchees": 48,
+  "minimum": 1,
+  "tarifTTC": 50,
+  "tva": 0.055,
+  "type": "sucre",
+  "photo": null
+ },
+ {
+  "gamme": "Sucré",
+  "nom": "Plaque tarte feuilletée fruits de saison",
+  "unite": "plaque",
+  "bouchees": 48,
+  "minimum": 1,
+  "tarifTTC": 50,
+  "tva": 0.055,
+  "type": "sucre",
+  "photo": null
+ },
+ {
+  "gamme": "Sucré",
+  "nom": "Plaque tarte feuilletée pommes x48",
+  "unite": "plaque",
+  "bouchees": 48,
+  "minimum": 1,
+  "tarifTTC": 35,
+  "tva": 0.055,
+  "type": "sucre",
+  "photo": null
+ },
+ {
+  "gamme": "Pains",
+  "nom": "Baguette au levain maison",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 1,
+  "tva": 0.055,
+  "type": null,
+  "photo": null
+ },
+ {
+  "gamme": "Pains",
+  "nom": "Baguettine céréales au levain maison",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 1.3,
+  "tva": 0.055,
+  "type": null,
+  "photo": null
+ },
+ {
+  "gamme": "Pains",
+  "nom": "Pavé Ange",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 2.9,
+  "tva": 0.055,
+  "type": null,
+  "photo": null
+ },
+ {
+  "gamme": "Pains",
+  "nom": "Pain au mais",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 3.4,
+  "tva": 0.055,
+  "type": null,
+  "photo": null
+ },
+ {
+  "gamme": "Pains",
+  "nom": "Pain aux noix",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 2.6,
+  "tva": 0.055,
+  "type": null,
+  "photo": null
+ },
+ {
+  "gamme": "Pains",
+  "nom": "Pain aux olives",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 2.6,
+  "tva": 0.055,
+  "type": null,
+  "photo": null
+ },
+ {
+  "gamme": "Pains",
+  "nom": "Pain Burger",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 0.95,
+  "tva": 0.055,
+  "type": null,
+  "photo": null
+ },
+ {
+  "gamme": "Pains",
+  "nom": "Pain Oriental",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 1.9,
+  "tva": 0.055,
+  "type": null,
+  "photo": null
+ },
+ {
+  "gamme": "Boissons",
+  "nom": "Expresso 12cl",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 1.6,
+  "tva": 0.055,
+  "type": null,
+  "photo": null
+ },
+ {
+  "gamme": "Boissons",
+  "nom": "Chocolat chaud onctueux 24cl",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 3.1,
+  "tva": 0.055,
+  "type": null,
+  "photo": null
+ },
+ {
+  "gamme": "Boissons",
+  "nom": "Thé Kusmi Tea",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 2.5,
+  "tva": 0.055,
+  "type": null,
+  "photo": null
+ },
+ {
+  "gamme": "Boissons",
+  "nom": "Eau plate 50cl",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 1.6,
+  "tva": 0.055,
+  "type": null,
+  "photo": null
+ },
+ {
+  "gamme": "Boissons",
+  "nom": "Eau plate 1,5L",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 2.9,
+  "tva": 0.055,
+  "type": null,
+  "photo": null
+ },
+ {
+  "gamme": "Boissons",
+  "nom": "Eau pétillante 50cl",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 2.2,
+  "tva": 0.055,
+  "type": null,
+  "photo": null
+ },
+ {
+  "gamme": "Boissons",
+  "nom": "Eau pétillante 1L",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 3.5,
+  "tva": 0.055,
+  "type": null,
+  "photo": null
+ },
+ {
+  "gamme": "Boissons",
+  "nom": "Soda 1,5L",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 5,
+  "tva": 0.055,
+  "type": null,
+  "photo": null
+ },
+ {
+  "gamme": "Boissons",
+  "nom": "Jus de fruit pressé Kookabara 1L",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 6,
+  "tva": 0.055,
+  "type": null,
+  "photo": null
+ },
+ {
+  "gamme": "Boissons",
+  "nom": "Jus de fruit pressé Kookabara 25cl",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 3,
+  "tva": 0.055,
+  "type": null,
+  "photo": null
+ },
+ {
+  "gamme": "Boissons",
+  "nom": "Vin rouge mondeuse \"La Somptueuse\" 75cl",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 16,
+  "tva": 0.055,
+  "type": null,
+  "photo": null
+ },
+ {
+  "gamme": "Boissons",
+  "nom": "Vin blanc de savoie \"Plaisir des Anges\" 75cl",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 16,
+  "tva": 0.055,
+  "type": null,
+  "photo": null
+ },
+ {
+  "gamme": "Accessoires",
+  "nom": "Serviettes en papier",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 0.01,
+  "tva": 0.055,
+  "type": null,
+  "photo": null
+ },
+ {
+  "gamme": "Accessoires",
+  "nom": "Gobelets 12cl (expresso)",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 0.1,
+  "tva": 0.055,
+  "type": null,
+  "photo": null
+ },
+ {
+  "gamme": "Accessoires",
+  "nom": "Gobelets 24cl (jus de fruit)",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 0.1,
+  "tva": 0.055,
+  "type": null,
+  "photo": null
+ },
+ {
+  "gamme": "Accessoires",
+  "nom": "Touillettes",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 0.02,
+  "tva": 0.055,
+  "type": null,
+  "photo": null
+ },
+ {
+  "gamme": "Accessoires",
+  "nom": "Sucrettes",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 0.05,
+  "tva": 0.055,
+  "type": null,
+  "photo": null
+ },
+ {
+  "gamme": "Accessoires",
+  "nom": "Cuillères",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 0.05,
+  "tva": 0.055,
+  "type": null,
+  "photo": null
+ },
+ {
+  "gamme": "Accessoires",
+  "nom": "Plateau cartonné noir",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 2,
+  "tva": 0.055,
+  "type": null,
+  "photo": null
+ },
+ {
+  "gamme": "Accessoires",
+  "nom": "Nappe papier 2m noire",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 4,
+  "tva": 0.055,
+  "type": null,
+  "photo": null
+ },
+ {
+  "gamme": "Accessoires",
+  "nom": "Nappe papier renforcé 2m noire",
+  "unite": "pièce",
+  "bouchees": 1,
+  "minimum": 1,
+  "tarifTTC": 8,
+  "tva": 0.055,
+  "type": null,
+  "photo": null
+ }
 ];
 
 /* =====================================================================
@@ -1755,16 +1819,17 @@ GAMMES.forEach(g=>{
   sec.innerHTML=`<div class="cat-head"><span class="b"></span><h2>${g.nom}</h2><span class="tag">${items.length} produit${items.length>1?'s':''}</span><span class="cat-sub" id="csub-${g.id}"></span></div><div class="grid"></div>`;
   const grid=sec.querySelector('.grid');
   items.forEach(p=>{
-    const card=document.createElement('article'); card.className='card'; card.style.setProperty('--c',g.couleur); card.dataset.i=p.i;
+    const card=document.createElement('article'); card.className='card'; card.style.setProperty('--c',g.couleur); card.dataset.i=p.i; card.dataset.search=(p.nom+' '+p.gamme).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
     const isPiece=p.unite==='pièce';
     const uLabel=isPiece?'Pièces':(p.unite==='plaque'?'Plaques':'Lots');
     const opts=`<option value="0">0</option>`+Array.from({length:CONFIG.maxLots},(_,k)=>`<option value="${k+1}">${k+1}</option>`).join('');
-    const control=isPiece
-      ? `<input type="number" id="q${p.i}" data-i="${p.i}" data-min="${p.minimum}" class="qnum" min="0" max="999" step="1" inputmode="numeric" placeholder="0" aria-label="Nombre de pièces pour ${p.nom}">`
-      : `<select id="q${p.i}" data-i="${p.i}" aria-label="Quantité pour ${p.nom}">${opts}</select>`;
+    const maxV=isPiece?999:CONFIG.maxLots;
+    const control=`<div class="stepper"><button type="button" class="st-btn" data-dir="-1" aria-label="Retirer">−</button>`+
+      `<input type="number" id="q${p.i}" data-i="${p.i}" data-min="${p.minimum}" data-max="${maxV}" class="qnum" min="0" max="${maxV}" step="1" inputmode="numeric" value="0" aria-label="Quantité pour ${p.nom}">`+
+      `<button type="button" class="st-btn" data-dir="1" aria-label="Ajouter">+</button></div>`;
     let hint='';
-    if(p.unite==='plaque') hint=`1 plaque = ${p.bouchees} bouchées`;
-    else if(p.unite==='lot' && p.gamme!=='Pains') hint=`1 lot = ${p.bouchees} bouchée${p.bouchees>1?'s':''}`;
+    if(p.unite==='plaque') hint=`1 plaque = ${p.bouchees} pièces<span class='minq-sub'>4×4 cm</span>`;
+    else if(p.unite==='lot' && p.gamme!=='Pains') hint=`1 lot = ${p.bouchees} pièce${p.bouchees>1?'s':''}`;
     else if(p.minimum>1) hint=`min. ${p.minimum} pièces`;
     const badge=hint?`<span class="minq">${hint}</span>`:'';
     const PHOLDER=`<div class="ph"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.8"/><path d="m21 15-5-5L5 21"/></svg><span>Photo à venir</span></div>`;
@@ -1773,19 +1838,22 @@ GAMMES.forEach(g=>{
     const htU=p.tarifTTC/(1+p.tva), tvaU=p.tarifTTC-htU;
     const unitWord=isPiece?'pièce':p.unite;
     const trancheOpt=p.gamme==='Pains'?`<label class="tranche-opt"><input type="checkbox" class="tr" data-i="${p.i}"> Je le souhaite tranché</label>`:'';
-    card.innerHTML=`${photo}<div class="card-body"><h3>${p.nom}</h3>
-      <div class="meta"><div class="price"><span class="ttc">${euro(p.tarifTTC)} <small>TTC / ${unitWord}</small></span><span class="htline">HT ${euro(htU)} · TVA ${euro(tvaU)}</span></div>${badge}</div>${trancheOpt}
-      <div class="card-foot"><div class="qty"><label for="q${p.i}">${uLabel}</label>${control}</div><div class="subtotal zero" id="s${p.i}">0,00 €</div></div></div>`;
+    card.innerHTML=`${photo}<div class="card-main"><div class="card-info"><h3>${p.nom}</h3>
+      <div class="meta"><div class="price"><span class="ttc">${euro(p.tarifTTC)} <small>TTC / ${unitWord}</small></span><span class="htline">HT ${euro(htU)} · TVA ${euro(tvaU)}</span></div>${badge}</div>${trancheOpt}</div>
+      <div class="card-controls"><div class="qty"><label for="q${p.i}">${uLabel}</label>${control}</div><div class="subtotal zero" id="s${p.i}">0,00 €</div></div></div>`;
     grid.appendChild(card);
   });
   catalogue.appendChild(sec);
 });
 
+function stepQty(inp,dir){ if(!inp) return; const mn=+inp.dataset.min||1, mx=+inp.dataset.max||999; let v=parseInt(inp.value)||0;
+  if(dir>0){ v=(v<=0&&mn>1)?mn:v+1; if(v>0&&v<mn)v=mn; if(v>mx)v=mx; } else { v=(mn>1&&v<=mn)?0:v-1; if(v<0)v=0; }
+  inp.value=v; onQty(inp,true); }
 function onQty(t,commit){
   if(!t.dataset||t.dataset.i===undefined) return;
   if(t.tagName!=='SELECT' && !(t.tagName==='INPUT'&&t.type==='number')) return;
   const i=+t.dataset.i; let q=parseInt(t.value)||0; if(q<0)q=0;
-  const mn=+t.dataset.min||1; if(commit&&q>0&&q<mn){ q=mn; t.value=mn; } if(q>999){ q=999; t.value=999; }
+  const mn=+t.dataset.min||1; const mx=+t.dataset.max||999; if(commit&&q>0&&q<mn){ q=mn; t.value=mn; } if(q>mx){ q=mx; t.value=mx; }
   if(q>0)state.set(i,q); else state.delete(i);
   const p=PRODUITS[i],sub=q*p.tarifTTC,el=$('s'+i);
   el.textContent=euro(sub); el.classList.toggle('zero',q===0);
@@ -1795,6 +1863,7 @@ function onQty(t,commit){
 }
 catalogue.addEventListener('input',e=>onQty(e.target,false));
 catalogue.addEventListener('change',e=>{ if(e.target.classList.contains('tr')){ const i=+e.target.dataset.i; if(e.target.checked)tranche.set(i,true); else tranche.delete(i); render(); return;} onQty(e.target,true); });
+catalogue.addEventListener('click',e=>{ const b=e.target.closest('.st-btn'); if(!b) return; stepQty(b.parentElement.querySelector('.qnum'), +b.dataset.dir); });
 
 function compute(){
   let ttc=0,ht=0,tva=0,minBase=0,count=0,bSale=0,bSucre=0; const lignes=[];
@@ -1814,17 +1883,17 @@ function compute(){
 
 /* --- Repere de quantite : aide le client a se situer --- */
 const REPERES=[
-  {max:4,  court:'en dessous d\u2019un ap\u00e9ritif l\u00e9ger', tag:'Tr\u00e8s l\u00e9ger',  txt:'C\u2019est peu\u00a0: pensez \u00e0 compl\u00e9ter si vos invit\u00e9s restent un moment.'},
-  {max:8,  court:'\u2248 ap\u00e9ritif',                          tag:'Ap\u00e9ritif',      txt:'Format ap\u00e9ritif ou pause caf\u00e9, sur une heure environ.'},
-  {max:11, court:'\u2248 ap\u00e9ritif dinatoire',               tag:'Ap\u00e9ritif dinatoire', txt:'Bien pour un ap\u00e9ritif qui dure, sans repas ensuite.'},
-  {max:14, court:'\u2248 repas complet',                          tag:'Repas complet',   txt:'Quantit\u00e9 d\u2019un vrai repas\u00a0: vos invit\u00e9s n\u2019auront pas faim.'},
-  {max:1e9,court:'au-del\u00e0 d\u2019un repas complet',          tag:'G\u00e9n\u00e9reux', txt:'Au-del\u00e0 d\u2019un repas complet\u00a0: pr\u00e9voyez des contenants pour le reste.'}
+  {max:4,  court:'idéal pour un café d’accueil', tag:'Idéal pour un café d’accueil', txt:'Une petite pause ou un café d’accueil. Pensez à compléter si l’événement dure.'},
+  {max:8,  court:'idéal pour un apéritif', tag:'Idéal pour un apéritif', txt:'Un apéritif ou une pause café, sur une heure environ.'},
+  {max:11, court:'idéal pour un apéritif dînatoire', tag:'Idéal pour un apéritif dînatoire', txt:'Un apéritif qui dure, sans repas ensuite.'},
+  {max:14, court:'idéal pour tenir lieu de repas', tag:'Idéal pour tenir lieu de repas', txt:'De quoi tenir lieu de repas : vos invités n’auront pas faim.'},
+  {max:1e9,court:'idéal pour un repas généreux', tag:'Idéal pour un repas généreux', txt:'Au-delà d’un repas : prévoyez des contenants pour le reste.'}
 ];
 function niveauBouchees(n){ return REPERES.find(r=>n<=r.max)||REPERES[REPERES.length-1]; }
 function repereBouchees(n){
   const r=niveauBouchees(n);
   return '<span class="tag">'+r.tag+'</span>'+r.txt+
-         '<br><b>Rep\u00e8re\u00a0:</b> 6 \u00e0 8 bouch\u00e9es/pers. pour un ap\u00e9ritif, 12 \u00e0 14 pour un repas complet.';
+         '<br><b>Rep\u00e8re\u00a0:</b> 6 \u00e0 8 pi\u00e8ces/pers. pour un ap\u00e9ritif, 12 \u00e0 14 pour un repas complet.';
 }
 
 function render(){
@@ -1841,8 +1910,8 @@ function render(){
   bites.style.display=c.lignes.length?'flex':'none'; biteSale.textContent=c.bSale; biteSucre.textContent=c.bSucre;
   const cl=$('convLive');
   if(cl){
-    if(conv>0 && c.lignes.length){ cl.textContent='\u2705 \u2248 '+(totalBites/conv).toFixed(1).replace('.',',')+' bouch\u00e9es / personne \u2014 '+niveauBouchees(totalBites/conv).court; cl.classList.add('show'); }
-    else if(conv>0){ cl.textContent='\u2192 Rep\u00e8re : 6 \u00e0 8 bouch\u00e9es/pers. pour un ap\u00e9ritif, 12 \u00e0 14 pour un repas complet.'; cl.classList.add('show'); }
+    if(conv>0 && c.lignes.length){ cl.textContent='\u2705 \u2248 '+(totalBites/conv).toFixed(1).replace('.',',')+' pi\u00e8ces / personne \u2014 '+niveauBouchees(totalBites/conv).court; cl.classList.add('show'); }
+    else if(conv>0){ cl.textContent='\u2192 Rep\u00e8re : 6 \u00e0 8 pi\u00e8ces/pers. pour un ap\u00e9ritif, 12 \u00e0 14 pour un repas complet.'; cl.classList.add('show'); }
     else cl.classList.remove('show');
   }
   const gt={};
@@ -1931,6 +2000,14 @@ $('installation').addEventListener('change',render);
 const spy=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ const id=e.target.id.replace('sec-','');
   document.querySelectorAll('.pill').forEach(p=>p.classList.toggle('active',p.dataset.target===id)); }}),{rootMargin:'-134px 0px -70% 0px'});
 document.querySelectorAll('.cat').forEach(s=>spy.observe(s));
+const prodSearch=$('prodSearch');
+if(prodSearch){ prodSearch.addEventListener('input',()=>{
+  const q=prodSearch.value.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); let total=0;
+  document.querySelectorAll('.cat').forEach(sec=>{ let vis=0;
+    sec.querySelectorAll('.card').forEach(c=>{ const hit=!q||(c.dataset.search||'').includes(q); c.style.display=hit?'':'none'; if(hit)vis++; });
+    sec.style.display=vis?'':'none'; total+=vis; });
+  const no=$('searchNo'); if(no) no.style.display=(q&&total===0)?'block':'none';
+}); }
 
 /* ---------- PDF (client gauche / Ange droite · lignes HT) ---------- */
 function buildPDF(d){
@@ -2013,14 +2090,14 @@ function buildPDF(d){
   const synH=d.convives?26:14;
   doc.setFillColor(255,255,255); doc.setDrawColor(233,228,214); doc.roundedRect(M,y-4,W-2*M,synH,2,2,'FD');
   doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(63,70,0);
-  doc.text('Synthèse bouchées',M+4,y+1.5); doc.setTextColor(26,26,22);
+  doc.text('Synthèse pièces',M+4,y+1.5); doc.setTextColor(26,26,22);
   doc.setFont('helvetica','normal'); doc.setFontSize(8.7);
   let sy=y+7.2; const lh=4.6; const cx1=M+4;
   const line=(t)=>{ doc.text(t,cx1,sy); sy+=lh; };
   if(d.convives) line('Nombre d\u2019invités : '+d.convives);
-  line('Total bouchées : '+totBites+'  ('+d.bSale+' salées · '+d.bSucre+' sucrées)');
+  line('Total pièces : '+totBites+'  ('+d.bSale+' salées · '+d.bSucre+' sucrées)');
   if(d.convives){
-    line('Bouchées par invité : '+dec(totBites/d.convives)+'  ('+dec(d.bSale/d.convives)+' salées · '+dec(d.bSucre/d.convives)+' sucrées)');
+    line('Pièces par invité : '+dec(totBites/d.convives)+'  ('+dec(d.bSale/d.convives)+' salées · '+dec(d.bSucre/d.convives)+' sucrées)');
     line('Prix par invité : '+euro(d.ttcProd/d.convives)+' TTC  ('+euro(d.htProd/d.convives)+' HT)');
   }
   doc.setTextColor(26,26,22); y+=synH+3;
@@ -2118,7 +2195,7 @@ function emailHTML(d){
      ${d.acompte?`<tr><td colspan="2" style="font-size:12px;color:#5b6300;font-weight:bold;text-align:right;padding-top:6px">Règlement de la totalité d'avance en boutique pour confirmer</td></tr>${d.acompteDeadline?`<tr><td colspan="2" style="font-size:12px;color:#7a4a1c;text-align:right;padding-top:1px">avant le ${d.acompteDeadline}</td></tr>`:''}`:''}
    </table>
    <div style="clear:both"></div>
-   <p style="font-size:13px;color:#555;margin:14px 0 0">Bouchées : ${d.bSale} salées · ${d.bSucre} sucrées${d.convives?' · '+d.ppBites+' bouchées/pers':''}</p>
+   <p style="font-size:13px;color:#555;margin:14px 0 0">Pièces : ${d.bSale} salées · ${d.bSucre} sucrées${d.convives?' · '+d.ppBites+' pièces/pers':''}</p>
    ${d.facture?`<p style="font-size:13px;line-height:1.5;margin:12px 0 0"><b>Facturation</b><br>${d.facture.raison}<br>${addr(d.facture)}</p>`:''}
    ${d.note?`<p style="font-size:13px;margin:12px 0 0"><b>Précisions :</b> ${d.note}</p>`:''}
    <div style="background:#F3F7CF;border-radius:10px;padding:14px 16px;margin-top:18px;font-size:13px;color:#3f4600;line-height:1.5">
