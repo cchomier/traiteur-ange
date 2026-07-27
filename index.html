@@ -2256,10 +2256,31 @@ $('orderForm').addEventListener('submit',async e=>{
   try{ const doc=buildPDF(d); if(doc){ lastPDF=doc; doc.save(`Commande-traiteur-Ange-${d.nom}.pdf`); pdfB64=doc.output('datauristring').split('base64,')[1]; } }catch(err){ console.warn(err); }
 
   const textFallback=`Commande ${d.ref} — ${d.prenom} ${d.nom} · ${euro(d.ttc)} TTC · voir PDF joint.`;
+
+  /* Bloc structuré pour le journal des demandes (Airtable) — n'affecte pas l'e-mail */
+  const r2=n=>Math.round(n*100)/100;
+  const order={
+    ref:d.ref,
+    client:`${d.prenom} ${d.nom}`,
+    tel:d.tel, email:d.email,
+    dateISO:f.date.value||'', heure:f.heure.value||'',
+    dateTexte:d.dateSouhaitee,
+    mode:d.mode,
+    adresse:deliv?[deliv.rue,deliv.comp,`${deliv.cp} ${deliv.ville}`.trim()].filter(Boolean).join('\n'):'',
+    convives:conv,
+    ttc:r2(d.ttc), ht:r2(d.ht), tva:r2(d.tva),
+    encaisser:r2(d.acompte),
+    bouchees:conv?`${d.ppBites} (${d.bSale} salées / ${d.bSucre} sucrées)`:'',
+    detail:d.lignes.map(l=>`${l.qty} × ${l.des} — ${euro(l.tot)}`).join('\n'),
+    note:d.note||'',
+    facturation:facture?[facture.raison,facture.rue,facture.comp,`${facture.cp} ${facture.ville}`.trim()].filter(Boolean).join('\n'):'',
+    boulangerie:d.bakeryNom
+  };
+
   let sent=false;
   try{
     const r=await fetch(CONFIG.apiEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({ref:d.ref,clientName:`${d.prenom} ${d.nom}`,bakeryName:d.bakeryNom,bakeryEmail:d.bakeryEmail,replyTo:d.email,html:emailHTML(d),text:textFallback,pdfBase64:pdfB64,filename:`Commande-${d.ref}.pdf`})});
+      body:JSON.stringify({ref:d.ref,clientName:`${d.prenom} ${d.nom}`,bakeryName:d.bakeryNom,bakeryEmail:d.bakeryEmail,replyTo:d.email,html:emailHTML(d),text:textFallback,pdfBase64:pdfB64,filename:`Commande-${d.ref}.pdf`,order})});
     sent=r.ok;
   }catch(err){ console.warn('Envoi API indisponible :',err); }
 
