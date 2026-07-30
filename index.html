@@ -246,6 +246,8 @@
 
   .bar{position:fixed; left:0; right:0; bottom:0; z-index:60; background:var(--noir); color:#fff; box-shadow:0 -6px 24px rgba(0,0,0,.25); transform:translateY(120%); transition:transform .25s;}
   .bar.show{transform:translateY(0);}
+  /* Saisie en cours : la barre s'efface pour liberer le bas de l'ecran (30/07/2026). */
+  .bar.show.typing{transform:translateY(120%);}
   .bar-in{max-width:1040px; margin:0 auto; padding:11px 22px; display:flex; align-items:center; justify-content:space-between; gap:16px;}
   .bar .lbl{font-size:12px; color:#ffffff99; font-weight:800; text-transform:uppercase; letter-spacing:.04em;}
   .bar .tot{font-family:"Fraunces",serif; font-weight:700; font-size:25px; color:var(--vert); line-height:1;}
@@ -291,9 +293,9 @@
   .card{transition:transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .28s, border-color .2s;}
   .card:hover{transform:translateY(-5px); box-shadow:0 16px 32px color-mix(in srgb, var(--c) 22%, transparent), 0 3px 8px rgba(20,20,10,.07);}
   .photo img{transition:transform .6s cubic-bezier(.2,.8,.2,1);}
-  .card:hover .photo img{transform:scale(1.07);}
+  /* Zoom au survol supprime (30/07/2026) : aucun element ne grossit au survol. */
   .photo .ph{transition:transform .35s cubic-bezier(.34,1.56,.64,1);}
-  .card:hover .photo .ph{transform:scale(1.1) rotate(-3deg);}
+  /* Rotation/zoom du placeholder supprimes (30/07/2026). */
   select:hover, input.qnum:hover{border-color:var(--c);}
   .pill{transition:transform .18s, box-shadow .2s, background .15s, border-color .15s, color .15s;}
   .pill:hover{transform:translateY(-2px); box-shadow:0 8px 16px color-mix(in srgb, var(--c) 28%, transparent);}
@@ -323,7 +325,7 @@
   @media(max-width:680px){ .bulle.b1{width:78px;height:78px; right:5%;} .bulle.b3{display:none;} }
   .hero-cta{display:flex; gap:14px; align-items:center; margin-top:14px; flex-wrap:wrap; position:relative; z-index:2;}
   .cta-main{font-family:inherit; font-weight:900; font-size:16px; color:var(--noir); background:linear-gradient(135deg,#D8E634,var(--vert)); border:0; border-radius:999px; padding:14px 28px; cursor:pointer; box-shadow:0 8px 24px rgba(205,219,0,.35); transition:transform .18s cubic-bezier(.34,1.56,.64,1), box-shadow .2s;}
-  .cta-main:hover{transform:translateY(-2px) scale(1.02); box-shadow:0 14px 32px rgba(205,219,0,.5);}
+  .cta-main:hover{transform:translateY(-2px); box-shadow:0 14px 32px rgba(205,219,0,.5);}
   .cta-main:active{transform:scale(.97);}
   .cta-sub{color:#EDE9DE; font-size:14px; font-weight:700;}
   .cta-sub b{color:var(--vert);}
@@ -370,12 +372,12 @@
   .card .minq{white-space:normal; text-align:center; line-height:1.2;}
   .minq-sub{display:block; font-size:9px; font-weight:800; letter-spacing:.02em; opacity:.9; margin-top:1px;}
   @media(max-width:640px){ .step-eyebrow{font-size:11px;} }
-  /* --- Vue liste : 1 produit par ligne, photo en medaillon zoom au survol --- */
+  /* --- Vue liste : 1 produit par ligne, photo en medaillon (statique au survol) --- */
   .grid{display:flex; flex-direction:column; gap:10px;}
   .card{flex-direction:row; align-items:center; gap:14px; padding:10px 14px; overflow:visible;}
   .card .photo{width:88px; height:88px; aspect-ratio:auto; flex:none; border:1px solid var(--line); border-radius:14px; transform-origin:center left; transition:transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .28s; position:relative; z-index:1;}
   .card:hover{transform:none; box-shadow:var(--shadow);}
-  .card:hover .photo{transform:scale(1.85); z-index:20; box-shadow:0 16px 36px rgba(20,20,10,.30);}
+  .card:hover .photo{box-shadow:0 8px 20px rgba(20,20,10,.18); border-color:var(--c);}
   .card-main{flex:1; display:flex; align-items:center; gap:18px; flex-wrap:wrap; min-width:0;}
   .card-info{flex:1 1 240px; min-width:0;}
   .card-info h3{margin:0 0 6px; font-size:16px; flex:none;}
@@ -386,7 +388,6 @@
   @media(max-width:560px){
     .card{gap:11px; padding:10px 12px; align-items:flex-start;}
     .card .photo{width:64px; height:64px;}
-    .card:hover .photo{transform:scale(2.5); z-index:20;}
     .card-main{gap:9px;}
     .card-controls{width:100%; justify-content:space-between; margin-left:0;}
     .card-info{flex-basis:100%;}
@@ -2256,31 +2257,10 @@ $('orderForm').addEventListener('submit',async e=>{
   try{ const doc=buildPDF(d); if(doc){ lastPDF=doc; doc.save(`Commande-traiteur-Ange-${d.nom}.pdf`); pdfB64=doc.output('datauristring').split('base64,')[1]; } }catch(err){ console.warn(err); }
 
   const textFallback=`Commande ${d.ref} — ${d.prenom} ${d.nom} · ${euro(d.ttc)} TTC · voir PDF joint.`;
-
-  /* Bloc structuré pour le journal des demandes (Airtable) — n'affecte pas l'e-mail */
-  const r2=n=>Math.round(n*100)/100;
-  const order={
-    ref:d.ref,
-    client:`${d.prenom} ${d.nom}`,
-    tel:d.tel, email:d.email,
-    dateISO:f.date.value||'', heure:f.heure.value||'',
-    dateTexte:d.dateSouhaitee,
-    mode:d.mode,
-    adresse:deliv?[deliv.rue,deliv.comp,`${deliv.cp} ${deliv.ville}`.trim()].filter(Boolean).join('\n'):'',
-    convives:conv,
-    ttc:r2(d.ttc), ht:r2(d.ht), tva:r2(d.tva),
-    encaisser:r2(d.acompte),
-    bouchees:conv?`${d.ppBites} (${d.bSale} salées / ${d.bSucre} sucrées)`:'',
-    detail:d.lignes.map(l=>`${l.qty} × ${l.des} — ${euro(l.tot)}`).join('\n'),
-    note:d.note||'',
-    facturation:facture?[facture.raison,facture.rue,facture.comp,`${facture.cp} ${facture.ville}`.trim()].filter(Boolean).join('\n'):'',
-    boulangerie:d.bakeryNom
-  };
-
   let sent=false;
   try{
     const r=await fetch(CONFIG.apiEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({ref:d.ref,clientName:`${d.prenom} ${d.nom}`,bakeryName:d.bakeryNom,bakeryEmail:d.bakeryEmail,replyTo:d.email,html:emailHTML(d),text:textFallback,pdfBase64:pdfB64,filename:`Commande-${d.ref}.pdf`,order})});
+      body:JSON.stringify({ref:d.ref,clientName:`${d.prenom} ${d.nom}`,bakeryName:d.bakeryNom,bakeryEmail:d.bakeryEmail,replyTo:d.email,html:emailHTML(d),text:textFallback,pdfBase64:pdfB64,filename:`Commande-${d.ref}.pdf`})});
     sent=r.ok;
   }catch(err){ console.warn('Envoi API indisponible :',err); }
 
@@ -2303,6 +2283,33 @@ try{
   const reveal=new IntersectionObserver(es=>es.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in'); reveal.unobserve(en.target);} }),{rootMargin:'0px 0px -6% 0px'});
   document.querySelectorAll('.card').forEach(c=>reveal.observe(c));
 }catch(e){ document.body.classList.remove('reveal-on'); }
+/* --- Barre basse : masquee pendant la saisie du formulaire (30/07/2026) ---
+   Probleme : la barre est fixee en bas de l'ecran. Clavier mobile ouvert, elle
+   recouvre le champ en cours de saisie. On la retire tant qu'un champ a le focus.
+   Le focusout est temporise : sans ce delai, la barre reapparait une fraction de
+   seconde entre deux champs (le focus quitte l'un avant d'atteindre l'autre). */
+(function(){
+  var bar=document.getElementById('bar'), form=document.getElementById('orderForm');
+  if(!bar||!form) return;
+  var t=null;
+  function estChampDeSaisie(el){
+    if(!el) return false;
+    if(!/^(INPUT|SELECT|TEXTAREA)$/.test(el.tagName)) return false;
+    return !/^(button|submit|reset|checkbox|radio)$/.test(el.type||'');
+  }
+  form.addEventListener('focusin',function(e){
+    if(!estChampDeSaisie(e.target)) return;
+    clearTimeout(t); bar.classList.add('typing');
+  });
+  form.addEventListener('focusout',function(){
+    clearTimeout(t);
+    t=setTimeout(function(){
+      var a=document.activeElement;
+      if(!(form.contains(a)&&estChampDeSaisie(a))) bar.classList.remove('typing');
+    },150);
+  });
+})();
+
 applyBakery(bakery); updateFormUI(); render();
 
 </script>
