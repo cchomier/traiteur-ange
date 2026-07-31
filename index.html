@@ -394,9 +394,12 @@
      carte descendait sous ~600px de large. */
   .card-info{flex:1 1 auto; min-width:0;}
   .card-info h3{margin:0 0 6px; font-size:16px; flex:none;}
-  /* Nom du produit et badge "nombre de pieces" sur une seule ligne. */
-  .name-row{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin:0 0 4px;}
-  .name-row h3{margin:0; flex:1 1 auto; min-width:0;}
+  /* Nom du produit et badge "nombre de pieces" sur une seule ligne.
+     h3 en flex:0 1 auto — surtout PAS flex-grow:1, sinon le titre avale tout
+     l'espace libre et pousse la pastille sur une deuxieme ligne. */
+  .name-row{display:flex; align-items:center; gap:9px; flex-wrap:wrap; margin:0 0 3px;}
+  .name-row h3{margin:0; flex:0 1 auto; min-width:0;}
+  .name-row .minq{flex:none;}
   /* Prix TTC, puis rappel HT/TVA juste en dessous. */
   .card .price{flex-direction:column; align-items:flex-start; gap:1px;}
   .card-info .meta{margin-bottom:0; align-items:center;}
@@ -2268,6 +2271,7 @@ $('orderForm').addEventListener('submit',async e=>{
     bakeryNom:bakery.nom,bakeryAdresse:bakery.adresse,bakeryPhone:bakery.phone,bakeryEmail:bakery.email,
     mode:c.livraison?'Livraison':'Retrait', deliv,
     dateSouhaitee:new Date(f.date.value).toLocaleDateString('fr-FR')+(f.heure.value?` à ${f.heure.value}`:''),
+    dateISO:f.date.value, heure:f.heure.value,   // format brut, attendu par le journal Airtable
     dateLong,
     convives:conv, ttc:c.grandTTC, ht:c.grandHT, tva:c.grandTVA, ttcProd:c.ttc, htProd:c.ht,
     mentionReglement, bSale:c.bSale, bSucre:c.bSucre, ppBites:conv?((c.bSale+c.bSucre)/conv).toFixed(1).replace('.',','):'0',
@@ -2278,11 +2282,31 @@ $('orderForm').addEventListener('submit',async e=>{
   let pdfB64=null;
   try{ const doc=buildPDF(d); if(doc){ lastPDF=doc; doc.save(`Devis-traiteur-Ange-${d.nom}.pdf`); pdfB64=doc.output('datauristring').split('base64,')[1]; } }catch(err){ console.warn(err); }
 
+  // Journal Airtable : la fonction serverless attend un objet "order" à plat, avec
+  // les noms de champs de la table. Sans lui, la ligne créée ne porte que la référence,
+  // donc elle n'apparaît dans aucune vue (planning, à traiter) faute de date.
+  const adr=a=>a?[a.rue,a.comp,[a.cp,a.ville].filter(Boolean).join(' ')].filter(Boolean).join('\n'):'';
+  const order={
+    ref:d.ref,
+    client:`${d.prenom} ${d.nom}`,
+    tel:d.tel, email:d.email,
+    dateISO:d.dateISO, heure:d.heure,
+    mode:d.mode,
+    adresse:adr(d.deliv),
+    convives:d.convives||null,
+    ttc:d.ttc,
+    bouchees:d.convives?`${d.ppBites} pièces / pers.`:'',
+    detail:d.lignes.map(l=>`${l.qty} × ${l.des} — ${euro(l.tot)}`).join('\n'),
+    note:d.note||'',
+    facturation:d.facture?[d.facture.raison,adr(d.facture)].filter(Boolean).join('\n'):'',
+    boulangerie:d.bakeryNom,
+  };
+
   const textFallback=`Devis ${d.ref} — ${d.prenom} ${d.nom} · ${euro(d.ttc)} TTC · voir PDF joint.`;
   let sent=false;
   try{
     const r=await fetch(CONFIG.apiEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({ref:d.ref,clientName:`${d.prenom} ${d.nom}`,bakeryName:d.bakeryNom,bakeryEmail:d.bakeryEmail,replyTo:d.email,html:emailHTML(d),text:textFallback,pdfBase64:pdfB64,filename:`Devis-${d.ref}.pdf`})});
+      body:JSON.stringify({ref:d.ref,clientName:`${d.prenom} ${d.nom}`,bakeryName:d.bakeryNom,bakeryEmail:d.bakeryEmail,replyTo:d.email,html:emailHTML(d),text:textFallback,pdfBase64:pdfB64,filename:`Devis-${d.ref}.pdf`,order})});
     sent=r.ok;
   }catch(err){ console.warn('Envoi API indisponible :',err); }
 
