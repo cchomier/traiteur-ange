@@ -9,11 +9,11 @@
 // Si les variables Airtable sont absentes, la journalisation est simplement ignorée :
 // l'e-mail part normalement. Une panne Airtable ne bloque JAMAIS la commande.
 
-// Destinataire : l'adresse du COMPTE Resend (mode test = envoi possible uniquement vers elle).
-// Ici cchomier ; une redirection Gmail cchomier -> commandes.ange74 alimente la boîte boulangerie.
-const RECIPIENT = "cchomier@gmail.com";
+// Destinataire : boîte dédiée de la boulangerie. Domaine ange74.fr vérifié chez Resend
+// (sending enabled, 10/08/2026) -> envoi direct, plus de redirection via cchomier.
+const RECIPIENT = "commandes.ange74@gmail.com";
 
-const FROM = "Traiteur Ange <onboarding@resend.dev>";
+const FROM = "Devis Traiteur Ange <devis@ange74.fr>";
 
 const AT_TABLE = process.env.AIRTABLE_TABLE || "Commandes";
 const AT_PDF_FIELD = "Devis PDF";
@@ -121,14 +121,14 @@ export default async function handler(req, res) {
     }
 
     // 2) E-mail boulangerie
-    // Multi-boulangeries : quand tu auras vérifié un domaine dans Resend, tu pourras router
+    // Domaine ange74.fr vérifié : envoi à la boîte dédiée. Multi-boulangeries : pour router
     // vers la boîte de chaque boulangerie -> remplace RECIPIENT par (bakeryEmail || RECIPIENT).
     const to = [RECIPIENT];
 
     const payload = {
       from: FROM,
       to,
-      subject: `Commande traiteur${bakeryName ? " [" + bakeryName + "]" : ""} ${ref || ""} — ${clientName || "client"}`,
+      subject: `Devis traiteur${bakeryName ? " [" + bakeryName + "]" : ""} ${ref || ""} — ${clientName || "client"}`,
       text: text || "Nouvelle commande traiteur.",
     };
     if (html) payload.html = html;
