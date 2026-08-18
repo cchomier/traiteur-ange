@@ -1998,11 +1998,12 @@ function render(){
 /* date : pas de blocage, mais alerte < 72h */
 const today=new Date().toISOString().split('T')[0];
 $('date').min=today;
-/* Pre-remplissage : J+3 (juste au-dela de l'alerte 72 h) et 8 h, l'heure
-   d'un retrait classique. Le client peut changer les deux ; le calendrier
-   s'ouvre ainsi sur le bon mois au lieu d'aujourd'hui. */
+/* Pre-remplissage : J+4 et 8 h, l'heure d'un retrait classique. J+4 et non
+   J+3 : a J+3 8h, on est sous les 72 h des que la commande est passee apres
+   8 h du matin, et l'alerte orange s'affichait par defaut. Le client peut
+   changer les deux valeurs. */
 (function(){
-  const d=new Date(); d.setDate(d.getDate()+3);
+  const d=new Date(); d.setDate(d.getDate()+4);
   $('date').value=d.toISOString().split('T')[0];
   $('heure').value='08:00';
   checkDate&&0; /* checkDate est declare plus bas ; l'ecouteur change le rejouera */
