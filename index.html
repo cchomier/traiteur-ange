@@ -428,6 +428,47 @@
     .stepper .qnum{width:38px;}
     .card-info h3{font-size:15px;}
   }
+
+  /* --- Deux portes d'entree : a la carte, ou formule prete --- */
+  .depart{display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin:0 0 4px;}
+  .porte{display:flex; align-items:flex-start; gap:14px; text-align:left; background:#fff; border:1.5px solid var(--line); border-radius:16px; padding:16px 18px; cursor:pointer; font-family:inherit; color:inherit;
+    transition:transform .18s cubic-bezier(.34,1.56,.64,1), border-color .18s, box-shadow .18s;}
+  .porte:hover{transform:translateY(-2px); border-color:var(--vert-deep); box-shadow:var(--shadow);}
+  .porte:active{transform:translateY(0);}
+  .porte:focus-visible{outline:3px solid var(--vert); outline-offset:2px;}
+  .porte[aria-pressed="true"]{border-color:var(--vert-deep); background:var(--vert-soft);}
+  .porte .ic{flex:none; display:grid; place-items:center; line-height:0; color:var(--vert-deep); margin-top:1px;}
+  .porte .t{display:block; font-weight:900; font-size:16px; margin-bottom:3px;}
+  .porte .d{display:block; font-size:13.5px; color:var(--muted); line-height:1.35;}
+  @media(max-width:640px){ .depart{grid-template-columns:1fr;} }
+
+  /* --- Panneau des formules --- */
+  .formules{margin:16px 0 4px;}
+  .formules-note{font-size:13.5px; color:var(--muted); margin:0 0 14px;}
+  .fgrid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+  @media(max-width:900px){ .fgrid{grid-template-columns:1fr;} }
+  .fcard{display:flex; flex-direction:column; background:#fff; border:1.5px solid var(--line); border-radius:16px; padding:18px 18px 16px;}
+  .fcard h3{margin:0 0 2px; font-size:17px;}
+  .fcard .acc{font-size:13.5px; color:var(--muted); margin:0 0 12px;}
+  .fcard .chiffres{display:flex; flex-wrap:wrap; gap:6px; margin:0 0 12px;}
+  .fcard .chiffres span{font-size:12.5px; font-weight:800; background:var(--creme-2); border-radius:999px; padding:5px 11px;}
+  .fcard .prix{font-size:24px; font-weight:900; margin:0 0 2px;}
+  .fcard .prix small{font-size:13px; font-weight:700; color:var(--muted);}
+  .fcard ul{list-style:none; margin:0 0 16px; padding:0; font-size:13.5px; color:var(--ink);}
+  .fcard li{display:flex; justify-content:space-between; gap:10px; padding:5px 0; border-bottom:1px dashed var(--line);}
+  .fcard li:last-child{border-bottom:0;}
+  .fcard li span{color:var(--muted); flex:none;}
+  .fcard .go{margin-top:auto; width:100%; border:0; border-radius:12px; background:var(--noir); color:#fff; font-family:inherit; font-weight:900; font-size:15px; padding:13px 16px; cursor:pointer;
+    transition:transform .18s cubic-bezier(.34,1.56,.64,1), opacity .18s;}
+  .fcard .go:hover{transform:translateY(-2px); opacity:.92;}
+  .fcard .go:active{transform:translateY(0);}
+  .fcard .go:focus-visible{outline:3px solid var(--vert); outline-offset:2px;}
+  .fdone{display:none; align-items:flex-start; gap:12px; background:var(--vert-soft); border:1.5px solid var(--vert-deep); border-radius:14px; padding:14px 17px; margin:14px 0 2px; font-size:14px;}
+  .fdone.show{display:flex;}
+  @media(prefers-reduced-motion:reduce){
+    .porte, .fcard .go{transition:border-color .18s, box-shadow .18s;}
+    .porte:hover, .fcard .go:hover{transform:none;}
+  }
 </style>
 </head>
 <body>
@@ -451,7 +492,7 @@
   <div class="wrap">
     <p class="lead"><span class="lead-devis">Devis immédiat · <b>sans paiement en ligne</b></span><br>
       Plateaux salés, sucrés, viennoiseries et boissons.<br>
-      Retrait gratuit en boutique · Livraison +30&nbsp;€ TTC jusqu'à 5&nbsp;km.</p>
+      Retrait gratuit en boutique · Livraison +30&nbsp;€ TTC jusqu'à 5&nbsp;km.<br>Commande en ligne à partir de 50&nbsp;€ TTC.</p>
     <h1>Faites votre <em>composition</em>,<br>on s'occupe du reste.</h1>
   </div>
 </section>
@@ -483,6 +524,27 @@
 </section>
 
 <div class="wrap"><div class="step-eyebrow"><span class="n">2</span> Composez votre buffet</div></div>
+
+<div class="wrap">
+  <div class="depart">
+    <button type="button" class="porte" id="porteCarte" data-depart="carte" aria-pressed="false">
+      <span class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6.5h16M4 12h16M4 17.5h10"/></svg></span>
+      <span><span class="t">À la carte</span><span class="d">Je compose moi-même ma commande.</span></span>
+    </button>
+    <button type="button" class="porte" id="porteFormules" data-depart="formules" aria-pressed="false" aria-controls="formules" aria-expanded="false">
+      <span class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><path d="M8 9.5h8M8 14h5"/></svg></span>
+      <span><span class="t">Formules prêtes à l'emploi</span><span class="d">Les compositions les plus demandées. Modifiables ensuite.</span></span>
+    </button>
+  </div>
+  <div class="formules" id="formules" hidden>
+    <p class="formules-note">Une formule est un point de départ, pas un menu figé : une fois chargée, vous ajoutez, retirez et changez les quantités librement.</p>
+    <div class="fgrid" id="fgrid"></div>
+  </div>
+  <div class="fdone" id="fdone">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;margin-top:1px"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
+    <div id="fdoneTxt"></div>
+  </div>
+</div>
 <nav class="catnav" aria-label="Gammes">
   <div class="catnav-search"><div class="search-wrap"><svg class="search-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg><input type="search" id="prodSearch" placeholder="Rechercher un produit (ex. quiche, wrap, verrine…)" aria-label="Rechercher un produit" autocomplete="off"></div></div>
   <div class="catnav-in" id="catnav"></div>
@@ -529,7 +591,7 @@
 
         <div class="gate" id="gate">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-          <div><b>Minimum : 50 € TTC</b><p>Le devis traiteur en ligne démarre à 50 € TTC (hors service). Pour un montant inférieur, merci de contacter directement la boulangerie au <b id="gatePhone">04 50 24 89 05</b>.</p></div>
+          <div><b>Commande en ligne à partir de 50 € TTC</b><p>Pour une commande plus petite, rendez-vous directement en boutique : on vous sert sans devis. Une question ? Appelez-nous au <b id="gatePhone">04 50 24 89 05</b>.</p></div>
         </div>
 
         <div class="liv-reminder" id="livReminder">📍 Livraison : 30 € TTC dans un rayon maximum de 5 km autour de la boulangerie Ange Grand Epagny.</div>
@@ -879,6 +941,17 @@ const PRODUITS = [
  },
  {
   "gamme": "Salé",
+  "nom": "Mini wraps (mix au choix du chef)",
+  "unite": "lot",
+  "bouchees": 24,
+  "minimum": 1,
+  "tarifTTC": 20,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
   "nom": "Mini wraps thon concombre",
   "unite": "lot",
   "bouchees": 24,
@@ -1049,6 +1122,17 @@ const PRODUITS = [
   "bouchees": 9,
   "minimum": 1,
   "tarifTTC": 15,
+  "tva": 0.055,
+  "type": "sale",
+  "photo": null
+ },
+ {
+  "gamme": "Salé",
+  "nom": "Navettes (mix au choix du chef)",
+  "unite": "lot",
+  "bouchees": 12,
+  "minimum": 1,
+  "tarifTTC": 20,
   "tva": 0.055,
   "type": "sale",
   "photo": null
@@ -1319,7 +1403,7 @@ const PRODUITS = [
  },
  {
   "gamme": "Sucré",
-  "nom": "Mini Verrines (au choix du chef)",
+  "nom": "Mini Verrines (mix au choix du chef)",
   "unite": "lot",
   "bouchees": 15,
   "minimum": 1,
@@ -1374,7 +1458,7 @@ const PRODUITS = [
  },
  {
   "gamme": "Sucré",
-  "nom": "Mini mignardises (au choix du chef)",
+  "nom": "Mini mignardises (mix au choix du chef)",
   "unite": "lot",
   "bouchees": 20,
   "minimum": 1,
@@ -1748,7 +1832,7 @@ const PRODUITS = [
  },
  {
   "gamme": "Accessoires",
-  "nom": "Gobelets 24cl (jus de fruit)",
+  "nom": "Gobelets 24cl (thé et jus de fruit)",
   "unite": "pièce",
   "bouchees": 1,
   "minimum": 1,
@@ -1823,6 +1907,25 @@ const PRODUITS = [
   "type": null,
   "photo": null
  }
+];
+
+
+/* FORMULES — paniers pre-remplis. Le client peut TOUT modifier ensuite :
+   charger une formule ne fait que remplir le panier existant. */
+const FORMULES = [
+  { id:"cocktail", nom:"Le cocktail parfait", accroche:"Pour vos cocktails et ap\u00e9ritifs", convives:24,
+    lignes:[["Aper'Ange saumon cr\u00e8me aneth",1],["Aper'Ange jambon ch\u00e8vre",1],["Plaque pizza margarita",1],
+            ["Mini Croques jambon fromage",1],["Mini wraps (mix au choix du chef)",1],["Navettes (mix au choix du chef)",1]] },
+  { id:"buffet", nom:"Le buffet parfait", accroche:"Pour les buffets d\u00eenatoires", convives:24,
+    lignes:[["Plaque pizza margarita",1],["Mini Croques jambon fromage",1],["Mini wraps (mix au choix du chef)",1],
+            ["Mini quiches fromage",1],["Aper'Ange saumon cr\u00e8me aneth",1],["Aper'Ange jambon ch\u00e8vre",1],
+            ["Navettes (mix au choix du chef)",1],["Bulles d'Ange",4],["Mini mignardises (mix au choix du chef)",2],
+            ["Mini Verrines (mix au choix du chef)",1]] },
+  { id:"ptitdej", nom:"Le bon p'tit dej", accroche:"Petit d\u00e9j d'entreprise, s\u00e9minaires, clients", convives:12,
+    lignes:[["Mini croissant",6],["Mini pain choc",6],["Mini Griffe d'Ange",6],["Bulles d'Ange",1],
+            ["Expresso 12cl",9],["Gobelets 12cl (expresso)",9],["Th\u00e9 Kusmi Tea",3],
+            ["Jus de fruit press\u00e9 Kookabara 1L",1],["Gobelets 24cl (th\u00e9 et jus de fruit)",12],
+            ["Sucrettes",6],["Touillettes",6],["Plateau cartonn\u00e9 noir",1]] }
 ];
 
 /* =====================================================================
@@ -1922,6 +2025,102 @@ function onQty(t,commit){
 catalogue.addEventListener('input',e=>onQty(e.target,false));
 catalogue.addEventListener('change',e=>{ if(e.target.classList.contains('tr')){ const i=+e.target.dataset.i; if(e.target.checked)tranche.set(i,true); else tranche.delete(i); render(); return;} onQty(e.target,true); });
 catalogue.addEventListener('click',e=>{ const b=e.target.closest('.st-btn'); if(!b) return; stepQty(b.parentElement.querySelector('.qnum'), +b.dataset.dir); });
+
+/* =====================================================================
+   Formules pretes a l'emploi
+   Charger une formule REMPLIT le panier existant : rien n'est verrouille,
+   le client ajuste ensuite comme s'il avait compose lui-meme.
+   ===================================================================== */
+const IDX_PAR_NOM = new Map(PRODUITS.map((p,i)=>[p.nom,i]));
+
+function chiffreFormule(f){
+  let ttc=0, bouchees=0; const lignes=[];
+  f.lignes.forEach(([nom,q])=>{
+    const i=IDX_PAR_NOM.get(nom);
+    if(i===undefined) return;            // produit retire du catalogue : la formule reste valide sans lui
+    const p=PRODUITS[i];
+    ttc+=q*p.tarifTTC;
+    if(p.type) bouchees+=q*p.bouchees;   // meme regle que le devis : seul ce qui se mange compte
+    lignes.push({i,p,q});
+  });
+  return {ttc,bouchees,lignes};
+}
+
+function uniteMot(p,q){
+  if(p.unite==='plaque') return q>1?'plaques':'plaque';
+  if(p.unite==='lot')    return q>1?'lots':'lot';
+  return q>1?'pièces':'pièce';
+}
+
+(function renderFormules(){
+  const g=$('fgrid'); if(!g) return;
+  g.innerHTML=FORMULES.map((f,k)=>{
+    const c=chiffreFormule(f);
+    const pp=f.convives?euro(c.ttc/f.convives):'—';
+    const bp=f.convives?(c.bouchees/f.convives).toFixed(1).replace('.',','):'—';
+    const li=c.lignes.map(l=>`<li>${l.p.nom}<span>${l.q} ${uniteMot(l.p,l.q)}</span></li>`).join('');
+    return `<div class="fcard">
+      <h3>${f.nom}</h3>
+      <p class="acc">${f.accroche}</p>
+      <p class="prix">${euro(c.ttc)} <small>TTC</small></p>
+      <div class="chiffres"><span>${f.convives} convives</span><span>${pp} / pers.</span><span>${bp} bouchées / pers.</span></div>
+      <ul>${li}</ul>
+      <button type="button" class="go" data-formule="${k}">Charger cette formule</button>
+    </div>`;
+  }).join('');
+})();
+
+function chargerFormule(f){
+  const c=chiffreFormule(f);
+  /* on repart d'un panier propre : une formule remplace la selection en cours */
+  state.clear(); tranche.clear();
+  document.querySelectorAll('#catalogue .tr').forEach(cb=>{ cb.checked=false; });
+  c.lignes.forEach(({i,q})=>{ state.set(i,q); });
+  PRODUITS.forEach((p,i)=>{
+    const q=state.get(i)||0;
+    const inp=$('q'+i); if(inp) inp.value=q;
+    const el=$('s'+i);
+    if(el){
+      el.textContent=euro(q*p.tarifTTC);
+      el.classList.toggle('zero',q===0);
+      const card=el.closest('.card'); if(card) card.classList.toggle('active',q>0);
+    }
+  });
+  if(f.convives){
+    const cv=$('convives');
+    if(cv){ cv.value=f.convives; cv.dispatchEvent(new Event('input',{bubbles:true})); }
+  }
+  render();
+  const d=$('fdone');
+  if(d){
+    $('fdoneTxt').innerHTML='<b>«&nbsp;'+f.nom+'&nbsp;» est dans votre panier.</b> Ajustez-la librement ci-dessous&nbsp;: '+
+      'ajoutez un produit, retirez-en un, changez les quantités. Rien n\'est figé.';
+    d.classList.add('show');
+  }
+  const nav=document.querySelector('.catnav');
+  if(nav) nav.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+(function departUI(){
+  const pc=$('porteCarte'), pf=$('porteFormules'), pan=$('formules');
+  if(!pc||!pf||!pan) return;
+  function choisir(mode){
+    const form = mode==='formules';
+    pan.hidden=!form;
+    pf.setAttribute('aria-pressed',form?'true':'false');
+    pf.setAttribute('aria-expanded',form?'true':'false');
+    pc.setAttribute('aria-pressed',form?'false':'true');
+    if(form) pan.scrollIntoView({behavior:'smooth',block:'nearest'});
+    else { const nav=document.querySelector('.catnav'); if(nav) nav.scrollIntoView({behavior:'smooth',block:'start'}); }
+  }
+  pc.addEventListener('click',()=>choisir('carte'));
+  pf.addEventListener('click',()=>choisir('formules'));
+  const g=$('fgrid');
+  if(g) g.addEventListener('click',e=>{
+    const b=e.target.closest('.go'); if(!b) return;
+    const f=FORMULES[+b.dataset.formule]; if(f) chargerFormule(f);
+  });
+})();
 
 function compute(){
   let ttc=0,ht=0,tva=0,minBase=0,count=0,bSale=0,bSucre=0; const lignes=[];
