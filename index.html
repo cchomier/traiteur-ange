@@ -89,7 +89,7 @@
   .card .price{display:flex; flex-direction:column; gap:2px;}
   .card .price .ttc{font-weight:900; font-size:16px;}
   .card .price .ttc small{font-weight:700; color:var(--muted); font-size:11px;}
-  .card .price .htline{font-size:11px; color:var(--muted); font-weight:700;}
+  .card .price .puline{font-size:11px; color:var(--muted); font-weight:700;}
   .card .minq{font-size:11px; font-weight:800; color:#fff; background:var(--c); padding:4px 9px; border-radius:999px; white-space:nowrap;}
   .card-foot{display:flex; align-items:center; justify-content:space-between; gap:10px; padding-top:12px; border-top:1px dashed var(--line);}
   .qty{display:flex; align-items:center; gap:8px;}
@@ -207,6 +207,19 @@
   .totals .tr.grand .v{font-family:"Fraunces",serif; font-weight:700; font-size:30px; color:var(--ink);}
   .totals .tr.acompte{color:#5b6300; font-weight:900; font-size:15px;}
   .totals .tr.acompte .v{color:#5b6300;}
+  .totals .tr.remise{color:#b3261e;}
+  .remise-mgr{margin-top:10px; text-align:right;}
+  .remise-link{background:none; border:none; color:var(--muted); font-size:11px; cursor:pointer; padding:2px 4px; opacity:.4; transition:opacity .15s;}
+  .remise-link:hover{opacity:1;}
+  .remise-box{display:flex; gap:6px; justify-content:flex-end; margin-top:6px; align-items:center; flex-wrap:wrap;}
+  .remise-box input[type=password]{width:110px; padding:6px 8px; border:1.5px solid var(--line); border-radius:8px; font-size:13px;}
+  .remise-box button{padding:6px 10px; border-radius:8px; border:1.5px solid var(--line); background:#fff; font-weight:700; font-size:12px; cursor:pointer;}
+  .remise-err{color:#b3261e; font-size:11px;}
+  .remise-form{display:flex; gap:6px; justify-content:flex-end; margin-top:8px; align-items:center; flex-wrap:wrap;}
+  .remise-form select{padding:6px; border-radius:8px; border:1.5px solid var(--line); font-size:13px;}
+  .remise-form input[type=number]{width:70px; padding:6px 8px; border:1.5px solid var(--line); border-radius:8px; font-size:13px;}
+  .remise-form button{padding:6px 10px; border-radius:8px; border:1.5px solid var(--vert-deep); background:var(--vert); font-weight:800; font-size:12px; cursor:pointer;}
+  .remise-form .clear{background:#fff; border-color:var(--line); font-weight:700;}
 
   .gate{display:none; align-items:flex-start; gap:12px; background:#FDECE9; border:1.5px solid var(--danger); border-radius:14px; padding:15px 17px; margin:14px 0 2px; color:#7a241b;}
   .gate.show{display:flex;}
@@ -585,8 +598,24 @@
           <div class="tr" id="installationRow" style="display:none;"><span>Installation (estimation)</span><span id="installationVal">30,00 €</span></div>
           <div class="tr"><span>Total HT</span><span id="htVal">0,00 €</span></div>
           <div class="tr"><span>TVA</span><span id="tvaVal">0,00 €</span></div>
+          <div class="tr remise" id="remiseRow" style="display:none;"><span id="remiseLabel">Remise</span><span id="remiseValDisp">-0,00 €</span></div>
           <div class="tr grand"><span class="l">Total TTC</span><span class="v" id="grandTotal">0,00 €</span></div>
           <div class="tr acompte" id="acompteRow" style="display:none;font-size:12px;font-weight:700;line-height:1.4;"><span id="acompteVal">Aucun paiement maintenant. Un règlement par avance pourra être demandé lorsque la boulangerie confirmera votre devis.</span></div>
+        </div>
+
+        <div class="remise-mgr" id="remiseMgr">
+          <button type="button" id="remiseToggle" class="remise-link">···</button>
+          <div class="remise-box" id="remiseBox" style="display:none;">
+            <input type="password" id="remiseCodeInput" placeholder="Code" autocomplete="off">
+            <button type="button" id="remiseUnlockBtn">Valider</button>
+            <span class="remise-err" id="remiseErr" style="display:none;">Code incorrect</span>
+          </div>
+          <div class="remise-form" id="remiseFormBox" style="display:none;">
+            <select id="remiseTypeSel"><option value="pct">%</option><option value="eur">€</option></select>
+            <input type="number" id="remiseValInput" min="0" step="0.5" inputmode="decimal" placeholder="0">
+            <button type="button" id="remiseApplyBtn">Appliquer</button>
+            <button type="button" id="remiseClearBtn" class="clear" style="display:none;">Retirer</button>
+          </div>
         </div>
 
         <div class="gate" id="gate">
@@ -728,6 +757,9 @@ const CONFIG = {
   alertHours:72,          // en dessous : alerte "valider par téléphone" (sans bloquer)
   deliveryFee:30, installationFee:30, feeTva:0.055,
   maxLots:20,             // max 20 lots/plaques
+  // Code de deblocage de la remise manager. A CHANGER avant mise en prod
+  // (visible dans le code source, ce n'est qu'un frein pour un client, pas une securite reelle).
+  remiseCode:"ANGE-REMISE-2026",
   bakeries:[
     {id:"epagny", nom:"Grand Epagny", adresse:"300 rue des Peupliers, 74330 Epagny", phone:"04 50 24 89 05", email:"commandes.ange74@gmail.com", horaires:"tous les jours 6h30\u201319h30, dimanche 8h\u201313h. Jours f\u00e9ri\u00e9s : nous contacter."},
     // 2e boulangerie : ajoute une entrée ici quand elle ouvre.
@@ -1935,6 +1967,7 @@ const slug = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''
 const $ = id => document.getElementById(id);
 const state = new Map();
 const tranche = new Map();
+let remiseOK=false, remiseType='pct', remiseVal=0;
 let lastPDF=null;
 
 const GAMMES=[...new Set(PRODUITS.map(p=>p.gamme))].map((nom,idx)=>({nom,id:'g'+idx,couleur:GAMME_COULEURS[nom]||PALETTE[idx%PALETTE.length]}));
@@ -1995,11 +2028,12 @@ GAMMES.forEach(g=>{
     const PHOLDER=`<div class="ph"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.8"/><path d="m21 15-5-5L5 21"/></svg><span>Photo à venir</span></div>`;
     const psrc=p.photo||('photos/'+slug(p.nom)+'.jpg');
     const photo=`<div class="photo">${PHOLDER}<img src="${psrc}" alt="${p.nom}" loading="lazy" onerror="if(!this.dataset.p){this.dataset.p=1;this.src=this.src.replace('.jpg','.png');}else{this.remove();}"></div>`;
-    const htU=p.tarifTTC/(1+p.tva), tvaU=p.tarifTTC-htU;
+    const puTTC=(!isPiece && p.bouchees>1)?p.tarifTTC/p.bouchees:null;
     const unitWord=isPiece?'pièce':p.unite;
     const trancheOpt=p.gamme==='Pains'?`<label class="tranche-opt"><input type="checkbox" class="tr" data-i="${p.i}"> Je le souhaite tranché</label>`:'';
+    const puLine=puTTC?`<span class="puline">${euro(puTTC)} TTC / pi\u00e8ce</span>`:'';
     card.innerHTML=`${photo}<div class="card-main"><div class="card-info"><div class="name-row"><h3>${p.nom}</h3>${badge}</div>
-      <div class="meta"><div class="price"><span class="ttc">${euro(p.tarifTTC)} <small>TTC / ${unitWord}</small></span><span class="htline">HT ${euro(htU)} · TVA ${euro(tvaU)}</span></div></div>${trancheOpt}</div>
+      <div class="meta"><div class="price"><span class="ttc">${euro(p.tarifTTC)} <small>TTC / ${unitWord}</small></span>${puLine}</div></div>${trancheOpt}</div>
       <div class="card-controls"><div class="qty"><label for="q${p.i}">${uLabel}</label>${control}</div><div class="subtotal zero" id="s${p.i}">0,00 €</div></div></div>`;
     grid.appendChild(card);
   });
@@ -2129,12 +2163,19 @@ function compute(){
     if(p.type){ const b=qty*p.bouchees; if(p.type==='sale')bSale+=b; else bSucre+=b; }
     lignes.push({p,qty,sub,i});
   }
+  // Remise manager : s'applique uniquement sur le produit, jamais sur livraison/installation.
+  let remiseMontant=0;
+  if(remiseOK && remiseVal>0){
+    remiseMontant = remiseType==='pct' ? ttc*Math.min(remiseVal,100)/100 : Math.min(remiseVal,ttc);
+  }
+  const ttcNet=ttc-remiseMontant, htNet=ttcNet/(1+CONFIG.feeTva), tvaNet=ttcNet-htNet;
   const livraison=(document.querySelector('input[name=mode]:checked')?.value)==='Livraison';
   const installation=!!($('installation')&&$('installation').checked);
   const delFee=livraison?CONFIG.deliveryFee:0, instFee=installation?CONFIG.installationFee:0;
   const extra=delFee+instFee, extraHT=extra/(1+CONFIG.feeTva);
   return {ttc,ht,tva,minBase,count,bSale,bSucre,lignes,livraison,installation,delFee,instFee,
-    grandTTC:ttc+extra, grandHT:ht+extraHT, grandTVA:tva+(extra-extraHT)};
+    remiseMontant,remiseActive:remiseOK&&remiseMontant>0,remiseType,remiseVal,
+    grandTTC:ttcNet+extra, grandHT:htNet+extraHT, grandTVA:tvaNet+(extra-extraHT)};
 }
 
 /* --- Repere de quantite : aide le client a se situer --- */
@@ -2183,6 +2224,11 @@ function render(){
   deliveryRow.style.display=c.delFee?'flex':'none';
   installationRow.style.display=c.instFee?'flex':'none';
   htVal.textContent=euro(c.grandHT); tvaVal.textContent=euro(c.grandTVA); grandTotal.textContent=euro(c.grandTTC);
+  if(c.remiseActive){
+    remiseLabel.textContent='Remise'+(c.remiseType==='pct'?` -${String(c.remiseVal).replace('.',',')}%`:'');
+    remiseValDisp.textContent='-'+euro(c.remiseMontant);
+    remiseRow.style.display='flex';
+  } else remiseRow.style.display='none';
   // >= et non > : une commande pile à 100 € passe le seuil, elle doit voir la mention.
   acompteRow.style.display=c.minBase>=CONFIG.minOrder?'flex':'none';
   // barre enrichie
@@ -2229,6 +2275,32 @@ function updateFormUI(){
   [$('facRue'),$('facCp'),$('facVille')].forEach(el=>el.required=(fac&&!same));
 }
 convives.addEventListener('input',render);
+
+/* --- Remise manager : deblocage par code, puis pourcentage ou montant fixe --- */
+$('remiseToggle').addEventListener('click',()=>{
+  const box=$('remiseBox');
+  box.style.display=box.style.display==='none'?'flex':'none';
+  if(box.style.display==='flex') $('remiseCodeInput').focus();
+});
+$('remiseUnlockBtn').addEventListener('click',()=>{
+  const val=$('remiseCodeInput').value;
+  if(val===CONFIG.remiseCode){
+    remiseOK=true;
+    $('remiseBox').style.display='none'; $('remiseErr').style.display='none';
+    $('remiseFormBox').style.display='flex'; $('remiseToggle').style.display='none';
+  } else { $('remiseErr').style.display='inline'; $('remiseCodeInput').value=''; $('remiseCodeInput').focus(); }
+});
+$('remiseCodeInput').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); $('remiseUnlockBtn').click(); } });
+$('remiseApplyBtn').addEventListener('click',()=>{
+  const v=parseFloat(($('remiseValInput').value||'0').replace(',','.'));
+  remiseType=$('remiseTypeSel').value; remiseVal=isNaN(v)||v<0?0:v;
+  $('remiseClearBtn').style.display=remiseVal>0?'inline-block':'none';
+  render();
+});
+$('remiseClearBtn').addEventListener('click',()=>{
+  remiseVal=0; $('remiseValInput').value=''; $('remiseClearBtn').style.display='none'; render();
+});
+
 document.querySelectorAll('.step[data-scroll]').forEach(b=>b.onclick=()=>{
   const ht=$('howto'); if(ht) ht.open=false;
   goTo(b.dataset.scroll);
@@ -2342,6 +2414,7 @@ function buildPDF(d){
     if(col)doc.setTextColor.apply(doc,col); doc.text(lab,cP,y,{align:'right'}); doc.text(val,cT,y,{align:'right'});
     doc.setTextColor(26,26,22); y+=6; };
   rr('Total HT',euro(d.ht)); rr('TVA',euro(d.tva));
+  if(d.remiseActive){ rr('Remise '+d.remiseLabel,'-'+euro(d.remiseMontant),false,9.5,[179,38,30]); }
   rr('TOTAL TTC',euro(d.ttc),true,13,[26,26,22]);
   if(d.mentionReglement){ y+=2.5; if(y>248){doc.addPage();y=20;}
     const payH=13;   // hauteur fixe : deux lignes, plus de date d'échéance à afficher
@@ -2459,6 +2532,7 @@ function emailHTML(d){
    <table align="right" cellpadding="0" cellspacing="0" style="font-size:14px;line-height:1.7">
      <tr><td style="color:#666;padding-right:28px">Total HT</td><td style="text-align:right;white-space:nowrap">${euro(d.ht)}</td></tr>
      <tr><td style="color:#666;padding-right:28px">TVA</td><td style="text-align:right;white-space:nowrap">${euro(d.tva)}</td></tr>
+     ${d.remiseActive?`<tr><td style="color:#b3261e;padding-right:28px">Remise ${d.remiseLabel}</td><td style="text-align:right;white-space:nowrap;color:#b3261e">-${euro(d.remiseMontant)}</td></tr>`:''}
      <tr><td style="font-weight:bold;font-size:17px;padding:4px 28px 0 0">Total TTC</td><td style="text-align:right;font-weight:bold;font-size:17px;padding-top:4px;white-space:nowrap">${euro(d.ttc)}</td></tr>
      ${d.mentionReglement?`<tr><td colspan="2" style="font-size:12px;color:#5b6300;font-weight:bold;text-align:right;padding-top:6px">Aucun paiement encaissé — règlement par avance à définir à la confirmation</td></tr>`:''}
    </table>
@@ -2513,6 +2587,8 @@ $('orderForm').addEventListener('submit',async e=>{
     dateLong,
     convives:conv, ttc:c.grandTTC, ht:c.grandHT, tva:c.grandTVA, ttcProd:c.ttc, htProd:c.ht,
     mentionReglement, bSale:c.bSale, bSucre:c.bSucre, ppBites:conv?((c.bSale+c.bSucre)/conv).toFixed(1).replace('.',','):'0',
+    remiseActive:c.remiseActive, remiseMontant:c.remiseMontant,
+    remiseLabel:c.remiseType==='pct'?`-${String(c.remiseVal).replace('.',',')}%`:`-${euro(c.remiseMontant)}`,
     note:f.note.value, facture, lignes,
   };
 
@@ -2534,7 +2610,7 @@ $('orderForm').addEventListener('submit',async e=>{
     convives:d.convives||null,
     ttc:d.ttc,
     bouchees:d.convives?`${d.ppBites} pièces / pers.`:'',
-    detail:d.lignes.map(l=>`${l.qty} × ${l.des} — ${euro(l.tot)}`).join('\n'),
+    detail:d.lignes.map(l=>`${l.qty} × ${l.des} — ${euro(l.tot)}`).join('\n')+(d.remiseActive?`\nRemise ${d.remiseLabel} : -${euro(d.remiseMontant)}`:''),
     note:d.note||'',
     facturation:d.facture?[d.facture.raison,adr(d.facture)].filter(Boolean).join('\n'):'',
     boulangerie:d.bakeryNom,
