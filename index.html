@@ -707,8 +707,7 @@
       <button type="button" id="stepNext" aria-label="Étape suivante">&#8250;</button>
     </div>
     <div class="bar-stats">
-      <div class="bstat"><b id="barCount">0</b><small>articles</small></div>
-      <div class="bstat xhide"><b id="barBites">—</b><small>pièces/pers</small></div>
+      <div class="bstat xhide"><b id="barBites">—</b><small>bouchées/pers</small></div>
       <div class="bstat mhide"><b id="barPP">—</b><small>coût/pers</small></div>
       <div class="bstat mhide"><b id="barHT">0,00 €</b><small>total HT</small></div>
       <div class="bstat big"><b id="barTotal">0,00 €</b><small>total TTC</small></div>
@@ -1977,7 +1976,7 @@ GAMMES.forEach(g=>{
   pill.onclick=()=>$('sec-'+g.id).scrollIntoView({behavior:'smooth',block:'start'});
   catnav.appendChild(pill);
   const sec=document.createElement('section'); sec.className='cat'; sec.id='sec-'+g.id; sec.style.setProperty('--c',g.couleur);
-  sec.innerHTML=`<div class="cat-head"><span class="b"></span><h2>${g.nom}</h2><span class="tag">${items.length} produit${items.length>1?'s':''}</span><span class="cat-sub" id="csub-${g.id}"></span></div><div class="grid"></div>`;
+  sec.innerHTML=`<div class="cat-head"><span class="b"></span><h2>${g.nom}</h2><span class="cat-sub" id="cbites-${g.id}"></span><span class="cat-sub" id="csub-${g.id}"></span></div><div class="grid"></div>`;
   const grid=sec.querySelector('.grid');
   items.forEach(p=>{
     const card=document.createElement('article'); card.className='card'; card.style.setProperty('--c',g.couleur); card.dataset.i=p.i; card.dataset.search=(p.nom+' '+p.gamme).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
@@ -2171,9 +2170,10 @@ function render(){
     else if(conv>0){ cl.textContent='\u2192 Rep\u00e8re : 6 \u00e0 8 pi\u00e8ces/pers. pour un ap\u00e9ritif, 12 \u00e0 14 pour un repas complet.'; cl.classList.add('show'); }
     else cl.classList.remove('show');
   }
-  const gt={};
-  for(const [gi,gq] of state){ const gp=PRODUITS[gi]; gt[gp.gamme]=(gt[gp.gamme]||0)+gq*gp.tarifTTC; }
+  const gt={},gb={};
+  for(const [gi,gq] of state){ const gp=PRODUITS[gi]; gt[gp.gamme]=(gt[gp.gamme]||0)+gq*gp.tarifTTC; if(gp.type) gb[gp.gamme]=(gb[gp.gamme]||0)+gq*gp.bouchees; }
   GAMMES.forEach(g=>{ const gel=$('csub-'+g.id); if(gel){ if(gt[g.nom]>0){ gel.textContent=euro(gt[g.nom]); gel.classList.add('show'); } else gel.classList.remove('show'); } });
+  GAMMES.forEach(g=>{ const bel=$('cbites-'+g.id); if(bel){ if(conv>0 && gb[g.nom]>0){ bel.textContent=(gb[g.nom]/conv).toFixed(1).replace('.',',')+' bouch\u00e9es / pers.'; bel.classList.add('show'); } else bel.classList.remove('show'); } });
   const pp=$('perPerson');
   if(c.lignes.length&&conv>0){ pp.classList.add('show'); ppN.textContent=conv;
     ppBites.textContent=(totalBites/conv).toFixed(1).replace('.',','); ppHT.textContent=euro(c.ht/conv); ppTTC.textContent=euro(c.ttc/conv);
@@ -2187,7 +2187,7 @@ function render(){
   acompteRow.style.display=c.minBase>=CONFIG.minOrder?'flex':'none';
   // barre enrichie
   bar.classList.add('show');   // barre toujours visible : sert aussi de navigation
-  barCount.textContent=c.count; barHT.textContent=euro(c.grandHT); barTotal.textContent=euro(c.grandTTC);
+  barHT.textContent=euro(c.grandHT); barTotal.textContent=euro(c.grandTTC);
   barBites.textContent=conv?(totalBites/conv).toFixed(1).replace('.',','):'—';
   barPP.textContent=conv?euro(c.ttc/conv):'—';
   const under=c.minBase>0&&c.minBase<CONFIG.minOrder;
