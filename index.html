@@ -179,7 +179,15 @@
 
   .recap{background:#fff; border:1px solid var(--line); border-radius:16px; padding:6px 18px; margin-bottom:16px;}
   .recap .empty{color:var(--muted); padding:22px 0; text-align:center; font-size:15px;}
-  .rline{display:flex; align-items:baseline; justify-content:space-between; gap:12px; padding:13px 0; border-bottom:1px solid var(--line);}
+  .rline{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:13px 0; border-bottom:1px solid var(--line);}
+  .rline .n{flex:1; min-width:0;}
+  .rline .rstep{flex:none;}
+  .rline .a{min-width:82px; text-align:right;}
+  @media(max-width:560px){
+    .rline{flex-wrap:wrap; gap:8px;}
+    .rline .n{flex:1 1 100%;}
+    .rline .a{flex:1; min-width:0;}
+  }
   .rline:last-child{border-bottom:0;}
   .rline .n{font-weight:800;}
   .rline .n small{color:var(--muted); font-weight:600; font-size:12.5px; margin-left:7px; white-space:nowrap;}
@@ -187,6 +195,15 @@
 
   .bites{display:flex; gap:10px; flex-wrap:wrap; margin:14px 0 2px;}
   .bite .pp{font-size:11.5px; color:var(--muted); font-weight:700; margin-top:2px;}
+  .panier-actions{display:flex; gap:12px; align-items:stretch; margin-top:6px;}
+  .panier-actions .submit{flex:1.4; margin-top:0;}
+  .btn-secondaire{flex:1; background:#fff; border:1.5px solid var(--line); border-radius:14px;
+    padding:15px 18px; font-family:inherit; font-weight:800; font-size:15px; color:var(--ink); cursor:pointer;
+    transition:transform .18s cubic-bezier(.34,1.56,.64,1), border-color .18s, box-shadow .18s;}
+  .btn-secondaire:hover{transform:translateY(-2px); border-color:var(--vert-deep); box-shadow:var(--shadow);}
+  .btn-secondaire:active{transform:none;}
+  .btn-secondaire:focus-visible{outline:3px solid var(--vert); outline-offset:2px;}
+  @media(max-width:560px){ .panier-actions{flex-direction:column;} }
   .retour{display:inline-flex; align-items:center; gap:6px; background:none; border:0; padding:4px 0;
     margin:0 0 16px; color:var(--vert-deep); font-family:inherit; font-weight:800; font-size:14px; cursor:pointer;
     transition:transform .18s cubic-bezier(.34,1.56,.64,1);}
@@ -215,16 +232,29 @@
   .totals .tr.acompte{color:#5b6300; font-weight:900; font-size:15px;}
   .totals .tr.acompte .v{color:#5b6300;}
   .totals .tr.remise{color:#b3261e;}
-  .remise-mgr{margin-top:10px; text-align:right;}
+  .remise-mgr{margin-top:18px; padding-top:14px; border-top:1px solid var(--line); text-align:left;}
   .remise-link{background:none; border:none; color:var(--muted); font-size:11.5px; font-family:inherit; font-weight:700; cursor:pointer; padding:3px 5px; opacity:.55; transition:opacity .15s; text-decoration:underline; text-underline-offset:3px;}
   .remise-link:hover{opacity:1;}
-  .remise-box{display:flex; gap:6px; justify-content:flex-end; margin-top:6px; align-items:center; flex-wrap:wrap;}
-  .remise-box input[type=password]{width:110px; padding:6px 8px; border:1.5px solid var(--line); border-radius:8px; font-size:13px;}
+  .remise-box{display:flex; gap:6px; justify-content:flex-start; margin-top:8px; align-items:center; flex-wrap:wrap;}
+  .pw-wrap{position:relative; display:inline-flex; align-items:center;}
+  .pw-wrap input{width:140px; padding:6px 32px 6px 8px; border:1.5px solid var(--line); border-radius:8px; font-size:13px; font-family:inherit;}
+  .pw-eye{position:absolute; right:2px; background:none; border:0; padding:4px; cursor:pointer; color:var(--muted); line-height:0; display:grid; place-items:center;}
+  .pw-eye svg{width:17px; height:17px;}
+  .pw-eye:hover{color:var(--ink);}
+  .pw-eye:focus-visible{outline:2px solid var(--vert); outline-offset:1px; border-radius:6px;}
+  .pw-eye.on{color:var(--vert-deep);}
   .remise-box button{padding:6px 10px; border-radius:8px; border:1.5px solid var(--line); background:#fff; font-weight:700; font-size:12px; cursor:pointer;}
   .remise-err{color:#b3261e; font-size:11px;}
-  .remise-form{display:flex; gap:6px; justify-content:flex-end; margin-top:8px; align-items:center; flex-wrap:wrap;}
-  .remise-form select{padding:6px; border-radius:8px; border:1.5px solid var(--line); font-size:13px;}
-  .remise-form input[type=number]{width:70px; padding:6px 8px; border:1.5px solid var(--line); border-radius:8px; font-size:13px;}
+  .remise-form{display:flex; gap:6px; justify-content:flex-start; margin-top:8px; align-items:center; flex-wrap:wrap;}
+  .remise-type{display:inline-flex; border:1.5px solid var(--line); border-radius:9px; overflow:hidden; background:#fff;}
+  .remise-type label{position:relative; margin:0; cursor:pointer;}
+  .remise-type input{position:absolute; opacity:0; inset:0; cursor:pointer;}
+  .remise-type span{display:block; min-width:36px; text-align:center; padding:7px 4px;
+    font-weight:800; font-size:14px; color:var(--muted); transition:background .12s, color .12s;}
+  .remise-type input:checked + span{background:var(--vert); color:var(--noir);}
+  .remise-type input:focus-visible + span{outline:2px solid var(--vert-deep); outline-offset:-2px;}
+  .remise-form input[type=number]{width:70px; padding:6px 8px; border:1.5px solid var(--line); border-radius:8px; font-size:13px; font-family:inherit;}
+  .remise-form input[type=text]{flex:1; min-width:180px; padding:6px 9px; border:1.5px solid var(--line); border-radius:8px; font-size:13px; font-family:inherit;}
   .remise-form button{padding:6px 10px; border-radius:8px; border:1.5px solid var(--vert-deep); background:var(--vert); font-weight:800; font-size:12px; cursor:pointer;}
   .remise-form .clear{background:#fff; border-color:var(--line); font-weight:700;}
 
@@ -326,7 +356,6 @@
     .tabbar .tab .tl{font-size:14px;}
     .tabbar .tab:hover{transform:translateX(2px); background:rgba(255,255,255,.06);}
     .tabbar .tab.on{background:rgba(205,219,0,.14);}
-    .tabbar .tab-mid{order:2;}
     /* Parcours en 3 etapes : numero + trait de liaison, facon suivi de commande. */
     .tabbar .tab{position:relative; padding-left:15px; margin-bottom:18px;}
     .tabbar .tab .num{display:grid; position:absolute; left:9px; top:12px; width:21px; height:21px; border-radius:50%;
@@ -504,21 +533,6 @@
   .fcard .go:active{transform:translateY(0);}
   .fcard .go:focus-visible{outline:3px solid var(--vert); outline-offset:2px;}
   /* Bandeau de la formule chargee : rappelle laquelle, et ouvre le catalogue complet. */
-  .fnote{display:flex; align-items:center; gap:9px; margin:16px 0 2px;
-    font-size:13.5px; color:#4d5400; font-weight:700;}
-  .fnote[hidden]{display:none;}
-  .fnote svg{flex:none; color:var(--vert-deep);}
-  .fnote b{font-weight:900;}
-  .fbar-bas{display:flex; align-items:center; justify-content:center; gap:16px; flex-wrap:wrap;
-    border-top:1px solid var(--line); margin-top:26px; padding:22px 0 4px;}
-  .fbar-bas[hidden]{display:none;}
-  .fbar-bas p{margin:0; font-size:14.5px; color:var(--muted); font-weight:700;}
-  .fbar-btn{flex:none; background:#fff; border:1.5px solid var(--vert-deep); border-radius:11px;
-    padding:9px 14px; font-family:inherit; font-weight:800; font-size:13.5px; color:#4d5400; cursor:pointer;
-    transition:transform .18s cubic-bezier(.34,1.56,.64,1), box-shadow .18s;}
-  .fbar-btn:hover{transform:translateY(-2px); box-shadow:var(--shadow);}
-  .fbar-btn:active{transform:none;}
-  .fbar-btn:focus-visible{outline:3px solid var(--vert); outline-offset:2px;}
   @media(prefers-reduced-motion:reduce){
     .fcard .go{transition:border-color .18s, box-shadow .18s;}
     .fcard .go:hover{transform:none;}
@@ -582,24 +596,12 @@
 </div>
 
 <div class="mode-pane" id="paneCarte">
-  <div class="wrap">
-    <div class="fnote" id="fbar" hidden>
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
-      <span>Formule <b id="fbarNom"></b> &middot; ajustez les quantit&eacute;s.</span>
-    </div>
-  </div>
   <nav class="catnav" aria-label="Gammes">
     <div class="catnav-search"><div class="search-wrap"><svg class="search-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg><input type="search" id="prodSearch" placeholder="Rechercher un produit (ex. quiche, wrap, verrine…)" aria-label="Rechercher un produit" autocomplete="off"></div></div>
     <div class="catnav-in" id="catnav"></div>
   </nav>
   <div class="wrap"><div class="nores" id="searchNo">Aucun produit ne correspond &agrave; votre recherche.</div></div>
   <div class="wrap" id="catalogue"></div>
-  <div class="wrap">
-    <div class="fbar-bas" id="fbarBas" hidden>
-      <p>Il vous manque quelque chose&nbsp;?</p>
-      <button type="button" class="fbar-btn" id="fbarTout">Ajouter d'autres produits</button>
-    </div>
-  </div>
 </div>
 
 </div>
@@ -609,12 +611,9 @@
     <section class="panel-devis">
       <div id="panierWrap">
         <h2 class="title">Votre panier</h2>
-        <p class="sub">Vérifiez votre sélection et le total, puis passez à vos coordonnées.</p>
+        <p class="sub">Ajustez les quantités directement ici, puis validez.</p>
 
-        <button type="button" class="retour screen-goto" data-go="composer">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg>
-          Modifier ma composition
-        </button>
+
 
         <div id="bakeryPick" class="bakerypick"></div>
 
@@ -645,29 +644,42 @@
           <div class="tr acompte" id="acompteRow" style="display:none;font-size:12px;font-weight:700;line-height:1.4;"><span id="acompteVal">Aucun paiement maintenant. Un règlement par avance pourra être demandé lorsque la boulangerie confirmera votre devis.</span></div>
         </div>
 
-        <div class="remise-mgr" id="remiseMgr">
-          <button type="button" id="remiseToggle" class="remise-link">Espace boulangerie</button>
-          <div class="remise-box" id="remiseBox" style="display:none;">
-            <input type="password" id="remiseCodeInput" placeholder="Code" autocomplete="off">
-            <button type="button" id="remiseUnlockBtn">Valider</button>
-            <span class="remise-err" id="remiseErr" style="display:none;">Code incorrect</span>
-          </div>
-          <div class="remise-form" id="remiseFormBox" style="display:none;">
-            <select id="remiseTypeSel"><option value="pct">%</option><option value="eur">€</option></select>
-            <input type="number" id="remiseValInput" min="0" step="0.5" inputmode="decimal" placeholder="0">
-            <button type="button" id="remiseApplyBtn">Appliquer</button>
-            <button type="button" id="remiseClearBtn" class="clear" style="display:none;">Retirer</button>
-          </div>
-        </div>
-
         <div class="gate" id="gate">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
           <div><b>Commande en ligne à partir de 50 € TTC</b><p>Pour une commande plus petite, rendez-vous directement en boutique : on vous sert sans devis. Une question ? Appelez-nous au <b id="gatePhone">04 50 24 89 05</b>.</p></div>
         </div>
 
+        <div class="panier-actions">
+          <button type="button" class="btn-secondaire screen-goto" data-go="composer">Ajouter d'autres produits</button>
+          <button type="button" class="submit screen-next" data-next="suivi">Valider ma commande</button>
+        </div>
+
         <div class="liv-reminder" id="livReminder">📍 Livraison : 30 € TTC dans un rayon maximum de 5 km autour de la boulangerie Ange Grand Epagny.</div>
 
-        <button type="button" class="submit screen-next" data-next="suivi">Continuer vers mes coordonnées</button>
+        <div class="remise-mgr" id="remiseMgr">
+          <button type="button" id="remiseToggle" class="remise-link">Espace boulangerie</button>
+          <div class="remise-box" id="remiseBox" style="display:none;">
+            <span class="pw-wrap">
+              <input type="password" id="remiseCodeInput" placeholder="Code" autocomplete="off">
+              <button type="button" id="remiseEye" class="pw-eye" aria-label="Afficher le code" title="Afficher le code">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12Z"/><circle cx="12" cy="12" r="2.8"/></svg>
+              </button>
+            </span>
+            <button type="button" id="remiseUnlockBtn">Valider</button>
+            <span class="remise-err" id="remiseErr" style="display:none;">Code incorrect</span>
+          </div>
+          <div class="remise-form" id="remiseFormBox" style="display:none;">
+            <span class="remise-type">
+              <label><input type="radio" name="remiseType" value="pct" checked><span>%</span></label>
+              <label><input type="radio" name="remiseType" value="eur"><span>&euro;</span></label>
+            </span>
+            <input type="number" id="remiseValInput" min="0" step="0.5" inputmode="decimal" placeholder="0">
+            <input type="text" id="remiseNoteInput" placeholder="Motif (ex. convention association)" maxlength="60" autocomplete="off">
+            <button type="button" id="remiseApplyBtn">Appliquer</button>
+            <button type="button" id="remiseClearBtn" class="clear" style="display:none;">Retirer</button>
+          </div>
+        </div>
+
       </div>
     </section>
   </div>
@@ -678,6 +690,13 @@
     <section class="panel-devis">
       <div id="suiviWrap">
         <h2 class="title">Vos coordonnées &amp; votre devis</h2>
+        <p class="sub">Dernière étape : vos coordonnées, et votre devis est prêt.</p>
+
+        <button type="button" class="retour screen-goto" data-go="panier">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg>
+          Retour au panier
+        </button>
+
         <form id="orderForm" novalidate>
           <div class="frow">
             <div class="field"><label class="lb" for="prenom">Prénom <span class="req">*</span></label><input type="text" id="prenom" name="prenom" autocomplete="given-name" required></div>
@@ -819,7 +838,7 @@ const CONFIG = {
   maxLots:20,             // max 20 lots/plaques
   // Code de deblocage de la remise manager. A CHANGER avant mise en prod
   // (visible dans le code source, ce n'est qu'un frein pour un client, pas une securite reelle).
-  remiseCode:"ANGE-REMISE-2026",
+  remiseCode:"Remise",
   bakeries:[
     {id:"epagny", nom:"Grand Epagny", adresse:"300 rue des Peupliers, 74330 Epagny", phone:"04 50 24 89 05", email:"commandes.ange74@gmail.com", horaires:"tous les jours 6h30\u201319h30, dimanche 8h\u201313h. Jours f\u00e9ri\u00e9s : nous contacter."},
     // 2e boulangerie : ajoute une entrée ici quand elle ouvre.
@@ -2027,7 +2046,7 @@ const slug = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''
 const $ = id => document.getElementById(id);
 const state = new Map();
 const tranche = new Map();
-let remiseOK=false, remiseType='pct', remiseVal=0;
+let remiseOK=false, remiseType='pct', remiseVal=0, remiseNote='';
 let lastPDF=null;
 
 const GAMMES=[...new Set(PRODUITS.map(p=>p.gamme))].map((nom,idx)=>({nom,id:'g'+idx,couleur:GAMME_COULEURS[nom]||PALETTE[idx%PALETTE.length]}));
@@ -2105,21 +2124,43 @@ GAMMES.forEach(g=>{
 function stepQty(inp,dir){ if(!inp) return; const mn=+inp.dataset.min||1, mx=+inp.dataset.max||999; let v=parseInt(inp.value)||0;
   if(dir>0){ v=(v<=0&&mn>1)?mn:v+1; if(v>0&&v<mn)v=mn; if(v>mx)v=mx; } else { v=(mn>1&&v<=mn)?0:v-1; if(v<0)v=0; }
   inp.value=v; onQty(inp,true); }
+/* Une quantite peut desormais etre changee a DEUX endroits : la carte du
+   catalogue et la ligne du panier. On centralise donc l'ecriture dans setQty,
+   et chaque vue se resynchronise depuis l'etat. */
+function majCarteProduit(i){
+  const p=PRODUITS[i], q=state.get(i)||0;
+  const inp=$('q'+i);
+  if(inp && (parseInt(inp.value)||0)!==q) inp.value=q;
+  const el=$('s'+i);
+  if(el){
+    el.textContent=euro(q*p.tarifTTC);
+    el.classList.toggle('zero',q===0);
+    const card=el.closest('.card'); if(card) card.classList.toggle('active',q>0);
+  }
+}
+function setQty(i,q){
+  if(q>0)state.set(i,q); else state.delete(i);
+  majCarteProduit(i);
+  if(q>0){ bump($('s'+i)); bump($('tabTotal')); }
+  render();
+}
 function onQty(t,commit){
   if(!t.dataset||t.dataset.i===undefined) return;
   if(t.tagName!=='SELECT' && !(t.tagName==='INPUT'&&t.type==='number')) return;
   const i=+t.dataset.i; let q=parseInt(t.value)||0; if(q<0)q=0;
-  const mn=+t.dataset.min||1; const mx=+t.dataset.max||999; if(commit&&q>0&&q<mn){ q=mn; t.value=mn; } if(q>mx){ q=mx; t.value=mx; }
-  if(q>0)state.set(i,q); else state.delete(i);
-  const p=PRODUITS[i],sub=q*p.tarifTTC,el=$('s'+i);
-  el.textContent=euro(sub); el.classList.toggle('zero',q===0);
-  if(q>0){ bump(el); bump($('tabTotal')); }
-  t.closest('.card').classList.toggle('active',q>0);
-  render();
+  const mn=+t.dataset.min||1; const mx=+t.dataset.max||999;
+  if(commit&&q>0&&q<mn){ q=mn; t.value=mn; } if(q>mx){ q=mx; t.value=mx; }
+  setQty(i,q);
 }
 catalogue.addEventListener('input',e=>onQty(e.target,false));
 catalogue.addEventListener('change',e=>{ if(e.target.classList.contains('tr')){ const i=+e.target.dataset.i; if(e.target.checked)tranche.set(i,true); else tranche.delete(i); render(); return;} onQty(e.target,true); });
 catalogue.addEventListener('click',e=>{ const b=e.target.closest('.st-btn'); if(!b) return; stepQty(b.parentElement.querySelector('.qnum'), +b.dataset.dir); });
+
+/* Memes gestes dans le panier : les deux vues ecrivent dans le meme etat. */
+const recapEl=$('recap');
+recapEl.addEventListener('input',e=>onQty(e.target,false));
+recapEl.addEventListener('change',e=>onQty(e.target,true));
+recapEl.addEventListener('click',e=>{ const b=e.target.closest('.st-btn'); if(!b) return; stepQty(b.parentElement.querySelector('.qnum'), +b.dataset.dir); });
 
 /* =====================================================================
    Formules pretes a l'emploi
@@ -2166,8 +2207,9 @@ function uniteMot(p,q){
 })();
 
 function chargerFormule(f){
+  /* Une formule REMPLACE la selection en cours : on previent avant d'effacer. */
+  if(state.size && !confirm('Charger « '+f.nom+' » remplacera votre sélection actuelle. Continuer ?')) return;
   const c=chiffreFormule(f);
-  /* on repart d'un panier propre : une formule remplace la selection en cours */
   state.clear(); tranche.clear();
   document.querySelectorAll('#catalogue .tr').forEach(cb=>{ cb.checked=false; });
   c.lignes.forEach(({i,q})=>{ state.set(i,q); });
@@ -2188,13 +2230,9 @@ function chargerFormule(f){
   render();
   /* Le client qui prend une formule veut aller vite : on ne lui montre
      que SES produits. Le catalogue complet reste a un clic. */
-  formuleFiltre=new Set(c.lignes.map(l=>l.i));
-  $('fbarNom').textContent=f.nom;
-  modeFormuleActive(true);
-  const ps=$('prodSearch'); if(ps) ps.value='';
-  filtrerCatalogue();
-  // Une formule chargee doit etre ajustable : on rebascule sur la carte.
-  choisirMode('carte');
+  /* Le client qui prend une formule veut aller vite : direction le panier,
+     ou il ajuste les quantites sur place. Le catalogue reste a un clic. */
+  showScreen('panier');
 }
 
 (function formulesUI(){
@@ -2224,7 +2262,7 @@ function compute(){
   const delFee=livraison?CONFIG.deliveryFee:0, instFee=installation?CONFIG.installationFee:0;
   const extra=delFee+instFee, extraHT=extra/(1+CONFIG.feeTva);
   return {ttc,ht,tva,minBase,count,bSale,bSucre,lignes,livraison,installation,delFee,instFee,
-    remiseMontant,remiseActive:remiseOK&&remiseMontant>0,remiseType,remiseVal,
+    remiseMontant,remiseActive:remiseOK&&remiseMontant>0,remiseType,remiseVal,remiseNote,
     grandTTC:ttcNet+extra, grandHT:htNet+extraHT, grandTVA:tvaNet+(extra-extraHT)};
 }
 
@@ -2245,15 +2283,38 @@ function repereBouchees(n){
 
 function render(){
   const c=compute(); const conv=parseInt(convives.value)||0; const totalBites=c.bSale+c.bSucre;
-  const recap=$('recap'); recap.innerHTML='';
-  if(!c.lignes.length){ recap.innerHTML='<div class="empty">Votre sélection est vide pour le moment.</div>'; }
-  else c.lignes.forEach(({p,qty,sub,i})=>{
-    const detail=p.unite==='pièce'?`${qty} × ${euro(p.tarifTTC)}`:`${qty} ${p.unite}${qty>1?'s':''} × ${euro(p.tarifTTC)}`;
-    const tr=tranche.get(i)?' · tranché':'';
-    const r=document.createElement('div'); r.className='rline';
-    r.innerHTML=`<div class="n">${p.nom}${tr}<small>${detail}</small></div><div class="a">${euro(sub)}</div>`;
-    recap.appendChild(r);
-  });
+  /* Panier modifiable : on met a jour les lignes EXISTANTES au lieu de tout
+     reconstruire, sinon le bouton +/- disparait sous le doigt a chaque clic. */
+  const recap=$('recap');
+  const vide=recap.querySelector('.empty');
+  if(!c.lignes.length){
+    recap.querySelectorAll('.rline').forEach(el=>el.remove());
+    if(!vide) recap.innerHTML='<div class="empty">Votre sélection est vide pour le moment.</div>';
+  } else {
+    if(vide) vide.remove();
+    const presents=new Set(c.lignes.map(l=>l.i));
+    recap.querySelectorAll('.rline').forEach(el=>{ if(!presents.has(+el.dataset.i)) el.remove(); });
+    c.lignes.forEach(({p,qty,sub,i})=>{
+      const isPiece=p.unite==='pièce';
+      const mx=isPiece?999:CONFIG.maxLots;
+      let r=recap.querySelector('.rline[data-i="'+i+'"]');
+      if(!r){
+        r=document.createElement('div'); r.className='rline'; r.dataset.i=i;
+        r.innerHTML=`<div class="n"><span class="rn"></span><small class="rd"></small></div>`+
+          `<div class="stepper rstep"><button type="button" class="st-btn" data-dir="-1" aria-label="Retirer">−</button>`+
+          `<input type="number" id="rq${i}" data-i="${i}" data-min="${p.minimum}" data-max="${mx}" class="qnum" min="0" max="${mx}" step="1" inputmode="numeric" aria-label="Quantité pour ${p.nom}">`+
+          `<button type="button" class="st-btn" data-dir="1" aria-label="Ajouter">+</button></div>`+
+          `<div class="a"></div>`;
+        recap.appendChild(r);
+      }
+      const tr=tranche.get(i)?' · tranché':'';
+      r.querySelector('.rn').textContent=p.nom+tr;
+      r.querySelector('.rd').textContent=isPiece?`${euro(p.tarifTTC)} / pièce`:`${euro(p.tarifTTC)} / ${p.unite}`;
+      const inp=r.querySelector('.qnum');
+      if(document.activeElement!==inp && (parseInt(inp.value)||0)!==qty) inp.value=qty;
+      r.querySelector('.a').textContent=euro(sub);
+    });
+  }
   bites.style.display=c.lignes.length?'flex':'none';
   biteSale.textContent=c.bSale; biteSucre.textContent=c.bSucre;
   const parPers=n=>conv?(n/conv).toFixed(1).replace('.',',')+' / pers.':'';
@@ -2278,7 +2339,8 @@ function render(){
   installationRow.style.display=c.instFee?'flex':'none';
   htVal.textContent=euro(c.grandHT); tvaVal.textContent=euro(c.grandTVA); grandTotal.textContent=euro(c.grandTTC);
   if(c.remiseActive){
-    remiseLabel.textContent='Remise'+(c.remiseType==='pct'?` -${String(c.remiseVal).replace('.',',')}%`:'');
+    remiseLabel.textContent='Remise'+(c.remiseType==='pct'?` -${String(c.remiseVal).replace('.',',')}%`:'')
+      +(c.remiseNote?` · ${c.remiseNote}`:'');
     remiseValDisp.textContent='-'+euro(c.remiseMontant);
     remiseRow.style.display='flex';
   } else remiseRow.style.display='none';
@@ -2342,22 +2404,36 @@ $('remiseToggle').addEventListener('click',()=>{
   if(box.style.display==='flex') $('remiseCodeInput').focus();
 });
 $('remiseUnlockBtn').addEventListener('click',()=>{
-  const val=$('remiseCodeInput').value;
-  if(val===CONFIG.remiseCode){
+  // Simple garde-fou, pas une securite : on tolere espaces et casse,
+  // sinon un espace invisible fait echouer la saisie sans explication.
+  const val=($('remiseCodeInput').value||'').trim().toLowerCase();
+  if(val===String(CONFIG.remiseCode).trim().toLowerCase()){
     remiseOK=true;
     $('remiseBox').style.display='none'; $('remiseErr').style.display='none';
     $('remiseFormBox').style.display='flex'; $('remiseToggle').style.display='none';
   } else { $('remiseErr').style.display='inline'; $('remiseCodeInput').value=''; $('remiseCodeInput').focus(); }
 });
 $('remiseCodeInput').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); $('remiseUnlockBtn').click(); } });
+/* Oeil : bascule entre code masque et code lisible. */
+$('remiseEye').addEventListener('click',()=>{
+  const inp=$('remiseCodeInput'), eye=$('remiseEye');
+  const visible = inp.type==='text';
+  inp.type = visible ? 'password' : 'text';
+  eye.classList.toggle('on', !visible);
+  eye.setAttribute('aria-label', visible?'Afficher le code':'Masquer le code');
+  eye.setAttribute('title', visible?'Afficher le code':'Masquer le code');
+  inp.focus();
+});
 $('remiseApplyBtn').addEventListener('click',()=>{
   const v=parseFloat(($('remiseValInput').value||'0').replace(',','.'));
-  remiseType=$('remiseTypeSel').value; remiseVal=isNaN(v)||v<0?0:v;
+  remiseType=document.querySelector('input[name=remiseType]:checked').value;
+  remiseNote=($('remiseNoteInput').value||'').trim(); remiseVal=isNaN(v)||v<0?0:v;
   $('remiseClearBtn').style.display=remiseVal>0?'inline-block':'none';
   render();
 });
 $('remiseClearBtn').addEventListener('click',()=>{
-  remiseVal=0; $('remiseValInput').value=''; $('remiseClearBtn').style.display='none'; render();
+  remiseVal=0; remiseNote=''; $('remiseValInput').value=''; $('remiseNoteInput').value='';
+  $('remiseClearBtn').style.display='none'; render();
 });
 
 /* ---- Navigation par ecrans (5 touches) ----
@@ -2393,11 +2469,6 @@ document.querySelectorAll('.screen-goto').forEach(b=>{
 
 /* ---- Selecteur "A la carte / Formules" a l'interieur de l'ecran Composer ----
    Deux facons de remplir le meme panier : un choix dans un ecran, pas deux destinations. */
-function modeFormuleActive(actif){
-  $('fbar').hidden=!actif;
-  $('fbarBas').hidden=!actif;
-  document.querySelector('.seg-mode').hidden=actif;
-}
 function choisirMode(mode){
   $('paneCarte').hidden    = (mode!=='carte');
   $('paneFormules').hidden = (mode!=='formules');
@@ -2417,15 +2488,13 @@ document.querySelectorAll('.cat').forEach(s=>spy.observe(s));
 /* Filtre unique du catalogue : la recherche texte ET le mode "formule seule"
    passent par ici. On masque des cartes existantes plutot que d'en creer de
    nouvelles : les id (q42, s42) doivent rester uniques dans la page. */
-let formuleFiltre=null;   // null = catalogue complet ; Set d'index = formule seule
 function filtrerCatalogue(){
   const ps=$('prodSearch');
   const q=ps?ps.value.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''):'';
   let total=0;
   document.querySelectorAll('.cat').forEach(sec=>{ let vis=0;
     sec.querySelectorAll('.card').forEach(c=>{
-      const dansFormule = !formuleFiltre || formuleFiltre.has(+c.dataset.i);
-      const hit = dansFormule && (!q || (c.dataset.search||'').includes(q));
+      const hit = !q || (c.dataset.search||'').includes(q);
       c.style.display=hit?'':'none'; if(hit)vis++;
     });
     sec.style.display=vis?'':'none'; total+=vis; });
@@ -2434,11 +2503,6 @@ function filtrerCatalogue(){
 const prodSearch=$('prodSearch');
 if(prodSearch) prodSearch.addEventListener('input',filtrerCatalogue);
 
-/* "Ajouter d'autres produits" : on quitte le mode formule seule. */
-$('fbarTout').addEventListener('click',()=>{
-  formuleFiltre=null; modeFormuleActive(false); filtrerCatalogue();
-  const nav=document.querySelector('.catnav'); if(nav) nav.scrollIntoView({behavior:'smooth',block:'start'});
-});
 
 /* ---------- PDF (client gauche / Ange droite · lignes HT) ---------- */
 function buildPDF(d){
@@ -2679,7 +2743,8 @@ $('orderForm').addEventListener('submit',async e=>{
     convives:conv, ttc:c.grandTTC, ht:c.grandHT, tva:c.grandTVA, ttcProd:c.ttc, htProd:c.ht,
     mentionReglement, bSale:c.bSale, bSucre:c.bSucre, ppBites:conv?((c.bSale+c.bSucre)/conv).toFixed(1).replace('.',','):'0',
     remiseActive:c.remiseActive, remiseMontant:c.remiseMontant,
-    remiseLabel:c.remiseType==='pct'?`-${String(c.remiseVal).replace('.',',')}%`:`-${euro(c.remiseMontant)}`,
+    remiseLabel:(c.remiseType==='pct'?`-${String(c.remiseVal).replace('.',',')}%`:`-${euro(c.remiseMontant)}`)
+      +(c.remiseNote?` \u00b7 ${c.remiseNote}`:''),
     note:f.note.value, facture, lignes,
   };
 
