@@ -86,10 +86,10 @@
   .card-body{padding:15px 16px 14px; display:flex; flex-direction:column; flex:1;}
   .card h3{font-family:"Fraunces",serif; font-weight:600; font-size:17px; line-height:1.15; margin:0 0 10px; flex:1;}
   .card .meta{display:flex; align-items:flex-start; justify-content:space-between; gap:8px; margin-bottom:12px;}
-  .card .price{display:flex; flex-direction:column; gap:2px;}
+  .card .price{display:flex; flex-wrap:wrap; align-items:baseline; gap:6px;}
   .card .price .ttc{font-weight:900; font-size:16px;}
   .card .price .ttc small{font-weight:700; color:var(--muted); font-size:11px;}
-  .card .price .puline{font-size:11px; color:var(--muted); font-weight:700;}
+  .card .price .puline{font-size:12px; color:var(--muted); font-weight:700;}
   .card .minq{font-size:11px; font-weight:800; color:#fff; background:var(--c); padding:4px 9px; border-radius:999px; white-space:nowrap;}
   .card-foot{display:flex; align-items:center; justify-content:space-between; gap:10px; padding-top:12px; border-top:1px dashed var(--line);}
   .qty{display:flex; align-items:center; gap:8px;}
@@ -182,10 +182,17 @@
   .rline{display:flex; align-items:baseline; justify-content:space-between; gap:12px; padding:13px 0; border-bottom:1px solid var(--line);}
   .rline:last-child{border-bottom:0;}
   .rline .n{font-weight:800;}
-  .rline .n small{display:block; color:var(--muted); font-weight:600; font-size:12.5px; margin-top:2px;}
+  .rline .n small{color:var(--muted); font-weight:600; font-size:12.5px; margin-left:7px; white-space:nowrap;}
   .rline .a{font-weight:900; white-space:nowrap;}
 
   .bites{display:flex; gap:10px; flex-wrap:wrap; margin:14px 0 2px;}
+  .bite .pp{font-size:11.5px; color:var(--muted); font-weight:700; margin-top:2px;}
+  .retour{display:inline-flex; align-items:center; gap:6px; background:none; border:0; padding:4px 0;
+    margin:0 0 16px; color:var(--vert-deep); font-family:inherit; font-weight:800; font-size:14px; cursor:pointer;
+    transition:transform .18s cubic-bezier(.34,1.56,.64,1);}
+  .retour:hover{transform:translateX(-2px);}
+  .retour:active{transform:none;}
+  .retour:focus-visible{outline:3px solid var(--vert); outline-offset:3px; border-radius:8px;}
   .bite{flex:1; min-width:140px; background:#fff; border:1px solid var(--line); border-radius:13px; padding:12px 14px;}
   .bite .l{font-size:11.5px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; color:var(--muted);}
   .bite .v{font-family:"Fraunces",serif; font-weight:700; font-size:21px;}
@@ -209,7 +216,7 @@
   .totals .tr.acompte .v{color:#5b6300;}
   .totals .tr.remise{color:#b3261e;}
   .remise-mgr{margin-top:10px; text-align:right;}
-  .remise-link{background:none; border:none; color:var(--muted); font-size:11px; cursor:pointer; padding:2px 4px; opacity:.4; transition:opacity .15s;}
+  .remise-link{background:none; border:none; color:var(--muted); font-size:11.5px; font-family:inherit; font-weight:700; cursor:pointer; padding:3px 5px; opacity:.55; transition:opacity .15s; text-decoration:underline; text-underline-offset:3px;}
   .remise-link:hover{opacity:1;}
   .remise-box{display:flex; gap:6px; justify-content:flex-end; margin-top:6px; align-items:center; flex-wrap:wrap;}
   .remise-box input[type=password]{width:110px; padding:6px 8px; border:1.5px solid var(--line); border-radius:8px; font-size:13px;}
@@ -288,6 +295,9 @@
   .tabbar .tab:active{transform:none;}
   .tabbar .tab.on{color:var(--vert);}
   .tabbar .tab:focus-visible{outline:3px solid var(--vert); outline-offset:2px; border-radius:10px;}
+  /* Etape pas encore accessible : visible mais clairement inactive. */
+  .tabbar .tab[disabled]{opacity:.35; cursor:not-allowed;}
+  .tabbar .tab[disabled]:hover{transform:none; color:#9a978d; background:none;}
   /* Bouton central sureleve : le panier est la destination centrale du parcours. */
   .tabbar .tab-mid .mid{width:50px; height:50px; border-radius:50%; background:var(--vert); color:var(--noir);
     display:grid; place-items:center; margin-top:-24px; position:relative; box-shadow:0 4px 14px rgba(0,0,0,.3);
@@ -315,6 +325,12 @@
     .tabbar .tab:hover{transform:translateX(2px); background:rgba(255,255,255,.06);}
     .tabbar .tab.on{background:rgba(205,219,0,.14);}
     .tabbar .tab-mid{order:2;}
+    /* Fil pointille entre les etapes, facon suivi de commande. */
+    .tabbar .tab{position:relative;}
+    .tabbar .tab::before{content:""; position:absolute; left:26px; top:-8px; height:8px;
+      border-left:2px dotted rgba(255,255,255,.28);}
+    .tabbar .tab:first-of-type::before{display:none;}
+    .tabbar .tab.done::before{border-left-color:var(--vert);}
     .tabbar .tab-mid .mid{width:34px; height:34px; margin-top:0; box-shadow:none;}
     .tabbar .tab-mid .mid svg{width:19px; height:19px;}
     .tabtotal{display:block; margin-top:auto; padding:14px 13px; border-top:1px solid rgba(255,255,255,.14);}
@@ -433,7 +449,7 @@
   .name-row h3{margin:0; flex:0 1 auto; min-width:0;}
   .name-row .minq{flex:none;}
   /* Prix TTC, puis rappel HT/TVA juste en dessous. */
-  .card .price{flex-direction:column; align-items:flex-start; gap:1px;}
+  .card .price{align-items:baseline; gap:5px;}
   .card-info .meta{margin-bottom:0; align-items:center;}
   .card-info .tranche-opt{margin:6px 0 0;}
   .card-controls{display:flex; align-items:center; gap:12px; margin-left:auto; flex:none;}
@@ -476,8 +492,19 @@
   .fcard .go:hover{transform:translateY(-2px); opacity:.92;}
   .fcard .go:active{transform:translateY(0);}
   .fcard .go:focus-visible{outline:3px solid var(--vert); outline-offset:2px;}
-  .fdone{display:none; align-items:flex-start; gap:12px; background:var(--vert-soft); border:1.5px solid var(--vert-deep); border-radius:14px; padding:14px 17px; margin:14px 0 2px; font-size:14px;}
-  .fdone.show{display:flex;}
+  /* Bandeau de la formule chargee : rappelle laquelle, et ouvre le catalogue complet. */
+  .fbar{display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;
+    background:var(--vert-soft); border:1.5px solid var(--vert-deep); border-radius:14px;
+    padding:14px 17px; margin:16px 0 2px;}
+  .fbar[hidden]{display:none;}
+  .fbar-txt b{display:block; font-size:15.5px;}
+  .fbar-txt span{font-size:13.5px; color:var(--muted);}
+  .fbar-btn{flex:none; background:#fff; border:1.5px solid var(--vert-deep); border-radius:11px;
+    padding:9px 14px; font-family:inherit; font-weight:800; font-size:13.5px; color:#4d5400; cursor:pointer;
+    transition:transform .18s cubic-bezier(.34,1.56,.64,1), box-shadow .18s;}
+  .fbar-btn:hover{transform:translateY(-2px); box-shadow:var(--shadow);}
+  .fbar-btn:active{transform:none;}
+  .fbar-btn:focus-visible{outline:3px solid var(--vert); outline-offset:2px;}
   @media(prefers-reduced-motion:reduce){
     .fcard .go{transition:border-color .18s, box-shadow .18s;}
     .fcard .go:hover{transform:none;}
@@ -541,17 +568,17 @@
 </div>
 
 <div class="mode-pane" id="paneCarte">
+  <div class="wrap">
+    <div class="fbar" id="fbar" hidden>
+      <div class="fbar-txt"><b id="fbarNom"></b><span>Ajustez les quantit&eacute;s ci-dessous.</span></div>
+      <button type="button" class="fbar-btn" id="fbarTout">Ajouter d'autres produits</button>
+    </div>
+  </div>
   <nav class="catnav" aria-label="Gammes">
     <div class="catnav-search"><div class="search-wrap"><svg class="search-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg><input type="search" id="prodSearch" placeholder="Rechercher un produit (ex. quiche, wrap, verrine…)" aria-label="Rechercher un produit" autocomplete="off"></div></div>
     <div class="catnav-in" id="catnav"></div>
   </nav>
   <div class="wrap"><div class="nores" id="searchNo">Aucun produit ne correspond &agrave; votre recherche.</div></div>
-  <div class="wrap">
-    <div class="fdone" id="fdone">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;margin-top:1px"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
-      <div id="fdoneTxt"></div>
-    </div>
-  </div>
   <div class="wrap" id="catalogue"></div>
 </div>
 
@@ -564,13 +591,18 @@
         <h2 class="title">Votre panier</h2>
         <p class="sub">Vérifiez votre sélection et le total, puis passez à vos coordonnées.</p>
 
+        <button type="button" class="retour screen-goto" data-go="composer">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg>
+          Modifier ma composition
+        </button>
+
         <div id="bakeryPick" class="bakerypick"></div>
 
         <div class="recap" id="recap"><div class="empty">Votre sélection est vide pour le moment.</div></div>
 
         <div class="bites" id="bites" style="display:none;">
-          <div class="bite"><div class="l">Pièces salées</div><div class="v" id="biteSale">0</div></div>
-          <div class="bite"><div class="l">Pièces sucrées</div><div class="v" id="biteSucre">0</div></div>
+          <div class="bite"><div class="l">Pièces salées</div><div class="v" id="biteSale">0</div><div class="pp" id="biteSalePP"></div></div>
+          <div class="bite"><div class="l">Pièces sucrées</div><div class="v" id="biteSucre">0</div><div class="pp" id="biteSucrePP"></div></div>
         </div>
 
         <div class="perperson" id="perPerson">
@@ -594,7 +626,7 @@
         </div>
 
         <div class="remise-mgr" id="remiseMgr">
-          <button type="button" id="remiseToggle" class="remise-link">···</button>
+          <button type="button" id="remiseToggle" class="remise-link">Espace boulangerie</button>
           <div class="remise-box" id="remiseBox" style="display:none;">
             <input type="password" id="remiseCodeInput" placeholder="Code" autocomplete="off">
             <button type="button" id="remiseUnlockBtn">Valider</button>
@@ -744,7 +776,7 @@
   </button>
   <button type="button" class="tab" data-go="suivi">
     <span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5"/><path d="m9.6 14.6 1.9 1.9 3.4-3.9"/></svg></span>
-    <span class="tl">Devis</span>
+    <span class="tl">Finaliser</span>
   </button>
   <div class="tabtotal"><b id="tabTotal">0,00 &euro;</b><small>total TTC</small></div>
 </nav>
@@ -2002,7 +2034,9 @@ if(CONFIG.bakeries.length>1){
   bp.innerHTML=`<div class="bk-title">Votre boulangerie</div><div class="seg">`+CONFIG.bakeries.map((b,i)=>`<label><input type="radio" name="bakery" value="${i}" ${i===0?'checked':''}><span>${b.nom}</span></label>`).join('')+`</div>`;
   bp.querySelectorAll('input[name=bakery]').forEach(rd=>rd.addEventListener('change',e=>applyBakery(CONFIG.bakeries[+e.target.value])));
 }else{
-  bp.innerHTML=`<div class="bk-single"><div class="bk-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21.5s7-5.6 7-11.2a7 7 0 1 0-14 0c0 5.6 7 11.2 7 11.2Z"/><circle cx="12" cy="10.2" r="2.6"/></svg></div><div><b>Boulangerie Ange \u2014 ${bakery.nom}</b><span>${bakery.adresse}</span></div></div>`;
+  // Une seule boulangerie : afficher son nom et son adresse ici n'apporte rien
+  // (l'info est deja en pied de page). Le selecteur revient des que Rumilly ouvre.
+  bp.hidden=true;
 }
 
 GAMMES.forEach(g=>{
@@ -2035,7 +2069,7 @@ GAMMES.forEach(g=>{
     const puTTC=(!isPiece && p.bouchees>1)?p.tarifTTC/p.bouchees:null;
     const unitWord=isPiece?'pièce':p.unite;
     const trancheOpt=p.gamme==='Pains'?`<label class="tranche-opt"><input type="checkbox" class="tr" data-i="${p.i}"> Je le souhaite tranché</label>`:'';
-    const puLine=puTTC?`<span class="puline">${euro(puTTC)} TTC / pi\u00e8ce</span>`:'';
+    const puLine=puTTC?`<span class="puline">(${euro(puTTC)} / pi\u00e8ce)</span>`:'';
     card.innerHTML=`${photo}<div class="card-main"><div class="card-info"><div class="name-row"><h3>${p.nom}</h3>${badge}</div>
       <div class="meta"><div class="price"><span class="ttc">${euro(p.tarifTTC)} <small>TTC / ${unitWord}</small></span>${puLine}</div></div>${trancheOpt}</div>
       <div class="card-controls"><div class="qty"><label for="q${p.i}">${uLabel}</label>${control}</div><div class="subtotal zero" id="s${p.i}">0,00 €</div></div></div>`;
@@ -2128,12 +2162,13 @@ function chargerFormule(f){
     if(cv){ cv.value=f.convives; cv.dispatchEvent(new Event('input',{bubbles:true})); }
   }
   render();
-  const d=$('fdone');
-  if(d){
-    $('fdoneTxt').innerHTML='<b>«&nbsp;'+f.nom+'&nbsp;» est dans votre panier.</b> Ajustez-la librement ci-dessous&nbsp;: '+
-      'ajoutez un produit, retirez-en un, changez les quantités. Rien n\'est figé.';
-    d.classList.add('show');
-  }
+  /* Le client qui prend une formule veut aller vite : on ne lui montre
+     que SES produits. Le catalogue complet reste a un clic. */
+  formuleFiltre=new Set(c.lignes.map(l=>l.i));
+  $('fbarNom').textContent=f.nom;
+  $('fbar').hidden=false;
+  const ps=$('prodSearch'); if(ps) ps.value='';
+  filtrerCatalogue();
   // Une formule chargee doit etre ajustable : on rebascule sur la carte.
   choisirMode('carte');
 }
@@ -2195,7 +2230,10 @@ function render(){
     r.innerHTML=`<div class="n">${p.nom}${tr}<small>${detail}</small></div><div class="a">${euro(sub)}</div>`;
     recap.appendChild(r);
   });
-  bites.style.display=c.lignes.length?'flex':'none'; biteSale.textContent=c.bSale; biteSucre.textContent=c.bSucre;
+  bites.style.display=c.lignes.length?'flex':'none';
+  biteSale.textContent=c.bSale; biteSucre.textContent=c.bSucre;
+  const parPers=n=>conv?(n/conv).toFixed(1).replace('.',',')+' / pers.':'';
+  biteSalePP.textContent=parPers(c.bSale); biteSucrePP.textContent=parPers(c.bSucre);
   const cl=$('convLive');
   if(cl){
     if(conv>0 && c.lignes.length){ cl.textContent='\u2705 \u2248 '+(totalBites/conv).toFixed(1).replace('.',',')+' pi\u00e8ces / personne \u2014 '+niveauBouchees(totalBites/conv).court; cl.classList.add('show'); }
@@ -2204,7 +2242,7 @@ function render(){
   }
   const gt={},gb={};
   for(const [gi,gq] of state){ const gp=PRODUITS[gi]; gt[gp.gamme]=(gt[gp.gamme]||0)+gq*gp.tarifTTC; if(gp.type) gb[gp.gamme]=(gb[gp.gamme]||0)+gq*gp.bouchees; }
-  GAMMES.forEach(g=>{ const gel=$('csub-'+g.id); if(gel){ if(gt[g.nom]>0){ gel.textContent=euro(gt[g.nom]); gel.classList.add('show'); } else gel.classList.remove('show'); } });
+  GAMMES.forEach(g=>{ const gel=$('csub-'+g.id); if(gel){ if(gt[g.nom]>0){ gel.textContent=euro(gt[g.nom])+' TTC'; gel.classList.add('show'); } else gel.classList.remove('show'); } });
   GAMMES.forEach(g=>{ const bel=$('cbites-'+g.id); if(bel){ if(conv>0 && gb[g.nom]>0){ bel.textContent=(gb[g.nom]/conv).toFixed(1).replace('.',',')+' bouch\u00e9es / pers.'; bel.classList.add('show'); } else bel.classList.remove('show'); } });
   const pp=$('perPerson');
   if(c.lignes.length&&conv>0){ pp.classList.add('show'); ppN.textContent=conv;
@@ -2227,6 +2265,12 @@ function render(){
   tabTotal.textContent=euro(c.grandTTC);
   const nArt=c.lignes.length;
   tabCount.textContent=nArt; tabCount.hidden = nArt===0;
+  /* Progression : on ne peut pas finaliser un panier vide. */
+  const tabFin=document.querySelector('.tabbar .tab[data-go="suivi"]');
+  const tabPan=document.querySelector('.tabbar .tab[data-go="panier"]');
+  if(tabFin) tabFin.disabled = nArt===0;
+  if(tabPan) tabPan.classList.toggle('done', nArt>0);
+  if(tabFin) tabFin.classList.toggle('done', nArt>0);
   const under=c.minBase>0&&c.minBase<CONFIG.minOrder;
   gate.classList.toggle('show',under); submitBtn.disabled=c.minBase<CONFIG.minOrder;
 }
@@ -2300,6 +2344,8 @@ const ECRANS=['composer','panier','suivi'];
 let ecranActuel='composer';
 function showScreen(nom){
   if(!ECRANS.includes(nom)) return;
+  const bt=document.querySelector('.tabbar .tab[data-go="'+nom+'"]');
+  if(bt&&bt.disabled) return;
   ecranActuel=nom;
   document.querySelectorAll('.screen').forEach(s=>{ s.hidden = (s.dataset.screen!==nom); });
   document.querySelectorAll('.tabbar .tab').forEach(b=>{
@@ -2316,6 +2362,9 @@ document.querySelectorAll('.tabbar .tab').forEach(b=>{
 /* Boutons "Continuer" places en bas des ecrans : meme mecanique, autre habillage. */
 document.querySelectorAll('.screen-next').forEach(b=>{
   b.addEventListener('click',()=>showScreen(b.dataset.next));
+});
+document.querySelectorAll('.screen-goto').forEach(b=>{
+  b.addEventListener('click',()=>showScreen(b.dataset.go));
 });
 
 /* ---- Selecteur "A la carte / Formules" a l'interieur de l'ecran Composer ----
@@ -2336,14 +2385,31 @@ $('installation').addEventListener('change',render);
 const spy=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ const id=e.target.id.replace('sec-','');
   document.querySelectorAll('.pill').forEach(p=>p.classList.toggle('active',p.dataset.target===id)); }}),{rootMargin:'-134px 0px -70% 0px'});
 document.querySelectorAll('.cat').forEach(s=>spy.observe(s));
-const prodSearch=$('prodSearch');
-if(prodSearch){ prodSearch.addEventListener('input',()=>{
-  const q=prodSearch.value.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); let total=0;
+/* Filtre unique du catalogue : la recherche texte ET le mode "formule seule"
+   passent par ici. On masque des cartes existantes plutot que d'en creer de
+   nouvelles : les id (q42, s42) doivent rester uniques dans la page. */
+let formuleFiltre=null;   // null = catalogue complet ; Set d'index = formule seule
+function filtrerCatalogue(){
+  const ps=$('prodSearch');
+  const q=ps?ps.value.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''):'';
+  let total=0;
   document.querySelectorAll('.cat').forEach(sec=>{ let vis=0;
-    sec.querySelectorAll('.card').forEach(c=>{ const hit=!q||(c.dataset.search||'').includes(q); c.style.display=hit?'':'none'; if(hit)vis++; });
+    sec.querySelectorAll('.card').forEach(c=>{
+      const dansFormule = !formuleFiltre || formuleFiltre.has(+c.dataset.i);
+      const hit = dansFormule && (!q || (c.dataset.search||'').includes(q));
+      c.style.display=hit?'':'none'; if(hit)vis++;
+    });
     sec.style.display=vis?'':'none'; total+=vis; });
   const no=$('searchNo'); if(no) no.style.display=(q&&total===0)?'block':'none';
-}); }
+}
+const prodSearch=$('prodSearch');
+if(prodSearch) prodSearch.addEventListener('input',filtrerCatalogue);
+
+/* "Ajouter d'autres produits" : on quitte le mode formule seule. */
+$('fbarTout').addEventListener('click',()=>{
+  formuleFiltre=null; $('fbar').hidden=true; filtrerCatalogue();
+  const nav=document.querySelector('.catnav'); if(nav) nav.scrollIntoView({behavior:'smooth',block:'start'});
+});
 
 /* ---------- PDF (client gauche / Ange droite · lignes HT) ---------- */
 function buildPDF(d){
