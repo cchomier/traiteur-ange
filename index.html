@@ -311,8 +311,10 @@
     border-radius:10px; background:var(--danger); color:#fff; font-size:11px; font-weight:900;
     display:flex; align-items:center; justify-content:center; border:2px solid var(--noir);}
   .tabtotal{display:none;}
+  .tabbar .tab .num, .tabbar .tab .hint{display:none;}
   /* Selecteur A la carte / Formules : reprend le composant .seg deja present. */
   .seg-mode{max-width:420px; margin:20px auto 4px;}
+  .seg-mode[hidden]{display:none;}
   .mode-pane[hidden]{display:none;}
   @media(min-width:900px){
     /* Desktop : pas de pouce, donc colonne laterale fixe plutot qu'une barre en bas. */
@@ -325,12 +327,21 @@
     .tabbar .tab:hover{transform:translateX(2px); background:rgba(255,255,255,.06);}
     .tabbar .tab.on{background:rgba(205,219,0,.14);}
     .tabbar .tab-mid{order:2;}
-    /* Fil pointille entre les etapes, facon suivi de commande. */
-    .tabbar .tab{position:relative;}
-    .tabbar .tab::before{content:""; position:absolute; left:26px; top:-8px; height:8px;
-      border-left:2px dotted rgba(255,255,255,.28);}
-    .tabbar .tab:first-of-type::before{display:none;}
+    /* Parcours en 3 etapes : numero + trait de liaison, facon suivi de commande. */
+    .tabbar .tab{position:relative; padding-left:15px; margin-bottom:18px;}
+    .tabbar .tab .num{display:grid; position:absolute; left:9px; top:12px; width:21px; height:21px; border-radius:50%;
+      background:rgba(255,255,255,.13); color:#cfccc2; font-size:11px; font-weight:900;
+      place-items:center; z-index:2;}
+    .tabbar .tab.on .num{background:var(--vert); color:var(--noir);}
+    .tabbar .tab.done .num{background:var(--vert); color:var(--noir);}
+    .tabbar .tab::before{content:""; position:absolute; left:18.5px; top:33px; bottom:-18px;
+      border-left:3px dotted rgba(255,255,255,.30);}
+    .tabbar .tab:last-of-type::before{display:none;}
     .tabbar .tab.done::before{border-left-color:var(--vert);}
+    .tabbar .tab .ti, .tabbar .tab-mid .mid{margin-left:24px;}
+    .tabbar .tab .hint{display:block; position:absolute; left:48px; top:34px; font-size:10.5px;
+      font-weight:700; color:#8d8a80; white-space:nowrap;}
+    .tabbar .tab:not([disabled]) .hint{display:none;}
     .tabbar .tab-mid .mid{width:34px; height:34px; margin-top:0; box-shadow:none;}
     .tabbar .tab-mid .mid svg{width:19px; height:19px;}
     .tabtotal{display:block; margin-top:auto; padding:14px 13px; border-top:1px solid rgba(255,255,255,.14);}
@@ -493,12 +504,15 @@
   .fcard .go:active{transform:translateY(0);}
   .fcard .go:focus-visible{outline:3px solid var(--vert); outline-offset:2px;}
   /* Bandeau de la formule chargee : rappelle laquelle, et ouvre le catalogue complet. */
-  .fbar{display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;
-    background:var(--vert-soft); border:1.5px solid var(--vert-deep); border-radius:14px;
-    padding:14px 17px; margin:16px 0 2px;}
-  .fbar[hidden]{display:none;}
-  .fbar-txt b{display:block; font-size:15.5px;}
-  .fbar-txt span{font-size:13.5px; color:var(--muted);}
+  .fnote{display:flex; align-items:center; gap:9px; margin:16px 0 2px;
+    font-size:13.5px; color:#4d5400; font-weight:700;}
+  .fnote[hidden]{display:none;}
+  .fnote svg{flex:none; color:var(--vert-deep);}
+  .fnote b{font-weight:900;}
+  .fbar-bas{display:flex; align-items:center; justify-content:center; gap:16px; flex-wrap:wrap;
+    border-top:1px solid var(--line); margin-top:26px; padding:22px 0 4px;}
+  .fbar-bas[hidden]{display:none;}
+  .fbar-bas p{margin:0; font-size:14.5px; color:var(--muted); font-weight:700;}
   .fbar-btn{flex:none; background:#fff; border:1.5px solid var(--vert-deep); border-radius:11px;
     padding:9px 14px; font-family:inherit; font-weight:800; font-size:13.5px; color:#4d5400; cursor:pointer;
     transition:transform .18s cubic-bezier(.34,1.56,.64,1), box-shadow .18s;}
@@ -569,9 +583,9 @@
 
 <div class="mode-pane" id="paneCarte">
   <div class="wrap">
-    <div class="fbar" id="fbar" hidden>
-      <div class="fbar-txt"><b id="fbarNom"></b><span>Ajustez les quantit&eacute;s ci-dessous.</span></div>
-      <button type="button" class="fbar-btn" id="fbarTout">Ajouter d'autres produits</button>
+    <div class="fnote" id="fbar" hidden>
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
+      <span>Formule <b id="fbarNom"></b> &middot; ajustez les quantit&eacute;s.</span>
     </div>
   </div>
   <nav class="catnav" aria-label="Gammes">
@@ -580,6 +594,12 @@
   </nav>
   <div class="wrap"><div class="nores" id="searchNo">Aucun produit ne correspond &agrave; votre recherche.</div></div>
   <div class="wrap" id="catalogue"></div>
+  <div class="wrap">
+    <div class="fbar-bas" id="fbarBas" hidden>
+      <p>Il vous manque quelque chose&nbsp;?</p>
+      <button type="button" class="fbar-btn" id="fbarTout">Ajouter d'autres produits</button>
+    </div>
+  </div>
 </div>
 
 </div>
@@ -764,10 +784,12 @@
 
 <nav class="tabbar" id="tabbar" aria-label="Navigation principale">
   <button type="button" class="tab" data-go="composer" aria-current="true">
+    <span class="num" aria-hidden="true">1</span>
     <span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6.5h16M4 12h16M4 17.5h10"/></svg></span>
     <span class="tl">Composer</span>
   </button>
   <button type="button" class="tab tab-mid" data-go="panier">
+    <span class="num" aria-hidden="true">2</span>
     <span class="mid">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1 12H7Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
       <span class="pastille" id="tabCount" hidden>0</span>
@@ -775,8 +797,10 @@
     <span class="tl">Panier</span>
   </button>
   <button type="button" class="tab" data-go="suivi">
+    <span class="num" aria-hidden="true">3</span>
     <span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5"/><path d="m9.6 14.6 1.9 1.9 3.4-3.9"/></svg></span>
     <span class="tl">Finaliser</span>
+    <span class="hint">Panier vide</span>
   </button>
   <div class="tabtotal"><b id="tabTotal">0,00 &euro;</b><small>total TTC</small></div>
 </nav>
@@ -2166,7 +2190,7 @@ function chargerFormule(f){
      que SES produits. Le catalogue complet reste a un clic. */
   formuleFiltre=new Set(c.lignes.map(l=>l.i));
   $('fbarNom').textContent=f.nom;
-  $('fbar').hidden=false;
+  modeFormuleActive(true);
   const ps=$('prodSearch'); if(ps) ps.value='';
   filtrerCatalogue();
   // Une formule chargee doit etre ajustable : on rebascule sur la carte.
@@ -2369,6 +2393,11 @@ document.querySelectorAll('.screen-goto').forEach(b=>{
 
 /* ---- Selecteur "A la carte / Formules" a l'interieur de l'ecran Composer ----
    Deux facons de remplir le meme panier : un choix dans un ecran, pas deux destinations. */
+function modeFormuleActive(actif){
+  $('fbar').hidden=!actif;
+  $('fbarBas').hidden=!actif;
+  document.querySelector('.seg-mode').hidden=actif;
+}
 function choisirMode(mode){
   $('paneCarte').hidden    = (mode!=='carte');
   $('paneFormules').hidden = (mode!=='formules');
@@ -2407,7 +2436,7 @@ if(prodSearch) prodSearch.addEventListener('input',filtrerCatalogue);
 
 /* "Ajouter d'autres produits" : on quitte le mode formule seule. */
 $('fbarTout').addEventListener('click',()=>{
-  formuleFiltre=null; $('fbar').hidden=true; filtrerCatalogue();
+  formuleFiltre=null; modeFormuleActive(false); filtrerCatalogue();
   const nav=document.querySelector('.catnav'); if(nav) nav.scrollIntoView({behavior:'smooth',block:'start'});
 });
 
