@@ -36,12 +36,12 @@
   @media(min-width:560px){ .head-phone .col{display:flex;flex-direction:column;line-height:1.15;} .head-phone small{display:block;font-size:11px;color:#ffffff88;font-weight:800;text-transform:uppercase;letter-spacing:.08em;} }
 
   .hero{position:relative; background:var(--noir); color:#fff; overflow:hidden;}
-  .hero .wrap{padding:34px 22px 30px; position:relative; z-index:2;}
-  @media(max-width:680px){ .hero .wrap{padding:24px 20px 22px;} }
+  .hero .wrap{padding:26px 22px 24px; position:relative; z-index:2;}
+  @media(max-width:680px){ .hero .wrap{padding:20px 20px 18px;} }
   .kicker{display:inline-flex; align-items:center; gap:8px; font-weight:900; font-size:11.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--noir); background:var(--vert); padding:6px 13px; border-radius:999px; margin:0 0 14px;}
-  .hero h1{font-family:"Fraunces",serif; font-weight:600; font-size:clamp(31px,5.6vw,52px); line-height:1.03; letter-spacing:-.02em; margin:0;}
+  .hero h1{font-family:"Fraunces",serif; font-weight:600; font-size:clamp(27px,4.6vw,42px); line-height:1.05; letter-spacing:-.02em; margin:0 0 10px;}
   .hero h1 em{font-style:italic; color:var(--vert);}
-  .hero p.lead{max-width:56ch; margin:0 0 14px; color:#EDE9DE; font-size:17px; line-height:1.55;}
+  .hero p.lead{max-width:56ch; margin:0; color:#EDE9DE; font-size:15px; line-height:1.5;}
   .hero .lead-devis{display:inline-block; margin-bottom:2px; font-weight:800; color:#fff;}
   .hero .lead-devis b{color:var(--vert);}
   .convives .opt{font-size:13px; font-weight:800; color:var(--muted); white-space:nowrap;}
@@ -116,10 +116,10 @@
   .infobox h3{margin:0 0 4px; font-family:"Fraunces",serif; font-size:19px;}
   .infobox p{margin:0; color:var(--muted); font-size:14.5px;}
 
-  #commande{margin-top:52px; background:var(--creme); border:1px solid var(--line); border-radius:26px; padding:32px 28px;}
-  @media(max-width:600px){ #commande{padding:24px 18px;} }
-  #commande h2.title{font-family:"Fraunces",serif; font-weight:600; font-size:28px; margin:0 0 4px;}
-  #commande .sub{color:var(--muted); margin:0 0 20px; font-size:15px;}
+  .panel-devis{margin-top:24px; background:var(--creme); border:1px solid var(--line); border-radius:26px; padding:32px 28px;}
+  @media(max-width:600px){ .panel-devis{padding:24px 18px;} }
+  .panel-devis h2.title{font-family:"Fraunces",serif; font-weight:600; font-size:28px; margin:0 0 4px;}
+  .panel-devis .sub{color:var(--muted); margin:0 0 20px; font-size:15px;}
 
   .bakerypick{margin-bottom:16px;}
   .bk-title{font-weight:800; font-size:13.5px; margin:0 0 8px;}
@@ -271,14 +271,57 @@
   footer .col{font-size:14px; color:#ffffffcc; line-height:1.8;}
   footer a{color:var(--vert); text-decoration:none; font-weight:700;}
 
-  .bar{position:fixed; left:0; right:0; bottom:0; z-index:60; background:var(--noir); color:#fff; box-shadow:0 -6px 24px rgba(0,0,0,.25); transform:translateY(120%); transition:transform .25s;}
-  .bar.show{transform:translateY(0);}
+  /* --- Navigation 5 touches : barre au pouce sur mobile, colonne laterale sur desktop --- */
+  .screen[hidden]{display:none;}
+  .tabbar{position:fixed; left:0; right:0; bottom:0; z-index:60; background:var(--noir); color:#fff;
+    display:flex; align-items:flex-end; justify-content:space-around; gap:2px;
+    padding:8px 6px calc(8px + env(safe-area-inset-bottom,0px)); box-shadow:0 -6px 24px rgba(0,0,0,.25);
+    transform:translateY(0); transition:transform .25s;}
   /* Saisie en cours : la barre s'efface pour liberer le bas de l'ecran (30/07/2026). */
-  .bar.show.typing{transform:translateY(120%);}
-  .bar-in{max-width:1040px; margin:0 auto; padding:11px 22px calc(11px + env(safe-area-inset-bottom,0px)); display:flex; align-items:center; justify-content:space-between; gap:16px;}
-  .bar .lbl{font-size:12px; color:#ffffff99; font-weight:800; text-transform:uppercase; letter-spacing:.04em;}
-  .bar .tot{font-family:"Fraunces",serif; font-weight:700; font-size:25px; color:var(--vert); line-height:1;}
-  .bar button{font-family:inherit; font-weight:900; font-size:15.5px; color:var(--noir); background:var(--vert); border:0; border-radius:12px; padding:13px 22px; cursor:pointer;}
+  .tabbar.typing{transform:translateY(130%);}
+  .tabbar .tab{flex:1 1 0; min-width:0; background:none; border:0; color:#9a978d; cursor:pointer;
+    display:flex; flex-direction:column; align-items:center; gap:3px; padding:4px 2px; font-family:inherit;
+    transition:color .18s, transform .18s cubic-bezier(.34,1.56,.64,1);}
+  .tabbar .tab .ti svg{width:22px; height:22px; display:block;}
+  .tabbar .tab .tl{font-size:10.5px; font-weight:700; white-space:nowrap;}
+  .tabbar .tab:hover{color:#fff; transform:translateY(-2px);}
+  .tabbar .tab:active{transform:none;}
+  .tabbar .tab.on{color:var(--vert);}
+  .tabbar .tab:focus-visible{outline:3px solid var(--vert); outline-offset:2px; border-radius:10px;}
+  /* Bouton central sureleve : le panier est la destination centrale du parcours. */
+  .tabbar .tab-mid .mid{width:50px; height:50px; border-radius:50%; background:var(--vert); color:var(--noir);
+    display:grid; place-items:center; margin-top:-24px; position:relative; box-shadow:0 4px 14px rgba(0,0,0,.3);
+    transition:transform .18s cubic-bezier(.34,1.56,.64,1);}
+  .tabbar .tab-mid .mid svg{width:23px; height:23px;}
+  .tabbar .tab-mid:hover .mid{transform:translateY(-2px);}
+  .tabbar .tab-mid:active .mid{transform:none;}
+  .tabbar .tab-mid .tl{color:#fff;}
+  .tabbar .tab-mid.on .tl{color:var(--vert);}
+  .pastille{position:absolute; top:-3px; right:-3px; min-width:19px; height:19px; padding:0 5px;
+    border-radius:10px; background:var(--danger); color:#fff; font-size:11px; font-weight:900;
+    display:flex; align-items:center; justify-content:center; border:2px solid var(--noir);}
+  .tabtotal{display:none;}
+  /* Selecteur A la carte / Formules : reprend le composant .seg deja present. */
+  .seg-mode{max-width:420px; margin:20px auto 4px;}
+  .mode-pane[hidden]{display:none;}
+  @media(min-width:900px){
+    /* Desktop : pas de pouce, donc colonne laterale fixe plutot qu'une barre en bas. */
+    .tabbar{top:0; bottom:0; right:auto; width:186px; flex-direction:column; align-items:stretch;
+      justify-content:flex-start; gap:4px; padding:26px 14px; box-shadow:6px 0 24px rgba(0,0,0,.18);}
+    .tabbar.typing{transform:none;}
+    .tabbar .tab{flex:0 0 auto; flex-direction:row; justify-content:flex-start; gap:11px;
+      padding:11px 13px; border-radius:12px;}
+    .tabbar .tab .tl{font-size:14px;}
+    .tabbar .tab:hover{transform:translateX(2px); background:rgba(255,255,255,.06);}
+    .tabbar .tab.on{background:rgba(205,219,0,.14);}
+    .tabbar .tab-mid{order:2;}
+    .tabbar .tab-mid .mid{width:34px; height:34px; margin-top:0; box-shadow:none;}
+    .tabbar .tab-mid .mid svg{width:19px; height:19px;}
+    .tabtotal{display:block; margin-top:auto; padding:14px 13px; border-top:1px solid rgba(255,255,255,.14);}
+    .tabtotal b{display:block; font-family:"Fraunces",serif; font-size:21px; color:var(--vert);}
+    .tabtotal small{font-size:11px; color:#9a978d; font-weight:700; text-transform:uppercase; letter-spacing:.06em;}
+    body{padding-bottom:0; padding-left:186px;}
+  }
   @media(prefers-reduced-motion:reduce){ *{transition:none!important; scroll-behavior:auto!important;} }
 
   /* alertes très visibles */
@@ -288,33 +331,11 @@
   .datealert b{display:block;} .datealert p{margin:3px 0 0; font-size:14px; color:#7a4a1c;}
   .notice{display:flex; gap:12px; align-items:flex-start; background:var(--vert-soft); border:2px solid var(--vert-deep); border-radius:14px; padding:14px 16px; margin:8px 0 14px;}
   .notice svg{flex:none; color:#4d5400; margin-top:1px;} .notice p{margin:0; font-size:14px; color:#3f4600;} .notice b{color:#3f4600;}
-  /* barre enrichie */
-  .bar-stats{display:flex; align-items:center; gap:20px; flex:1; min-width:0;}
-  .bstat{display:flex; flex-direction:column; line-height:1.05;}
-  .bstat b{font-family:"Fraunces",serif; font-weight:700; font-size:18px; color:#fff;}
-  .bstat small{font-size:10px; color:#ffffff99; font-weight:700; text-transform:uppercase; letter-spacing:.03em; margin-top:2px;}
-  .bstat.big b{color:var(--vert); font-size:23px;}
-  @media(max-width:640px){ .bar-stats{gap:12px;} .bstat b{font-size:15px;} .bstat.big b{font-size:18px;} .bstat.mhide{display:none;} }
-
-  /* Navigation par etapes depuis la barre basse — precedent / suivant */
-  .stepnav{flex:none; display:flex; align-items:center; gap:2px; background:rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.20); border-radius:12px; padding:3px; margin-right:14px;}
-  .bar .stepnav button{background:transparent; color:#fff; border:0; border-radius:9px; padding:8px 9px; font-size:15px; font-weight:900; line-height:1; box-shadow:none; transition:background .15s, opacity .15s;}
-  .bar .stepnav button:hover:not(:disabled){background:rgba(255,255,255,.18); transform:none; box-shadow:none;}
-  .bar .stepnav button:disabled{opacity:.28; cursor:default; background:transparent;}
-  .bar .stepnav button:focus-visible{outline:2px solid var(--vert); outline-offset:1px;}
-  .stepnav .cur{display:flex; flex-direction:column; align-items:center; gap:1px; line-height:1; min-width:62px; padding:0 2px;}
-  .stepnav .cur small{font-size:8.5px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:#ffffff8c;}
-  .stepnav .cur b{font-size:12.5px; font-weight:800; color:#fff; white-space:nowrap;}
-  @media(max-width:560px){ .stepnav{margin-right:10px;} .stepnav .cur{min-width:0;} .stepnav .cur small{display:none;} .stepnav .cur b{font-size:11.5px;} .bar-in{padding:10px 14px;} }
-  @media(max-width:430px){ .stepnav .cur{display:none;} .bstat.xhide{display:none;} }
   .submit:hover:not(:disabled){transform:translateY(-2px); box-shadow:0 12px 28px rgba(205,219,0,.42); filter:saturate(1.08);}
   .submit:active:not(:disabled){transform:translateY(0) scale(.985);}
   .submit::after{content:""; position:absolute; top:0; left:-70%; width:45%; height:100%; background:linear-gradient(105deg,transparent,rgba(255,255,255,.5),transparent); transform:skewX(-20deg); transition:left .5s ease;}
   .submit:hover:not(:disabled)::after{left:125%;}
   .submit:disabled{background:#e7e3d3; box-shadow:none;} .submit:disabled::after{display:none;}
-  .bar button{transition:transform .16s, box-shadow .2s; box-shadow:0 4px 14px rgba(205,219,0,.35);}
-  .bar button:hover{transform:translateY(-2px); box-shadow:0 8px 20px rgba(205,219,0,.5);}
-  .bar button:active{transform:scale(.97);}
   .done .dl{transition:transform .16s, box-shadow .2s;}
   .done .dl:hover{transform:translateY(-2px); box-shadow:0 8px 20px rgba(205,219,0,.4);}
   .card{transition:transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .28s, border-color .2s;}
@@ -370,17 +391,8 @@
   @media(prefers-reduced-motion:reduce){ .halo,.bulle{animation:none!important;} .submit::after{display:none;} body.reveal-on .card{opacity:1!important; transform:none!important;} }
 
   /* --- Etapes visibles, eyebrow, convives repositionne, stepper, recherche --- */
-  .howsteps{background:var(--paper); border-bottom:1px solid var(--line);}
-  .howsteps .wrap{padding:20px 22px 22px;}
-  .howsteps-head{font-weight:800; font-size:15px; color:var(--ink); margin:0 0 4px; display:flex; align-items:center; gap:9px;}
-  .howsteps-head svg{color:var(--vert-deep); flex:none;}
-  .howsteps-head b{color:var(--vert-deep);}
-  .steps-nav-hint{text-align:center; font-size:13px; color:var(--muted); margin:12px 0 0;}
-  .steps-nav-hint b{color:var(--vert-deep);}
   .convives-wrap{background:var(--creme-2); border-bottom:1px solid var(--line);}
   .convives-wrap .wrap{padding:18px 22px;}
-  .step-eyebrow{font-weight:800; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--vert-deep); margin:0 0 10px; display:flex; align-items:center; gap:8px;}
-  .step-eyebrow .n{width:22px; height:22px; border-radius:50%; background:var(--vert); color:var(--noir); display:grid; place-items:center; font-size:12px; font-weight:900; flex:none;}
   .nores{display:none; margin:0 2px; color:var(--muted); font-size:14px;}
   .catnav-search{max-width:1040px; margin:0 auto; padding:11px 22px 0;}
   .search-wrap{position:relative;}
@@ -442,18 +454,6 @@
     .card-info h3{font-size:15px;}
   }
 
-  /* --- Deux portes d'entree : a la carte, ou formule prete --- */
-  .depart{display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin:0 0 4px;}
-  .porte{display:flex; align-items:flex-start; gap:14px; text-align:left; background:#fff; border:1.5px solid var(--line); border-radius:16px; padding:16px 18px; cursor:pointer; font-family:inherit; color:inherit;
-    transition:transform .18s cubic-bezier(.34,1.56,.64,1), border-color .18s, box-shadow .18s;}
-  .porte:hover{transform:translateY(-2px); border-color:var(--vert-deep); box-shadow:var(--shadow);}
-  .porte:active{transform:translateY(0);}
-  .porte:focus-visible{outline:3px solid var(--vert); outline-offset:2px;}
-  .porte[aria-pressed="true"]{border-color:var(--vert-deep); background:var(--vert-soft);}
-  .porte .ic{flex:none; display:grid; place-items:center; line-height:0; color:var(--vert-deep); margin-top:1px;}
-  .porte .t{display:block; font-weight:900; font-size:16px; margin-bottom:3px;}
-  .porte .d{display:block; font-size:13.5px; color:var(--muted); line-height:1.35;}
-  @media(max-width:640px){ .depart{grid-template-columns:1fr;} }
 
   /* --- Panneau des formules --- */
   .formules{margin:16px 0 4px;}
@@ -479,8 +479,8 @@
   .fdone{display:none; align-items:flex-start; gap:12px; background:var(--vert-soft); border:1.5px solid var(--vert-deep); border-radius:14px; padding:14px 17px; margin:14px 0 2px; font-size:14px;}
   .fdone.show{display:flex;}
   @media(prefers-reduced-motion:reduce){
-    .porte, .fcard .go{transition:border-color .18s, box-shadow .18s;}
-    .porte:hover, .fcard .go:hover{transform:none;}
+    .fcard .go{transition:border-color .18s, box-shadow .18s;}
+    .fcard .go:hover{transform:none;}
   }
 </style>
 </head>
@@ -499,34 +499,22 @@
   </div>
 </header>
 
+<main>
+
+<div class="screen" id="screen-composer" data-screen="composer">
+
 <section class="hero">
   <div class="halo" aria-hidden="true"></div>
   <div class="bulle b1" aria-hidden="true"></div><div class="bulle b2" aria-hidden="true"></div><div class="bulle b3" aria-hidden="true"></div>
   <div class="wrap">
-    <p class="lead"><span class="lead-devis">Devis immédiat · <b>sans paiement en ligne</b></span><br>
-      Plateaux salés, sucrés, viennoiseries et boissons.<br>
-      Retrait gratuit en boutique · Livraison +30&nbsp;€ TTC jusqu'à 5&nbsp;km.<br>Commande en ligne à partir de 50&nbsp;€ TTC.</p>
     <h1>Faites votre <em>composition</em>,<br>on s'occupe du reste.</h1>
-  </div>
-</section>
-
-<section class="howsteps" id="howto">
-  <div class="wrap">
-    <div class="howsteps-head"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12.5" r="8.5"/><path d="M12 8v4.5l3 1.8M9 2.5h6"/></svg> Comment &ccedil;a marche&nbsp;? <b>5 &eacute;tapes, 2 minutes</b></div>
-    <ol class="steps">
-      <li><button type="button" class="step" data-scroll="#etapeConvives"><span class="num">1</span><span class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3.6"/><path d="M2.5 20v-1.4A4.6 4.6 0 0 1 7 14h4a4.6 4.6 0 0 1 4.5 4.6V20"/><path d="M16.5 4.2a3.6 3.6 0 0 1 0 6.9M21.5 20v-1.4a4.6 4.6 0 0 0-3-4.3"/></svg></span><span class="lbl">Indiquez le nombre de convives</span></button></li>
-      <li><button type="button" class="step" data-scroll=".cat"><span class="num">2</span><span class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8.2v7.6M8.2 12h7.6"/></svg></span><span class="lbl">Composez votre buffet</span></button></li>
-      <li><button type="button" class="step" data-scroll="#recap"><span class="num">3</span><span class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4.5H7a2 2 0 0 0-2 2V19a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6.5a2 2 0 0 0-2-2h-2"/><rect x="9" y="2.5" width="6" height="4" rx="1.3"/><path d="m9 13.6 2.2 2.2 4-4.6"/></svg></span><span class="lbl">V&eacute;rifiez</span></button></li>
-      <li><button type="button" class="step" data-scroll="#orderForm"><span class="num">4</span><span class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5"/><path d="M12 11.5v5.5M9.6 14.6 12 17l2.4-2.4"/></svg></span><span class="lbl">T&eacute;l&eacute;chargez votre devis</span></button></li>
-      <li><div class="step step-info"><span class="num">5</span><span class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></svg></span><span class="lbl">Ange vous recontacte sous 48&nbsp;h</span></div></li>
-    </ol>
-    <p class="steps-nav-hint">Astuce&nbsp;: passez d'une &eacute;tape &agrave; l'autre &agrave; tout moment avec les fl&egrave;ches <b>&#8249;&nbsp;&#8250;</b> visibles en bas de l'&eacute;cran, &agrave; gauche du bandeau noir.</p>
+    <p class="lead"><span class="lead-devis">Devis imm&eacute;diat &middot; <b>sans paiement en ligne</b></span><br>
+      Retrait gratuit &middot; Livraison +30&nbsp;&euro; TTC jusqu'&agrave; 5&nbsp;km &middot; &agrave; partir de 50&nbsp;&euro; TTC.</p>
   </div>
 </section>
 
 <section class="convives-wrap">
   <div class="wrap">
-    <div class="step-eyebrow"><span class="n">1</span> Indiquez le nombre de convives</div>
     <div class="convives" id="etapeConvives">
       <label for="convives"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3.6"/><path d="M2.5 20v-1.4A4.6 4.6 0 0 1 7 14h4a4.6 4.6 0 0 1 4.5 4.6V20"/><path d="M16.5 4.2a3.6 3.6 0 0 1 0 6.9M21.5 20v-1.4a4.6 4.6 0 0 0-3-4.3"/></svg> Pour combien de personnes&nbsp;?</label>
       <input type="number" id="convives" min="1" step="1" placeholder="ex. 25">
@@ -536,46 +524,48 @@
   </div>
 </section>
 
-<div class="wrap"><div class="step-eyebrow"><span class="n">2</span> Composez votre buffet</div></div>
-
 <div class="wrap">
-  <div class="depart">
-    <button type="button" class="porte" id="porteCarte" data-depart="carte" aria-pressed="false">
-      <span class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6.5h16M4 12h16M4 17.5h10"/></svg></span>
-      <span><span class="t">À la carte</span><span class="d">Je compose moi-même ma commande.</span></span>
-    </button>
-    <button type="button" class="porte" id="porteFormules" data-depart="formules" aria-pressed="false" aria-controls="formules" aria-expanded="false">
-      <span class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><path d="M8 9.5h8M8 14h5"/></svg></span>
-      <span><span class="t">Formules prêtes à l'emploi</span><span class="d">Les compositions les plus demandées. Modifiables ensuite.</span></span>
-    </button>
-  </div>
-  <div class="formules" id="formules" hidden>
-    <p class="formules-note">Une formule est un point de départ, pas un menu figé : une fois chargée, vous ajoutez, retirez et changez les quantités librement.</p>
-    <div class="fgrid" id="fgrid"></div>
-  </div>
-  <div class="fdone" id="fdone">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;margin-top:1px"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
-    <div id="fdoneTxt"></div>
+  <div class="seg seg-mode" role="group" aria-label="Mode de composition">
+    <label><input type="radio" name="compose" value="carte" checked><span>&Agrave; la carte</span></label>
+    <label><input type="radio" name="compose" value="formules"><span>Formules</span></label>
   </div>
 </div>
-<nav class="catnav" aria-label="Gammes">
-  <div class="catnav-search"><div class="search-wrap"><svg class="search-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg><input type="search" id="prodSearch" placeholder="Rechercher un produit (ex. quiche, wrap, verrine…)" aria-label="Rechercher un produit" autocomplete="off"></div></div>
-  <div class="catnav-in" id="catnav"></div>
-</nav>
 
-<main>
-  <div class="wrap"><div class="nores" id="searchNo">Aucun produit ne correspond à votre recherche.</div></div>
-  <div class="wrap" id="catalogue"></div>
-
+<div class="mode-pane" id="paneFormules" hidden>
   <div class="wrap">
-    <section id="commande">
-      <div id="formWrap">
-        <h2 class="title">Votre devis</h2>
-        <p class="sub">Vérifiez votre sélection ci-dessous, puis laissez-nous vos coordonnées. Le nombre de convives se règle en haut de page.</p>
+    <div class="formules show" id="formules">
+      <p class="formules-note">Une formule est un point de d&eacute;part, pas un menu fig&eacute;&nbsp;: une fois charg&eacute;e, vous ajoutez, retirez et changez les quantit&eacute;s librement.</p>
+      <div class="fgrid" id="fgrid"></div>
+    </div>
+  </div>
+</div>
+
+<div class="mode-pane" id="paneCarte">
+  <nav class="catnav" aria-label="Gammes">
+    <div class="catnav-search"><div class="search-wrap"><svg class="search-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg><input type="search" id="prodSearch" placeholder="Rechercher un produit (ex. quiche, wrap, verrine…)" aria-label="Rechercher un produit" autocomplete="off"></div></div>
+    <div class="catnav-in" id="catnav"></div>
+  </nav>
+  <div class="wrap"><div class="nores" id="searchNo">Aucun produit ne correspond &agrave; votre recherche.</div></div>
+  <div class="wrap">
+    <div class="fdone" id="fdone">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;margin-top:1px"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
+      <div id="fdoneTxt"></div>
+    </div>
+  </div>
+  <div class="wrap" id="catalogue"></div>
+</div>
+
+</div>
+
+<div class="screen" id="screen-panier" data-screen="panier" hidden>
+  <div class="wrap">
+    <section class="panel-devis">
+      <div id="panierWrap">
+        <h2 class="title">Votre panier</h2>
+        <p class="sub">Vérifiez votre sélection et le total, puis passez à vos coordonnées.</p>
 
         <div id="bakeryPick" class="bakerypick"></div>
 
-        <div class="step-eyebrow"><span class="n">3</span> Vérifiez</div>
         <div class="recap" id="recap"><div class="empty">Votre sélection est vide pour le moment.</div></div>
 
         <div class="bites" id="bites" style="display:none;">
@@ -625,7 +615,17 @@
 
         <div class="liv-reminder" id="livReminder">📍 Livraison : 30 € TTC dans un rayon maximum de 5 km autour de la boulangerie Ange Grand Epagny.</div>
 
-        <div class="step-eyebrow"><span class="n">4</span> Vos coordonnées &amp; votre devis</div>
+        <button type="button" class="submit screen-next" data-next="suivi">Continuer vers mes coordonnées</button>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div class="screen" id="screen-suivi" data-screen="suivi" hidden>
+  <div class="wrap">
+    <section class="panel-devis">
+      <div id="suiviWrap">
+        <h2 class="title">Vos coordonnées &amp; votre devis</h2>
         <form id="orderForm" novalidate>
           <div class="frow">
             <div class="field"><label class="lb" for="prenom">Prénom <span class="req">*</span></label><input type="text" id="prenom" name="prenom" autocomplete="given-name" required></div>
@@ -718,6 +718,8 @@
       </div>
     </section>
   </div>
+</div>
+
 </main>
 
 <footer>
@@ -728,22 +730,24 @@
   </div>
 </footer>
 
-<div class="bar" id="bar">
-  <div class="bar-in">
-    <div class="stepnav" role="group" aria-label="Navigation par étapes">
-      <button type="button" id="stepPrev" aria-label="Étape précédente">&#8249;</button>
-      <span class="cur"><small id="stepNum">&Eacute;tape 1/4</small><b id="stepLbl">Convives</b></span>
-      <button type="button" id="stepNext" aria-label="Étape suivante">&#8250;</button>
-    </div>
-    <div class="bar-stats">
-      <div class="bstat xhide"><b id="barBites">—</b><small>bouchées/pers</small></div>
-      <div class="bstat mhide"><b id="barPP">—</b><small>coût/pers</small></div>
-      <div class="bstat mhide"><b id="barHT">0,00 €</b><small>total HT</small></div>
-      <div class="bstat big"><b id="barTotal">0,00 €</b><small>total TTC</small></div>
-    </div>
-    <button type="button" id="barGo">Finaliser</button>
-  </div>
-</div>
+<nav class="tabbar" id="tabbar" aria-label="Navigation principale">
+  <button type="button" class="tab" data-go="composer" aria-current="true">
+    <span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6.5h16M4 12h16M4 17.5h10"/></svg></span>
+    <span class="tl">Composer</span>
+  </button>
+  <button type="button" class="tab tab-mid" data-go="panier">
+    <span class="mid">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1 12H7Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+      <span class="pastille" id="tabCount" hidden>0</span>
+    </span>
+    <span class="tl">Panier</span>
+  </button>
+  <button type="button" class="tab" data-go="suivi">
+    <span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5"/><path d="m9.6 14.6 1.9 1.9 3.4-3.9"/></svg></span>
+    <span class="tl">Devis</span>
+  </button>
+  <div class="tabtotal"><b id="tabTotal">0,00 &euro;</b><small>total TTC</small></div>
+</nav>
 
 <script>
 /* =====================================================================
@@ -759,7 +763,7 @@ const CONFIG = {
   maxLots:20,             // max 20 lots/plaques
   // Code de deblocage de la remise manager. A CHANGER avant mise en prod
   // (visible dans le code source, ce n'est qu'un frein pour un client, pas une securite reelle).
-  remiseCode:"18082021",
+  remiseCode:"ANGE-REMISE-2026",
   bakeries:[
     {id:"epagny", nom:"Grand Epagny", adresse:"300 rue des Peupliers, 74330 Epagny", phone:"04 50 24 89 05", email:"commandes.ange74@gmail.com", horaires:"tous les jours 6h30\u201319h30, dimanche 8h\u201313h. Jours f\u00e9ri\u00e9s : nous contacter."},
     // 2e boulangerie : ajoute une entrée ici quand elle ouvre.
@@ -2051,7 +2055,7 @@ function onQty(t,commit){
   if(q>0)state.set(i,q); else state.delete(i);
   const p=PRODUITS[i],sub=q*p.tarifTTC,el=$('s'+i);
   el.textContent=euro(sub); el.classList.toggle('zero',q===0);
-  if(q>0){ bump(el); bump($('barTotal')); }
+  if(q>0){ bump(el); bump($('tabTotal')); }
   t.closest('.card').classList.toggle('active',q>0);
   render();
 }
@@ -2130,24 +2134,11 @@ function chargerFormule(f){
       'ajoutez un produit, retirez-en un, changez les quantités. Rien n\'est figé.';
     d.classList.add('show');
   }
-  const nav=document.querySelector('.catnav');
-  if(nav) nav.scrollIntoView({behavior:'smooth',block:'start'});
+  // Une formule chargee doit etre ajustable : on rebascule sur la carte.
+  choisirMode('carte');
 }
 
-(function departUI(){
-  const pc=$('porteCarte'), pf=$('porteFormules'), pan=$('formules');
-  if(!pc||!pf||!pan) return;
-  function choisir(mode){
-    const form = mode==='formules';
-    pan.hidden=!form;
-    pf.setAttribute('aria-pressed',form?'true':'false');
-    pf.setAttribute('aria-expanded',form?'true':'false');
-    pc.setAttribute('aria-pressed',form?'false':'true');
-    if(form) pan.scrollIntoView({behavior:'smooth',block:'nearest'});
-    else { const nav=document.querySelector('.catnav'); if(nav) nav.scrollIntoView({behavior:'smooth',block:'start'}); }
-  }
-  pc.addEventListener('click',()=>choisir('carte'));
-  pf.addEventListener('click',()=>choisir('formules'));
+(function formulesUI(){
   const g=$('fgrid');
   if(g) g.addEventListener('click',e=>{
     const b=e.target.closest('.go'); if(!b) return;
@@ -2232,10 +2223,10 @@ function render(){
   // >= et non > : une commande pile à 100 € passe le seuil, elle doit voir la mention.
   acompteRow.style.display=c.minBase>=CONFIG.minOrder?'flex':'none';
   // barre enrichie
-  bar.classList.add('show');   // barre toujours visible : sert aussi de navigation
-  barHT.textContent=euro(c.grandHT); barTotal.textContent=euro(c.grandTTC);
-  barBites.textContent=conv?(totalBites/conv).toFixed(1).replace('.',','):'—';
-  barPP.textContent=conv?euro(c.ttc/conv):'—';
+  // Navigation : total dans la colonne desktop, pastille sur le bouton Panier.
+  tabTotal.textContent=euro(c.grandTTC);
+  const nArt=c.lignes.length;
+  tabCount.textContent=nArt; tabCount.hidden = nArt===0;
   const under=c.minBase>0&&c.minBase<CONFIG.minOrder;
   gate.classList.toggle('show',under); submitBtn.disabled=c.minBase<CONFIG.minOrder;
 }
@@ -2301,38 +2292,43 @@ $('remiseClearBtn').addEventListener('click',()=>{
   remiseVal=0; $('remiseValInput').value=''; $('remiseClearBtn').style.display='none'; render();
 });
 
-document.querySelectorAll('.step[data-scroll]').forEach(b=>b.onclick=()=>{
-  const ht=$('howto'); if(ht) ht.open=false;
-  goTo(b.dataset.scroll);
+/* ---- Navigation par ecrans (5 touches) ----
+   Un seul ecran visible a la fois : on masque les autres avec l'attribut hidden.
+   Reutilisable : tout nouvel ecran = un <div class="screen" data-screen="xxx"> +
+   un bouton .tab data-go="xxx". Aucune autre modification necessaire. */
+const ECRANS=['composer','panier','suivi'];
+let ecranActuel='composer';
+function showScreen(nom){
+  if(!ECRANS.includes(nom)) return;
+  ecranActuel=nom;
+  document.querySelectorAll('.screen').forEach(s=>{ s.hidden = (s.dataset.screen!==nom); });
+  document.querySelectorAll('.tabbar .tab').forEach(b=>{
+    const on = b.dataset.go===nom;
+    b.classList.toggle('on',on);
+    if(on) b.setAttribute('aria-current','true'); else b.removeAttribute('aria-current');
+  });
+  window.scrollTo({top:0,behavior:'auto'});
+
+}
+document.querySelectorAll('.tabbar .tab').forEach(b=>{
+  b.addEventListener('click',()=>showScreen(b.dataset.go));
+});
+/* Boutons "Continuer" places en bas des ecrans : meme mecanique, autre habillage. */
+document.querySelectorAll('.screen-next').forEach(b=>{
+  b.addEventListener('click',()=>showScreen(b.dataset.next));
 });
 
-/* ---- Navigation par etapes depuis la barre basse ---- */
-function goTo(sel){
-  if(sel==='top'){ window.scrollTo({top:0,behavior:'smooth'}); setTimeout(()=>{try{convives.focus({preventScroll:true});}catch(e){}},500); return; }
-  const t=document.querySelector(sel);
-  if(t) t.scrollIntoView({behavior:'smooth',block:'start'});
-  if(sel==='#etapeConvives') setTimeout(()=>{try{convives.focus({preventScroll:true});}catch(e){}},450);
+/* ---- Selecteur "A la carte / Formules" a l'interieur de l'ecran Composer ----
+   Deux facons de remplir le meme panier : un choix dans un ecran, pas deux destinations. */
+function choisirMode(mode){
+  $('paneCarte').hidden    = (mode!=='carte');
+  $('paneFormules').hidden = (mode!=='formules');
+  const r=document.querySelector('input[name=compose][value="'+mode+'"]');
+  if(r) r.checked=true;
 }
-const STEPS=[
-  {sel:'#etapeConvives', lbl:'Convives'},
-  {sel:'.cat',           lbl:'Buffet'},
-  {sel:'#recap',         lbl:'Récap'},
-  {sel:'#orderForm',     lbl:'Devis'}
-];
-const stepPrev=$('stepPrev'), stepNext=$('stepNext'), stepLbl=$('stepLbl'), stepNum=$('stepNum');
-function stepTop(i){ const e=document.querySelector(STEPS[i].sel); if(!e||!e.offsetParent&&e.offsetHeight===0) return Infinity;
-  return e.getBoundingClientRect().top+window.scrollY; }
-function curStep(){ const y=window.scrollY+170; let k=0; for(let i=0;i<STEPS.length;i++){ if(stepTop(i)<=y) k=i; } return k; }
-function syncStepNav(){ const k=curStep();
-  stepLbl.textContent=STEPS[k].lbl; stepNum.textContent='Étape '+(k+1)+'/'+STEPS.length;
-  stepPrev.disabled=(k<=0); stepNext.disabled=(k>=STEPS.length-1); }
-stepPrev.onclick=()=>{ const k=curStep(); if(k>0) goTo(STEPS[k-1].sel); };
-stepNext.onclick=()=>{ const k=curStep(); if(k<STEPS.length-1) goTo(STEPS[k+1].sel); };
-let _snRaf=0;
-window.addEventListener('scroll',()=>{ cancelAnimationFrame(_snRaf); _snRaf=requestAnimationFrame(syncStepNav); },{passive:true});
-window.addEventListener('resize',syncStepNav);
-syncStepNav();
-barGo.onclick=()=>$('commande').scrollIntoView({behavior:'smooth',block:'start'});
+document.querySelectorAll('input[name=compose]').forEach(r=>{
+  r.addEventListener('change',()=>choisirMode(r.value));
+});
 document.querySelectorAll('input[name=mode]').forEach(r=>r.addEventListener('change',()=>{updateFormUI();render();}));
 document.querySelectorAll('input[name=facture]').forEach(r=>r.addEventListener('change',updateFormUI));
 document.querySelectorAll('input[name=sameaddr]').forEach(r=>r.addEventListener('change',updateFormUI));
@@ -2624,7 +2620,7 @@ $('orderForm').addEventListener('submit',async e=>{
     sent=r.ok;
   }catch(err){ console.warn('Envoi API indisponible :',err); }
 
-  formWrap.style.display='none'; bar.classList.remove('show');
+  $('suiviWrap').style.display='none';
   if(sent){
     doneMsg.innerHTML=`Merci ${d.prenom} ! Votre <b>devis</b> est téléchargé et votre demande nous est bien parvenue. Nous vérifions les disponibilités et revenons vers vous très vite pour <b>confirmer ce devis</b>.`
       +(d.mentionReglement?` <b>Vous ne payez rien maintenant</b> : un règlement par avance pourra vous être demandé en boutique au moment de la confirmation.`:``)
@@ -2632,7 +2628,7 @@ $('orderForm').addEventListener('submit',async e=>{
   } else {
     doneMsg.innerHTML=`Votre <b>devis</b> est bien téléchargé, mais son envoi automatique à la boulangerie n'a pas abouti. Merci de nous <b>appeler au ${d.bakeryPhone}</b> (ou de nous transmettre votre PDF) pour que nous puissions le traiter. Toutes nos excuses pour ce contretemps.`;
   }
-  $('done').classList.add('show'); $('commande').scrollIntoView({behavior:'smooth',block:'start'});
+  $('done').classList.add('show'); window.scrollTo({top:0,behavior:'smooth'});
 });
 dlBtn.onclick=()=>{ if(lastPDF)lastPDF.save('Devis-traiteur-Ange.pdf'); };
 const againBtn=$('againBtn'); if(againBtn) againBtn.onclick=()=>location.reload();
@@ -2649,7 +2645,7 @@ try{
    Le focusout est temporise : sans ce delai, la barre reapparait une fraction de
    seconde entre deux champs (le focus quitte l'un avant d'atteindre l'autre). */
 (function(){
-  var bar=document.getElementById('bar'), form=document.getElementById('orderForm');
+  var bar=document.getElementById('tabbar'), form=document.getElementById('orderForm');
   if(!bar||!form) return;
   var t=null;
   function estChampDeSaisie(el){
@@ -2670,7 +2666,7 @@ try{
   });
 })();
 
-applyBakery(bakery); updateFormUI(); render();
+applyBakery(bakery); updateFormUI(); render(); showScreen('composer');
 
 </script>
 </body>
