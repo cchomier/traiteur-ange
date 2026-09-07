@@ -16,6 +16,7 @@
     --creme:#FAF7EF; --creme-2:#FDFBF5; --paper:#FFFFFF;
     --ink:#1A1A16; --muted:#6E6A5E; --line:#E9E4D6; --ok:#2E7D5B; --danger:#C0392B;
     --shadow:0 1px 2px rgba(20,20,10,.05), 0 10px 30px rgba(20,20,10,.07); --radius:18px;
+    --header-h:64px;
   }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
@@ -23,7 +24,8 @@
   .wrap{max-width:1040px; margin:0 auto; padding:0 22px;}
   a{color:inherit;}
 
-  header{position:sticky; top:0; z-index:50; background:var(--noir); color:#fff;}
+  header{position:sticky; top:0; z-index:50; background:var(--noir); color:#fff; transition:transform .28s cubic-bezier(.4,0,.2,1); will-change:transform;}
+  header.hide{transform:translateY(-100%);}
   .head-in{display:flex; align-items:center; justify-content:space-between; gap:16px; height:64px;}
   .brand{display:flex; align-items:center; gap:12px; color:inherit; text-decoration:none; cursor:pointer;}
   .brand img{height:42px; width:auto; display:block;}
@@ -53,7 +55,7 @@
   .crc-note{font-size:13px; color:var(--muted); margin:14px 0 0;}
   .hours-note{font-size:13px; color:var(--muted); margin:-6px 0 14px;}
 
-  .catnav{position:sticky; top:64px; z-index:40; background:rgba(253,251,245,.95); backdrop-filter:blur(8px); border-bottom:1px solid var(--line);}
+  .catnav{position:sticky; top:var(--header-h,64px); z-index:40; background:rgba(253,251,245,.95); backdrop-filter:blur(8px); border-bottom:1px solid var(--line); transition:top .28s cubic-bezier(.4,0,.2,1);}
   .catnav-in{display:flex; gap:9px; overflow-x:auto; padding:12px 22px; max-width:1040px; margin:0 auto; scrollbar-width:none;}
   .catnav-in::-webkit-scrollbar{display:none;}
   .pill{flex:none; border:1.5px solid var(--line); background:#fff; color:var(--ink); font-family:inherit; font-weight:800; font-size:15px; padding:9px 15px; border-radius:999px; cursor:pointer; white-space:nowrap; display:flex; align-items:center; gap:8px; transition:.15s;}
@@ -192,6 +194,8 @@
   .rline .n{font-weight:800;}
   .rline .n small{color:var(--muted); font-weight:600; font-size:12.5px; margin-left:7px; white-space:nowrap;}
   .rline .a{font-weight:900; white-space:nowrap;}
+  .rline--zero{opacity:.5;}
+  .rline--zero .a{opacity:0;}
 
   .bites{display:flex; gap:10px; flex-wrap:wrap; margin:14px 0 2px;}
   .bite .pp{font-size:11.5px; color:var(--muted); font-weight:700; margin-top:2px;}
@@ -438,6 +442,7 @@
   body.reveal-on .card.in:hover{transform:translateY(-5px);}
   @keyframes bumpIn{0%{transform:scale(1);}45%{transform:scale(1.16);}100%{transform:scale(1);}}
   .bump{animation:bumpIn .32s ease;}
+  .fly-dot{position:fixed; width:13px; height:13px; border-radius:50%; background:var(--vert); box-shadow:0 2px 10px rgba(180,192,0,.55); z-index:9999; pointer-events:none; will-change:transform,opacity;}
   .rline{transition:background .15s; border-radius:8px;}
   .rline:hover{background:var(--creme-2);}
   .cat-head{position:relative; overflow:hidden;}
@@ -2046,6 +2051,9 @@ const slug = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''
 const $ = id => document.getElementById(id);
 const state = new Map();
 const tranche = new Map();
+/* Produits remis a 0 dans le panier : ils y restent visibles (griges) jusqu'a
+   l'envoi definitif du devis, au cas ou le client change d'avis. */
+const zeroKeep = new Set();
 let remiseOK=false, remiseType='pct', remiseVal=0, remiseNote='';
 let lastPDF=null;
 
@@ -2121,9 +2129,9 @@ GAMMES.forEach(g=>{
   catalogue.appendChild(sec);
 });
 
-function stepQty(inp,dir){ if(!inp) return; const mn=+inp.dataset.min||1, mx=+inp.dataset.max||999; let v=parseInt(inp.value)||0;
+function stepQty(inp,dir,origin){ if(!inp) return; const mn=+inp.dataset.min||1, mx=+inp.dataset.max||999; let v=parseInt(inp.value)||0;
   if(dir>0){ v=(v<=0&&mn>1)?mn:v+1; if(v>0&&v<mn)v=mn; if(v>mx)v=mx; } else { v=(mn>1&&v<=mn)?0:v-1; if(v<0)v=0; }
-  inp.value=v; onQty(inp,true); }
+  inp.value=v; onQty(inp,true,origin); }
 /* Une quantite peut desormais etre changee a DEUX endroits : la carte du
    catalogue et la ligne du panier. On centralise donc l'ecriture dans setQty,
    et chaque vue se resynchronise depuis l'etat. */
@@ -2138,23 +2146,26 @@ function majCarteProduit(i){
     const card=el.closest('.card'); if(card) card.classList.toggle('active',q>0);
   }
 }
-function setQty(i,q){
-  if(q>0)state.set(i,q); else state.delete(i);
+function setQty(i,q,origin){
+  const hadQty=state.has(i);
+  if(q>0){ state.set(i,q); zeroKeep.delete(i); } else { state.delete(i); if(hadQty) zeroKeep.add(i); }
   majCarteProduit(i);
-  if(q>0){ bump($('s'+i)); bump($('tabTotal')); }
+  if(q>0){ bump($('s'+i)); bump($('tabTotal')); if(origin) flyToCart(origin); }
   render();
 }
-function onQty(t,commit){
+function onQty(t,commit,origin){
   if(!t.dataset||t.dataset.i===undefined) return;
   if(t.tagName!=='SELECT' && !(t.tagName==='INPUT'&&t.type==='number')) return;
   const i=+t.dataset.i; let q=parseInt(t.value)||0; if(q<0)q=0;
   const mn=+t.dataset.min||1; const mx=+t.dataset.max||999;
   if(commit&&q>0&&q<mn){ q=mn; t.value=mn; } if(q>mx){ q=mx; t.value=mx; }
-  setQty(i,q);
+  setQty(i,q,origin);
 }
 catalogue.addEventListener('input',e=>onQty(e.target,false));
 catalogue.addEventListener('change',e=>{ if(e.target.classList.contains('tr')){ const i=+e.target.dataset.i; if(e.target.checked)tranche.set(i,true); else tranche.delete(i); render(); return;} onQty(e.target,true); });
-catalogue.addEventListener('click',e=>{ const b=e.target.closest('.st-btn'); if(!b) return; stepQty(b.parentElement.querySelector('.qnum'), +b.dataset.dir); });
+/* Animation d'ajout : uniquement sur le clic "+" du catalogue, jamais sur "-"
+   ni depuis le panier (on n'anime pas un produit qui y est deja). */
+catalogue.addEventListener('click',e=>{ const b=e.target.closest('.st-btn'); if(!b) return; const dir=+b.dataset.dir; stepQty(b.parentElement.querySelector('.qnum'), dir, dir>0?b:null); });
 
 /* Memes gestes dans le panier : les deux vues ecrivent dans le meme etat. */
 const recapEl=$('recap');
@@ -2210,7 +2221,7 @@ function chargerFormule(f){
   /* Une formule REMPLACE la selection en cours : on previent avant d'effacer. */
   if(state.size && !confirm('Charger « '+f.nom+' » remplacera votre sélection actuelle. Continuer ?')) return;
   const c=chiffreFormule(f);
-  state.clear(); tranche.clear();
+  state.clear(); tranche.clear(); zeroKeep.clear();
   document.querySelectorAll('#catalogue .tr').forEach(cb=>{ cb.checked=false; });
   c.lignes.forEach(({i,q})=>{ state.set(i,q); });
   PRODUITS.forEach((p,i)=>{
@@ -2287,14 +2298,17 @@ function render(){
      reconstruire, sinon le bouton +/- disparait sous le doigt a chaque clic. */
   const recap=$('recap');
   const vide=recap.querySelector('.empty');
-  if(!c.lignes.length){
+  const allIds=new Set([...c.lignes.map(l=>l.i), ...zeroKeep]);
+  if(!allIds.size){
     recap.querySelectorAll('.rline').forEach(el=>el.remove());
     if(!vide) recap.innerHTML='<div class="empty">Votre sélection est vide pour le moment.</div>';
   } else {
     if(vide) vide.remove();
-    const presents=new Set(c.lignes.map(l=>l.i));
-    recap.querySelectorAll('.rline').forEach(el=>{ if(!presents.has(+el.dataset.i)) el.remove(); });
-    c.lignes.forEach(({p,qty,sub,i})=>{
+    recap.querySelectorAll('.rline').forEach(el=>{ if(!allIds.has(+el.dataset.i)) el.remove(); });
+    /* Une ligne panier peut exister a une quantite > 0 (etat reel) ou remise a 0
+       (zeroKeep, gardee visible au cas ou le client change d'avis) : meme
+       fabrique de ligne pour les deux, pour ne pas dupliquer le HTML. */
+    function ligneRecap(i,p,qty,sub){
       const isPiece=p.unite==='pièce';
       const mx=isPiece?999:CONFIG.maxLots;
       let r=recap.querySelector('.rline[data-i="'+i+'"]');
@@ -2307,13 +2321,16 @@ function render(){
           `<div class="a"></div>`;
         recap.appendChild(r);
       }
+      r.classList.toggle('rline--zero',qty===0);
       const tr=tranche.get(i)?' · tranché':'';
       r.querySelector('.rn').textContent=p.nom+tr;
       r.querySelector('.rd').textContent=isPiece?`${euro(p.tarifTTC)} / pièce`:`${euro(p.tarifTTC)} / ${p.unite}`;
       const inp=r.querySelector('.qnum');
       if(document.activeElement!==inp && (parseInt(inp.value)||0)!==qty) inp.value=qty;
       r.querySelector('.a').textContent=euro(sub);
-    });
+    }
+    c.lignes.forEach(({p,qty,sub,i})=>ligneRecap(i,p,qty,sub));
+    zeroKeep.forEach(i=>{ if(!state.has(i)) ligneRecap(i,PRODUITS[i],0,0); });
   }
   bites.style.display=c.lignes.length?'flex':'none';
   biteSale.textContent=c.bSale; biteSucre.textContent=c.bSucre;
@@ -2780,6 +2797,7 @@ $('orderForm').addEventListener('submit',async e=>{
     sent=r.ok;
   }catch(err){ console.warn('Envoi API indisponible :',err); }
 
+  zeroKeep.clear();
   $('suiviWrap').style.display='none';
   if(sent){
     doneMsg.innerHTML=`Merci ${d.prenom} ! Votre <b>devis</b> est téléchargé et votre demande nous est bien parvenue. Nous vérifions les disponibilités et revenons vers vous très vite pour <b>confirmer ce devis</b>.`
@@ -2794,6 +2812,51 @@ dlBtn.onclick=()=>{ if(lastPDF)lastPDF.save('Devis-traiteur-Ange.pdf'); };
 const againBtn=$('againBtn'); if(againBtn) againBtn.onclick=()=>location.reload();
 
 function bump(el){ if(!el) return; el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); }
+/* Trajectoire discrete du produit ajoute vers l'icone panier (touche mobile /
+   colonne desktop, meme element .tab-mid .mid dans les deux cas), puis petit
+   rebond de reception sur l'icone : c'est ce rebond qui "vend" l'ajout, le
+   point qui vole n'est qu'un signal de trajet. Desactive si le client a
+   demande moins d'animations (prefers-reduced-motion). */
+function flyToCart(originEl){
+  if(!originEl) return;
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const target=document.querySelector('.tab-mid .mid');
+  if(!target || !target.animate) return;
+  const o=originEl.getBoundingClientRect(), t=target.getBoundingClientRect();
+  if(!o.width || !t.width) return;
+  const dot=document.createElement('div'); dot.className='fly-dot';
+  dot.style.left=(o.left+o.width/2-6.5)+'px'; dot.style.top=(o.top+o.height/2-6.5)+'px';
+  document.body.appendChild(dot);
+  const dx=(t.left+t.width/2)-(o.left+o.width/2), dy=(t.top+t.height/2)-(o.top+o.height/2);
+  const arc=dy-Math.max(70,Math.abs(dx)*.4);
+  const anim=dot.animate([
+    {transform:'translate(0,0) scale(1)', opacity:1, offset:0},
+    {transform:`translate(${dx*.55}px, ${arc}px) scale(1)`, opacity:1, offset:.6},
+    {transform:`translate(${dx}px, ${dy}px) scale(.3)`, opacity:0, offset:1}
+  ],{duration:480, easing:'cubic-bezier(.34,1.56,.64,1)'});
+  anim.onfinish=()=>{ dot.remove(); bump(target); };
+}
+/* Bandeau du haut : disparait en descendant (plus d'espace pour lire), revient
+   des qu'on remonte (acces au logo/telephone). Le catnav suit via --header-h. */
+(function headerAutoHide(){
+  const header=document.querySelector('header');
+  if(!header) return;
+  let lastY=window.scrollY||0, ticking=false;
+  const seuilBas=72, seuilMouvement=6;
+  function appliquer(cache){
+    header.classList.toggle('hide',cache);
+    document.documentElement.style.setProperty('--header-h',cache?'0px':'64px');
+  }
+  function onScroll(){
+    const y=window.scrollY||0;
+    if(Math.abs(y-lastY)>seuilMouvement){
+      appliquer(y>lastY && y>seuilBas);
+      lastY=y;
+    }
+    ticking=false;
+  }
+  window.addEventListener('scroll',()=>{ if(!ticking){ requestAnimationFrame(onScroll); ticking=true; } },{passive:true});
+})();
 try{
   document.body.classList.add('reveal-on');
   const reveal=new IntersectionObserver(es=>es.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in'); reveal.unobserve(en.target);} }),{rootMargin:'0px 0px -6% 0px'});
