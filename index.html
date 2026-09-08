@@ -2828,12 +2828,21 @@ function flyToCart(originEl){
   dot.style.left=(o.left+o.width/2-6.5)+'px'; dot.style.top=(o.top+o.height/2-6.5)+'px';
   document.body.appendChild(dot);
   const dx=(t.left+t.width/2)-(o.left+o.width/2), dy=(t.top+t.height/2)-(o.top+o.height/2);
-  const arc=dy-Math.max(70,Math.abs(dx)*.4);
-  const anim=dot.animate([
-    {transform:'translate(0,0) scale(1)', opacity:1, offset:0},
-    {transform:`translate(${dx*.55}px, ${arc}px) scale(1)`, opacity:1, offset:.6},
-    {transform:`translate(${dx}px, ${dy}px) scale(.3)`, opacity:0, offset:1}
-  ],{duration:480, easing:'cubic-bezier(.34,1.56,.64,1)'});
+  /* Point de controle place bien au-dessus de la ligne droite point-panier :
+     plus il est haut, plus la courbe se voit. On echantillonne ensuite une
+     vraie courbe de Bezier quadratique en plusieurs images-cles, plutot que
+     deux segments droits — c'est ca qui donnait l'effet "trop lineaire". */
+  const cx=dx*.5, cy=dy-Math.max(120,Math.abs(dx)*.65);
+  const N=16, frames=[];
+  for(let k=0;k<=N;k++){
+    const p=k/N, inv=1-p;
+    const x=2*inv*p*cx+p*p*dx;
+    const y=2*inv*p*cy+p*p*dy;
+    const scale=Math.max(1-.7*Math.pow(p,1.6),.3);
+    const opacity=p<.72?1:1-((p-.72)/.28);
+    frames.push({transform:`translate(${x}px, ${y}px) scale(${scale})`, opacity, offset:p});
+  }
+  const anim=dot.animate(frames,{duration:640, easing:'cubic-bezier(.3,0,.2,1)'});
   anim.onfinish=()=>{ dot.remove(); bump(target); };
 }
 /* Bandeau du haut : disparait en descendant (plus d'espace pour lire), revient
