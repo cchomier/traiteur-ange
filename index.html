@@ -2965,6 +2965,10 @@ async function chargerCatalogue(){
       && ['pièce','lot','plaque'].includes(p.unite)
       && typeof p.tarifTTC==='number' && isFinite(p.tarifTTC) && p.tarifTTC>=0);
     if(!valide){ console.warn('Catalogue distant invalide, repli conserve.'); return; }
+    /* Rien n'a change depuis le dernier deploiement : on ne reconstruit pas.
+       C'est le cas le plus frequent, et cela evite de refabriquer 106 cartes
+       et de faire clignoter le catalogue a chaque visite. */
+    if(JSON.stringify(liste)===JSON.stringify(PRODUITS)) return;
     /* Le panier est indexe par la POSITION du produit dans le tableau.
        Echanger le catalogue sous un panier deja rempli decalerait les lignes
        et le client paierait autre chose que ce qu'il a choisi. On s'abstient. */
@@ -2977,6 +2981,13 @@ async function chargerCatalogue(){
     /* Les sections viennent d'etre recreees : l'observateur suivait les
        anciennes, il faut lui redonner les nouvelles. */
     document.querySelectorAll('.cat').forEach(s=>spy.observe(s));
+    /* MEME PIEGE, EN PIRE : `body.reveal-on .card` met les cartes a opacity:0,
+       et c'est un second observateur, cree au chargement, qui leur ajoute la
+       classe `in` pour les faire apparaitre. Il n'a observe que les cartes
+       d'origine : les nouvelles resteraient invisibles pour toujours — grille
+       a la bonne hauteur, mais page vide a l'ecran. On les revele directement,
+       l'animation d'entree n'a aucun sens sur un remplacement. */
+    document.querySelectorAll('#catalogue .card').forEach(c=>c.classList.add('in'));
     filtrerCatalogue();
     render();
   }catch(e){
