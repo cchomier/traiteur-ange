@@ -855,8 +855,13 @@ const PALETTE=["#E0A100","#D2542A","#C85A86","#A9772E","#2E9C9C","#7C7A72","#5E7
 const GAMME_TYPE={};  // le type vient de l'Excel (colonne Type)
 const QR_TRAITEUR="data:image/png;base64,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";  // QR -> https://traiteur-ange.vercel.app/ (repasser commande)
 
-/* CATALOGUE — depuis ton Excel */
-const PRODUITS = [
+/* CATALOGUE DE REPLI — figé dans la page.
+   Depuis le module 2, la source de vérité est la table `produits_traiteur`
+   de Supabase, lue au chargement via /api/catalogue. Ce tableau reste le
+   filet : si la route ou la base ne répond pas, la page s'affiche quand même
+   avec ce catalogue. Une page vide serait un client perdu.
+   À régénérer à chaque déploiement pour rester proche de la base. */
+const PRODUITS_REPLI = [
  {
   "gamme": "P'tit Dej",
   "nom": "Mini croissant",
@@ -2025,6 +2030,9 @@ const PRODUITS = [
  }
 ];
 
+/* Catalogue reellement affiche. Part du repli, remplace par la base si la
+   route repond. `let` et non `const` : c'est ce qui rend l'echange possible. */
+let PRODUITS = PRODUITS_REPLI;
 
 /* FORMULES — paniers pre-remplis. Le client peut TOUT modifier ensuite :
    charger une formule ne fait que remplir le panier existant. */
@@ -2058,7 +2066,13 @@ const zeroKeep = new Set();
 let remiseOK=false, remiseType='pct', remiseVal=0, remiseNote='';
 let lastPDF=null;
 
-const GAMMES=[...new Set(PRODUITS.map(p=>p.gamme))].map((nom,idx)=>({nom,id:'g'+idx,couleur:GAMME_COULEURS[nom]||PALETTE[idx%PALETTE.length]}));
+/* Les gammes sont deduites du catalogue : elles doivent donc etre recalculees
+   quand le catalogue change. Meme raison pour IDX_PAR_NOM plus bas. */
+let GAMMES=[];
+function calculerGammes(){
+  GAMMES=[...new Set(PRODUITS.map(p=>p.gamme))].map((nom,idx)=>({nom,id:'g'+idx,couleur:GAMME_COULEURS[nom]||PALETTE[idx%PALETTE.length]}));
+}
+calculerGammes();
 
 /* boulangerie */
 let bakery=CONFIG.bakeries[0];
@@ -2091,6 +2105,12 @@ if(CONFIG.bakeries.length>1){
   bp.hidden=true;
 }
 
+/* Construction du catalogue. Appelee une premiere fois avec le repli, puis
+   rejouee si la base repond : on vide d'abord pastilles et sections, sinon on
+   empile deux catalogues l'un sous l'autre. */
+function construireCatalogue(){
+catalogue.innerHTML='';
+catnav.querySelectorAll('.pill').forEach(el=>el.remove());
 GAMMES.forEach(g=>{
   const items=PRODUITS.map((p,i)=>({...p,i})).filter(p=>p.gamme===g.nom);
   if(!items.length) return;
@@ -2128,6 +2148,8 @@ GAMMES.forEach(g=>{
   });
   catalogue.appendChild(sec);
 });
+}
+construireCatalogue();
 
 function stepQty(inp,dir,origin){ if(!inp) return; const mn=+inp.dataset.min||1, mx=+inp.dataset.max||999; let v=parseInt(inp.value)||0;
   if(dir>0){ v=(v<=0&&mn>1)?mn:v+1; if(v>0&&v<mn)v=mn; if(v>mx)v=mx; } else { v=(mn>1&&v<=mn)?0:v-1; if(v<0)v=0; }
@@ -2178,19 +2200,30 @@ recapEl.addEventListener('click',e=>{ const b=e.target.closest('.st-btn'); if(!b
    Charger une formule REMPLIT le panier existant : rien n'est verrouille,
    le client ajuste ensuite comme s'il avait compose lui-meme.
    ===================================================================== */
-const IDX_PAR_NOM = new Map(PRODUITS.map((p,i)=>[p.nom,i]));
+/* Les formules designent leurs produits par le NOM. Un nom present deux fois
+   dans le catalogue (« Bulles d'Ange », en P'tit Dej et en Sucre) ne garde ici
+   que la DERNIERE occurrence : c'est le comportement du constructeur de Map.
+   Sans consequence tant que les deux lignes portent le meme prix. */
+let IDX_PAR_NOM = new Map();
+function indexerProduits(){
+  IDX_PAR_NOM = new Map(PRODUITS.map((p,i)=>[p.nom,i]));
+}
+indexerProduits();
 
 function chiffreFormule(f){
-  let ttc=0, bouchees=0; const lignes=[];
+  let ttc=0, bouchees=0, manquants=0; const lignes=[];
   f.lignes.forEach(([nom,q])=>{
     const i=IDX_PAR_NOM.get(nom);
-    if(i===undefined) return;            // produit retire du catalogue : la formule reste valide sans lui
+    /* Produit introuvable : renomme ou desactive depuis la base. On NE charge
+       PAS une formule amputee — le client paierait un panier incomplet au prix
+       affiche. On la marque indisponible et on le dit. */
+    if(i===undefined){ manquants++; return; }
     const p=PRODUITS[i];
     ttc+=q*p.tarifTTC;
     if(p.type) bouchees+=q*p.bouchees;   // meme regle que le devis : seul ce qui se mange compte
     lignes.push({i,p,q});
   });
-  return {ttc,bouchees,lignes};
+  return {ttc,bouchees,lignes,manquants};
 }
 
 function uniteMot(p,q){
@@ -2199,13 +2232,23 @@ function uniteMot(p,q){
   return q>1?'pièces':'pièce';
 }
 
-(function renderFormules(){
+function renderFormules(){
   const g=$('fgrid'); if(!g) return;
   g.innerHTML=FORMULES.map((f,k)=>{
     const c=chiffreFormule(f);
     const pp=f.convives?euro(c.ttc/f.convives):'—';
     const bp=f.convives?(c.bouchees/f.convives).toFixed(1).replace('.',','):'—';
     const li=c.lignes.map(l=>`<li>${l.p.nom}<span>${l.q} ${uniteMot(l.p,l.q)}</span></li>`).join('');
+    if(c.manquants){
+      console.warn('Formule « '+f.nom+' » : '+c.manquants+' produit(s) introuvable(s) dans le catalogue.');
+      return `<div class="fcard">
+      <h3>${f.nom}</h3>
+      <p class="acc">${f.accroche}</p>
+      <p class="prix">Momentanément indisponible</p>
+      <div class="chiffres"><span>Appelez-nous, on la compose avec vous</span></div>
+      <button type="button" class="go" disabled>Indisponible</button>
+    </div>`;
+    }
     return `<div class="fcard">
       <h3>${f.nom}</h3>
       <p class="acc">${f.accroche}</p>
@@ -2215,12 +2258,15 @@ function uniteMot(p,q){
       <button type="button" class="go" data-formule="${k}">Charger cette formule</button>
     </div>`;
   }).join('');
-})();
+}
+renderFormules();
 
 function chargerFormule(f){
+  const c=chiffreFormule(f);
+  /* Garde-fou : une formule amputee ne se charge pas. Voir chiffreFormule. */
+  if(c.manquants) return;
   /* Une formule REMPLACE la selection en cours : on previent avant d'effacer. */
   if(state.size && !confirm('Charger « '+f.nom+' » remplacera votre sélection actuelle. Continuer ?')) return;
-  const c=chiffreFormule(f);
   state.clear(); tranche.clear(); zeroKeep.clear();
   document.querySelectorAll('#catalogue .tr').forEach(cb=>{ cb.checked=false; });
   c.lignes.forEach(({i,q})=>{ state.set(i,q); });
@@ -2898,7 +2944,48 @@ try{
   });
 })();
 
+/* =====================================================================
+   Catalogue depuis la base — module 2
+   La page s'affiche d'abord avec le catalogue de repli, donc elle est
+   utilisable immediatement. La base arrive ensuite et remplace, si et
+   seulement si elle repond quelque chose de complet.
+   ===================================================================== */
+async function chargerCatalogue(){
+  try{
+    const r=await fetch('/api/catalogue',{headers:{Accept:'application/json'}});
+    if(!r.ok){ console.warn('Catalogue distant : HTTP '+r.status+', repli conserve.'); return; }
+    const data=await r.json();
+    const liste=(data && Array.isArray(data.produits)) ? data.produits : null;
+    if(!liste || !liste.length){ console.warn('Catalogue distant vide, repli conserve.'); return; }
+    /* Un catalogue a moitie forme est pire qu'un catalogue un peu ancien :
+       on verifie chaque ligne avant d'echanger quoi que ce soit. */
+    const valide=liste.every(p=>p
+      && typeof p.nom==='string'   && p.nom.trim()
+      && typeof p.gamme==='string' && p.gamme.trim()
+      && ['pièce','lot','plaque'].includes(p.unite)
+      && typeof p.tarifTTC==='number' && isFinite(p.tarifTTC) && p.tarifTTC>=0);
+    if(!valide){ console.warn('Catalogue distant invalide, repli conserve.'); return; }
+    /* Le panier est indexe par la POSITION du produit dans le tableau.
+       Echanger le catalogue sous un panier deja rempli decalerait les lignes
+       et le client paierait autre chose que ce qu'il a choisi. On s'abstient. */
+    if(state.size){ console.warn('Panier en cours : catalogue distant applique au prochain chargement.'); return; }
+    PRODUITS=liste;
+    calculerGammes();
+    construireCatalogue();
+    indexerProduits();
+    renderFormules();
+    /* Les sections viennent d'etre recreees : l'observateur suivait les
+       anciennes, il faut lui redonner les nouvelles. */
+    document.querySelectorAll('.cat').forEach(s=>spy.observe(s));
+    filtrerCatalogue();
+    render();
+  }catch(e){
+    console.warn('Catalogue distant injoignable, repli conserve.',e);
+  }
+}
+
 applyBakery(bakery); updateFormUI(); render(); showScreen('composer');
+chargerCatalogue();
 
 </script>
 </body>
