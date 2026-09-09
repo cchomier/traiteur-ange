@@ -840,7 +840,8 @@ const CONFIG = {
   // Le règlement par avance est décidé à la main par la boulangerie quand elle confirme.
   alertHours:72,          // en dessous : alerte "valider par téléphone" (sans bloquer)
   deliveryFee:30, installationFee:30, feeTva:0.055,
-  maxLots:20,             // max 20 lots/plaques
+  maxLots:500,            // max 500 lots/plaques par ligne (pièces : maxPieces)
+  maxPieces:999,          // max 999 pièces par ligne
   // Code de deblocage de la remise manager. A CHANGER avant mise en prod
   // (visible dans le code source, ce n'est qu'un frein pour un client, pas une securite reelle).
   remiseCode:"Remise",
@@ -2104,8 +2105,7 @@ GAMMES.forEach(g=>{
     const card=document.createElement('article'); card.className='card'; card.style.setProperty('--c',g.couleur); card.dataset.i=p.i; card.dataset.search=(p.nom+' '+p.gamme).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
     const isPiece=p.unite==='pièce';
     const uLabel=isPiece?'Pièces':(p.unite==='plaque'?'Plaques':'Lots');
-    const opts=`<option value="0">0</option>`+Array.from({length:CONFIG.maxLots},(_,k)=>`<option value="${k+1}">${k+1}</option>`).join('');
-    const maxV=isPiece?999:CONFIG.maxLots;
+    const maxV=isPiece?CONFIG.maxPieces:CONFIG.maxLots;
     const control=`<div class="stepper"><button type="button" class="st-btn" data-dir="-1" aria-label="Retirer">−</button>`+
       `<input type="number" id="q${p.i}" data-i="${p.i}" data-min="${p.minimum}" data-max="${maxV}" class="qnum" min="0" max="${maxV}" step="1" inputmode="numeric" value="0" aria-label="Quantité pour ${p.nom}">`+
       `<button type="button" class="st-btn" data-dir="1" aria-label="Ajouter">+</button></div>`;
@@ -2310,7 +2310,7 @@ function render(){
        fabrique de ligne pour les deux, pour ne pas dupliquer le HTML. */
     function ligneRecap(i,p,qty,sub){
       const isPiece=p.unite==='pièce';
-      const mx=isPiece?999:CONFIG.maxLots;
+      const mx=isPiece?CONFIG.maxPieces:CONFIG.maxLots;
       let r=recap.querySelector('.rline[data-i="'+i+'"]');
       if(!r){
         r=document.createElement('div'); r.className='rline'; r.dataset.i=i;
