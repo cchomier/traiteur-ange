@@ -2064,6 +2064,7 @@ const tranche = new Map();
    l'envoi definitif du devis, au cas ou le client change d'avis. */
 const zeroKeep = new Set();
 let remiseOK=false, remiseType='pct', remiseVal=0, remiseNote='';
+let repriseOrigine=null;  // devis en cours de reprise (modules 3/4) : {ref, token} ou null
 let lastPDF=null;
 
 /* Les gammes sont deduites du catalogue : elles doivent donc etre recalculees
@@ -3012,6 +3013,120 @@ async function chargerCatalogue(){
 
 applyBakery(bakery); updateFormUI(); render(); showScreen('composer');
 chargerCatalogue();
+
+/* =====================================================================
+   Reprise d'un devis — module 3
+   ?reprise=<uuid> ouvre le formulaire PREREMPLI a partir du panier stocke,
+   pour renvoyer une v2 au client. On restaure l'ETAT complet : produits,
+   quantites, tranche, convives, mode/livraison, facturation, remise, client.
+   Restauration par NOM de produit (comme les formules) : robuste au fait que
+   la base ait pu reordonner le catalogue. Un produit disparu est signale, pas
+   invente. La restauration remplit `state`, ce qui bloque tout echange de
+   catalogue en cours (chargerCatalogue ne remplace que sur panier vide).
+   ===================================================================== */
+async function reprendreDevis(){
+  const token=(new URLSearchParams(location.search).get('reprise')||'').trim();
+  if(!token) return;
+  let data=null;
+  try{
+    const r=await fetch('/api/reprise?token='+encodeURIComponent(token),{headers:{Accept:'application/json'}});
+    if(!r.ok){ afficherRepriseErreur(r.status); return; }
+    data=await r.json();
+  }catch(e){ afficherRepriseErreur(0); return; }
+  const pan=data&&data.panier;
+  if(!pan||!Array.isArray(pan.lignes)){ afficherRepriseErreur(0); return; }
+
+  // 1) Produits (par NOM). Inconnu = ignore, jamais invente.
+  let poses=0, ignores=0;
+  pan.lignes.forEach(l=>{
+    const i=IDX_PAR_NOM.get(l.nom);
+    if(i===undefined){ ignores++; return; }
+    if(l.tranche) tranche.set(i,true);
+    setQty(i, Math.max(0, parseInt(l.qty)||0));
+    poses++;
+  });
+
+  // 2) Convives
+  if(pan.convives!=null){ const cv=$('convives'); if(cv) cv.value=pan.convives; }
+
+  // 3) Client
+  const F=$('orderForm'), cl=pan.client||{};
+  if(F){
+    if(cl.prenom!=null&&F.prenom) F.prenom.value=cl.prenom;
+    if(cl.nom!=null&&F.nom) F.nom.value=cl.nom;
+    if(cl.email!=null&&F.email) F.email.value=cl.email;
+    if(cl.tel!=null&&F.tel) F.tel.value=cl.tel;
+    if(cl.dateISO&&F.date) F.date.value=cl.dateISO;
+    if(cl.heure!=null&&F.heure) F.heure.value=cl.heure;
+  }
+
+  // 4) Mode + adresse de livraison
+  if(pan.mode==='Livraison'){
+    const rl=document.querySelector('input[name=mode][value="Livraison"]'); if(rl) rl.checked=true;
+    const lv=pan.livraison||{};
+    if($('livRue')) $('livRue').value=lv.rue||'';
+    if($('livComp')) $('livComp').value=lv.comp||'';
+    if($('livCp')) $('livCp').value=lv.cp||'';
+    if($('livVille')) $('livVille').value=lv.ville||'';
+  }
+
+  // 5) Facturation
+  if(pan.facture){
+    const rf=document.querySelector('input[name=facture][value="Oui"]'); if(rf) rf.checked=true;
+    const fc=pan.facture;
+    if($('raison')) $('raison').value=fc.raison||'';
+    if($('facRue')) $('facRue').value=fc.rue||'';
+    if($('facComp')) $('facComp').value=fc.comp||'';
+    if($('facCp')) $('facCp').value=fc.cp||'';
+    if($('facVille')) $('facVille').value=fc.ville||'';
+    const rs=document.querySelector('input[name=sameaddr][value="Non"]'); if(rs) rs.checked=true;
+  }
+  updateFormUI();
+
+  // 6) Remise manager : on rejoue l'etat deverrouille, sans redemander le code.
+  if(pan.remise){
+    remiseOK=true;
+    remiseType=pan.remise.type==='eur'?'eur':'pct';
+    remiseVal=parseFloat(pan.remise.val)||0;
+    remiseNote=pan.remise.note||'';
+    const rt=document.querySelector('input[name=remiseType][value="'+remiseType+'"]'); if(rt) rt.checked=true;
+    if($('remiseValInput')) $('remiseValInput').value=remiseVal||'';
+    if($('remiseNoteInput')) $('remiseNoteInput').value=remiseNote;
+    if($('remiseBox')) $('remiseBox').style.display='none';
+    if($('remiseFormBox')) $('remiseFormBox').style.display='flex';
+    if($('remiseToggle')) $('remiseToggle').style.display='none';
+    if($('remiseClearBtn')) $('remiseClearBtn').style.display=remiseVal>0?'inline-block':'none';
+  }
+
+  // 7) Origine memorisee pour la v2 (module 4)
+  repriseOrigine={ ref:(data.ref||null), token:token };
+
+  render();
+  afficherRepriseBanniere(data.ref, ignores);
+  showScreen('panier');
+}
+
+function afficherRepriseBanniere(ref, ignores){
+  const host=$('panierWrap'); if(!host) return;
+  let b=$('repriseBanniere');
+  if(!b){ b=document.createElement('div'); b.id='repriseBanniere'; b.className='notice'; host.insertBefore(b, host.firstChild); }
+  const av=ignores>0?` <b>${ignores}</b> produit(s) du devis d'origine ne sont plus au catalogue et n'ont pas ete repris \u2014 verifiez le panier.`:'';
+  b.innerHTML='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 4v4h4"/></svg>'
+    +'<div>Vous modifiez le devis <b>'+(ref||'')+'</b>. Ajustez ce qu\'il faut puis validez : le client recevra une <b>nouvelle version</b>.'+av+'</div>';
+}
+
+function afficherRepriseErreur(status){
+  const host=$('panierWrap'); if(!host) return;
+  const msg = status===409 ? "Ce devis a ete emis avant la mise en place de la reprise : pas de panier reutilisable. Recomposez-le manuellement."
+    : status===404 ? "Devis introuvable : le lien de reprise est peut-etre errone."
+    : "Reprise impossible pour le moment. Reessayez, ou recomposez le devis manuellement.";
+  const b=document.createElement('div'); b.className='datealert'; b.style.display='flex';
+  b.innerHTML='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg><div>'+msg+'</div>';
+  host.insertBefore(b, host.firstChild);
+  showScreen('panier');
+}
+
+reprendreDevis();
 
 </script>
 </body>
