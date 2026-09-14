@@ -2812,6 +2812,15 @@ $('orderForm').addEventListener('submit',async e=>{
     note:f.note.value, facture, lignes,
   };
 
+  // Versionnage : un devis REPRIS devient la version suivante de sa base, pas un
+  // devis neuf. Ref = <base>-v<n>. La lignee remonte du /api/reprise (repriseOrigine).
+  // Le -v<n> se propage seul au PDF, au mail et au nom de fichier (tous lisent d.ref).
+  if(repriseOrigine){
+    const base=repriseOrigine.baseRef||repriseOrigine.ref||d.ref;
+    const nv=(parseInt(repriseOrigine.version)||1)+1;
+    d.ref=`${base}-v${nv}`; d.baseRef=base; d.version=nv;
+  } else { d.baseRef=d.ref; d.version=1; }
+
   const btn=submitBtn; btn.disabled=true; btn.textContent='Envoi…';
   let pdfB64=null;
   try{ const doc=buildPDF(d); if(doc){ lastPDF=doc; doc.save(`Devis-traiteur-Ange-${d.nom}.pdf`); pdfB64=doc.output('datauristring').split('base64,')[1]; } }catch(err){ console.warn(err); }
@@ -2848,6 +2857,7 @@ $('orderForm').addEventListener('submit',async e=>{
     note:d.note||'',
     facturation:d.facture?[d.facture.raison,adr(d.facture)].filter(Boolean).join('\n'):'',
     boulangerie:d.bakeryNom,
+    baseRef:d.baseRef, version:d.version,
     panier,
   };
 
@@ -3099,7 +3109,7 @@ async function reprendreDevis(){
   }
 
   // 7) Origine memorisee pour la v2 (module 4)
-  repriseOrigine={ ref:(data.ref||null), token:token };
+  repriseOrigine={ ref:(data.ref||null), baseRef:(data.base_ref||data.ref||null), version:(parseInt(data.version)||1), token:token };
 
   render();
   afficherRepriseBanniere(data.ref, ignores);
