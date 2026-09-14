@@ -2819,6 +2819,20 @@ $('orderForm').addEventListener('submit',async e=>{
   // les noms de champs de la table. Sans lui, la ligne créée ne porte que la référence,
   // donc elle n'apparaît dans aucune vue (planning, à traiter) faute de date.
   const adr=a=>a?[a.rue,a.comp,[a.cp,a.ville].filter(Boolean).join(' ')].filter(Boolean).join('\n'):'';
+  // Panier STRUCTURE (colonne `panier` jsonb) : tout ce qu'il faut pour rouvrir
+  // ce devis et en renvoyer une v2. On indexe les produits par NOM (comme FORMULES),
+  // pas par position : la position bouge quand le catalogue change, le nom non.
+  const panier={
+    v:1,
+    convives:d.convives||null,
+    mode:d.mode,
+    livraison:d.deliv?{rue:d.deliv.rue||'',comp:d.deliv.comp||'',cp:d.deliv.cp||'',ville:d.deliv.ville||''}:null,
+    facture:d.facture?{raison:d.facture.raison||'',rue:d.facture.rue||'',comp:d.facture.comp||'',cp:d.facture.cp||'',ville:d.facture.ville||''}:null,
+    client:{prenom:d.prenom||'',nom:d.nom||'',email:d.email||'',tel:d.tel||'',dateISO:d.dateISO||'',heure:d.heure||''},
+    note:d.note||'',
+    remise:c.remiseActive?{type:c.remiseType,val:c.remiseVal,montant:c.remiseMontant,note:c.remiseNote||''}:null,
+    lignes:c.lignes.map(({p,qty,i})=>({nom:p.nom,qty,tranche:!!tranche.get(i)})),
+  };
   const order={
     ref:d.ref,
     client:`${d.prenom} ${d.nom}`,
@@ -2833,6 +2847,7 @@ $('orderForm').addEventListener('submit',async e=>{
     note:d.note||'',
     facturation:d.facture?[d.facture.raison,adr(d.facture)].filter(Boolean).join('\n'):'',
     boulangerie:d.bakeryNom,
+    panier,
   };
 
   const textFallback=`Devis ${d.ref} — ${d.prenom} ${d.nom} · ${euro(d.ttc)} TTC · voir PDF joint.`;
