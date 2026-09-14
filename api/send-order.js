@@ -222,6 +222,9 @@ async function logToSupabase({ ref, order }) {
     precisions_client: o.note || null,
     facturation: o.facturation || null,
     boulangerie: o.boulangerie || null,
+    // Panier structuré (jsonb) : socle du « rouvrir et renvoyer une v2 ». Absent des
+    // anciens formulaires en cache -> null, non bloquant. PostgREST insère l'objet en jsonb.
+    panier: o.panier || null,
     // statut ('À traiter') et org_id : laissés aux valeurs par défaut de la table.
   };
   const r = await fetch(`${url}/rest/v1/${SB_TABLE}`, {
