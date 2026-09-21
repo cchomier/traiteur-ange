@@ -532,8 +532,9 @@
   .fcard li{display:flex; justify-content:space-between; gap:10px; padding:5px 0; border-bottom:1px dashed var(--line);}
   .fcard li:last-child{border-bottom:0;}
   .fcard li span{color:var(--muted); flex:none;}
-  .fcard .fhead{display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 12px; margin:0 0 4px;}
-  .fcard .fhead h3{flex:1 1 auto;}
+  .fcard .fhead{display:flex; flex-wrap:nowrap; align-items:center; justify-content:space-between; gap:12px; margin:0 0 4px;}
+  .fcard .fhead h3{flex:1 1 0; min-width:0;}
+  .fcard .fhead .go{white-space:nowrap;}
   .fcard .go{flex:none; border:0; border-radius:999px; background:var(--noir); color:#fff; font-family:inherit; font-weight:900; font-size:13.5px; padding:9px 14px; min-height:40px; cursor:pointer;
     transition:transform .18s cubic-bezier(.34,1.56,.64,1), opacity .18s;}
   .fcard .go:hover{transform:translateY(-2px); opacity:.92;}
