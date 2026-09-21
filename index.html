@@ -532,9 +532,12 @@
   .fcard li{display:flex; justify-content:space-between; gap:10px; padding:5px 0; border-bottom:1px dashed var(--line);}
   .fcard li:last-child{border-bottom:0;}
   .fcard li span{color:var(--muted); flex:none;}
-  .fcard .go{margin-top:auto; width:100%; border:0; border-radius:12px; background:var(--noir); color:#fff; font-family:inherit; font-weight:900; font-size:15px; padding:13px 16px; cursor:pointer;
+  .fcard .fhead{display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 12px; margin:0 0 4px;}
+  .fcard .fhead h3{flex:1 1 auto;}
+  .fcard .go{flex:none; border:0; border-radius:999px; background:var(--noir); color:#fff; font-family:inherit; font-weight:900; font-size:13.5px; padding:9px 14px; min-height:40px; cursor:pointer;
     transition:transform .18s cubic-bezier(.34,1.56,.64,1), opacity .18s;}
   .fcard .go:hover{transform:translateY(-2px); opacity:.92;}
+  .fcard .go:disabled{opacity:.45; cursor:default; transform:none;}
   .fcard .go:active{transform:translateY(0);}
   .fcard .go:focus-visible{outline:3px solid var(--vert); outline-offset:2px;}
   /* Bandeau de la formule chargee : rappelle laquelle, et ouvre le catalogue complet. */
@@ -787,7 +790,7 @@
 
       <div class="done" id="done">
         <div class="check"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
-        <h2>Merci, c'est envoyé&nbsp;!</h2>
+        <h2 id="doneTitle">Merci, c'est envoyé&nbsp;!</h2>
         <p id="doneMsg">Merci, nous avons bien reçu votre demande. Nous revenons vers vous très vite pour la confirmer.</p>
         <button class="dl" id="dlBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Retélécharger mon PDF</button>
         <div style="margin-top:14px"><button type="button" id="againBtn" style="background:none;border:0;color:var(--muted);font-weight:700;font-size:14px;cursor:pointer;text-decoration:underline">Faire un nouveau devis</button></div>
@@ -2243,20 +2246,24 @@ function renderFormules(){
     if(c.manquants){
       console.warn('Formule « '+f.nom+' » : '+c.manquants+' produit(s) introuvable(s) dans le catalogue.');
       return `<div class="fcard">
-      <h3>${f.nom}</h3>
+      <div class="fhead">
+        <h3>${f.nom}</h3>
+        <button type="button" class="go" disabled>Indisponible</button>
+      </div>
       <p class="acc">${f.accroche}</p>
       <p class="prix">Momentanément indisponible</p>
       <div class="chiffres"><span>Appelez-nous, on la compose avec vous</span></div>
-      <button type="button" class="go" disabled>Indisponible</button>
     </div>`;
     }
     return `<div class="fcard">
-      <h3>${f.nom}</h3>
+      <div class="fhead">
+        <h3>${f.nom}</h3>
+        <button type="button" class="go" data-formule="${k}">Charger cette formule</button>
+      </div>
       <p class="acc">${f.accroche}</p>
       <p class="prix">${euro(c.ttc)} <small>TTC</small></p>
       <div class="chiffres"><span>${f.convives} convives</span><span>${pp} / pers.</span><span>${bp} bouchées / pers.</span></div>
       <ul>${li}</ul>
-      <button type="button" class="go" data-formule="${k}">Charger cette formule</button>
     </div>`;
   }).join('');
 }
@@ -2772,6 +2779,49 @@ function emailHTML(d){
 }
 
 /* ---------- Soumission ---------- */
+/* --- iPhone / iPad : le téléchargement d'un PDF quitte la page (21/09/2026) --- */
+const ESTIOS=/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+let lastPDFName='Devis-traiteur-Ange.pdf';
+
+/* --- Mémoire des coordonnées du client (21/09/2026) ---
+   Le formulaire n'est jamais « soumis » au sens du navigateur (envoi en arrière-
+   plan) : Safari et Chrome ne proposent donc pas de retenir nom, e-mail et
+   téléphone. On les garde nous-mêmes sur l'appareil du client, et on les remet
+   au devis suivant. Jamais en reprise de devis ni en espace boulangerie : sur le
+   poste du comptoir, on préremplirait le client précédent. */
+const CLE_COORD='ange-traiteur-coordonnees';
+const CHAMPS_COORD=['prenom','nom','email','tel'];
+function memoriserCoordonnees(d){
+  try{
+    if(repriseOrigine || (typeof state!=='undefined' && d.remiseActive)) return;
+    localStorage.setItem(CLE_COORD,JSON.stringify({prenom:d.prenom||'',nom:d.nom||'',email:d.email||'',tel:d.tel||''}));
+  }catch(e){}
+}
+function effacerCoordonnees(){
+  try{ localStorage.removeItem(CLE_COORD); }catch(e){}
+  CHAMPS_COORD.forEach(k=>{ const el=$(k); if(el){ el.value=''; el.dispatchEvent(new Event('input',{bubbles:true})); } });
+  const l=$('coordMemo'); if(l) l.remove();
+}
+(function preremplirCoordonnees(){
+  let m=null;
+  try{ m=JSON.parse(localStorage.getItem(CLE_COORD)||'null'); }catch(e){ m=null; }
+  if(!m || new URLSearchParams(location.search).has('reprise')) return;
+  let rempli=false;
+  CHAMPS_COORD.forEach(k=>{
+    const el=$(k);
+    if(el && !el.value && m[k]){ el.value=m[k]; el.dispatchEvent(new Event('input',{bubbles:true})); rempli=true; }
+  });
+  if(!rempli) return;
+  const ancre=$('prenom') && ($('prenom').closest('.frow')||$('prenom').closest('.field'));
+  if(!ancre || !ancre.parentNode) return;
+  const p=document.createElement('p');
+  p.id='coordMemo';
+  p.style.cssText='margin:0 0 10px;font-size:13px;color:var(--muted)';
+  p.innerHTML='Vos coordonnées du dernier devis sont reprises. <button type="button" class="lien-coord" style="background:none;border:0;padding:0;font:inherit;color:inherit;text-decoration:underline;cursor:pointer">Ce n\'est pas vous&nbsp;? Effacer</button>';
+  ancre.parentNode.insertBefore(p,ancre);
+  p.querySelector('button').onclick=effacerCoordonnees;
+})();
+
 $('orderForm').addEventListener('submit',async e=>{
   e.preventDefault(); const f=e.target; const c=compute();
   if(c.minBase<CONFIG.minOrder){ gate.scrollIntoView({behavior:'smooth',block:'center'}); return; }
@@ -2822,8 +2872,13 @@ $('orderForm').addEventListener('submit',async e=>{
   } else { d.baseRef=d.ref; d.version=1; }
 
   const btn=submitBtn; btn.disabled=true; btn.textContent='Envoi…';
+  // ORDRE CRITIQUE (corrigé le 21/09/2026) : on fabrique le PDF, on ENVOIE, et
+  // seulement ensuite on le télécharge. Sur iPhone, doc.save() ouvre le PDF dans
+  // l'onglet : la page est quittée et l'envoi part à la poubelle — la demande
+  // n'arrivait jamais, alors que le client voyait son PDF. Sur iPhone on ne lance
+  // plus le téléchargement automatique : le bouton de l'écran final le propose.
   let pdfB64=null;
-  try{ const doc=buildPDF(d); if(doc){ lastPDF=doc; doc.save(`Devis-traiteur-Ange-${d.nom}.pdf`); pdfB64=doc.output('datauristring').split('base64,')[1]; } }catch(err){ console.warn(err); }
+  try{ const doc=buildPDF(d); if(doc){ lastPDF=doc; lastPDFName=`Devis-traiteur-Ange-${d.nom}.pdf`; pdfB64=doc.output('datauristring').split('base64,')[1]; } }catch(err){ console.warn(err); }
 
   // Journal Airtable : la fonction serverless attend un objet "order" à plat, avec
   // les noms de champs de la table. Sans lui, la ligne créée ne porte que la référence,
@@ -2869,18 +2924,25 @@ $('orderForm').addEventListener('submit',async e=>{
     sent=r.ok;
   }catch(err){ console.warn('Envoi API indisponible :',err); }
 
+  if(sent) memoriserCoordonnees(d);
+  if(lastPDF && !ESTIOS){ try{ lastPDF.save(lastPDFName); }catch(err){ console.warn(err); } }
+
   zeroKeep.clear();
   $('suiviWrap').style.display='none';
+  const titre=$('doneTitle'), coche=document.querySelector('#done .check');
+  if(titre) titre.innerHTML=sent?'Merci, c\'est envoyé&nbsp;!':'Envoi non abouti';
+  if(coche) coche.style.display=sent?'':'none';
+  if(dlBtn) dlBtn.lastChild.textContent=ESTIOS?'Télécharger mon devis (PDF)':'Retélécharger mon PDF';
   if(sent){
-    doneMsg.innerHTML=`Merci ${d.prenom} ! Votre <b>devis</b> est téléchargé et votre demande nous est bien parvenue. Nous vérifions les disponibilités et revenons vers vous très vite pour <b>confirmer ce devis</b>.`
+    doneMsg.innerHTML=`Merci ${d.prenom} ! ${ESTIOS?'Votre <b>devis</b> est prêt (bouton ci-dessous)':'Votre <b>devis</b> est téléchargé'} et votre demande nous est bien parvenue. Nous vérifions les disponibilités et revenons vers vous très vite pour <b>confirmer ce devis</b>.`
       +(d.mentionReglement?` <b>Vous ne payez rien maintenant</b> : un règlement par avance pourra vous être demandé en boutique au moment de la confirmation.`:``)
       +`<br><br>Pensez à conserver votre PDF. \uD83E\uDD50`;
   } else {
-    doneMsg.innerHTML=`Votre <b>devis</b> est bien téléchargé, mais son envoi automatique à la boulangerie n'a pas abouti. Merci de nous <b>appeler au ${d.bakeryPhone}</b> (ou de nous transmettre votre PDF) pour que nous puissions le traiter. Toutes nos excuses pour ce contretemps.`;
+    doneMsg.innerHTML=`Votre <b>devis</b> est prêt, mais son envoi automatique à la boulangerie n'a pas abouti. Merci de nous <b>appeler au ${d.bakeryPhone}</b> (ou de nous transmettre votre PDF) pour que nous puissions le traiter. Toutes nos excuses pour ce contretemps.`;
   }
   $('done').classList.add('show'); window.scrollTo({top:0,behavior:'smooth'});
 });
-dlBtn.onclick=()=>{ if(lastPDF)lastPDF.save('Devis-traiteur-Ange.pdf'); };
+dlBtn.onclick=()=>{ if(lastPDF)lastPDF.save(lastPDFName||'Devis-traiteur-Ange.pdf'); };
 const againBtn=$('againBtn'); if(againBtn) againBtn.onclick=()=>location.reload();
 
 function bump(el){ if(!el) return; el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); }
