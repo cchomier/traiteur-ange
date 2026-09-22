@@ -268,7 +268,10 @@
   .gate{display:none; align-items:flex-start; gap:12px; background:#FDECE9; border:1.5px solid var(--danger); border-radius:14px; padding:15px 17px; margin:14px 0 2px; color:#7a241b;}
   .gate.show{display:flex;}
   .gate svg{flex:none; color:var(--danger); margin-top:1px;}
-  .gate b{display:block; margin-bottom:2px;} .gate p{margin:0; font-size:14px;}
+  /* Le titre de l'encart est en bloc ; les mises en gras DANS le texte
+     (montant qui manque, telephone) restent en ligne, sinon la phrase se
+     casse en trois morceaux et le point final part tout seul. */
+  .gate > div > b{display:block; margin-bottom:2px;} .gate p{margin:0; font-size:14px;} .gate p b{display:inline;}
 
   form{margin-top:24px;}
   .frow{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
@@ -658,7 +661,7 @@
 
         <div class="gate" id="gate">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-          <div><b>Commande en ligne à partir de 50 € TTC</b><p>Pour une commande plus petite, rendez-vous directement en boutique : on vous sert sans devis. Une question ? Appelez-nous au <b id="gatePhone">04 50 24 89 05</b>.</p></div>
+          <div><b>Commande en ligne à partir de <span id="gateMin">50,00 €</span> TTC</b><p><span id="gateManque"></span>Pour une commande plus petite, rendez-vous directement en boutique : on vous sert sans devis. Une question ? Appelez-nous au <b id="gatePhone">04 50 24 89 05</b>.</p></div>
         </div>
 
         <div class="panier-actions">
@@ -2434,6 +2437,12 @@ function render(){
   if(tabPan) tabPan.classList.toggle('done', nArt>0);
   if(tabFin) tabFin.classList.toggle('done', nArt>0);
   const under=c.minBase>0&&c.minBase<CONFIG.minOrder;
+  /* Bloquer sans dire de combien, c'est laisser le client deviner : il
+     abandonne au lieu d'ajouter deux viennoiseries. On affiche le montant qui
+     manque, et le seuil vient de CONFIG (un seul endroit a changer). */
+  const gMin=$('gateMin'); if(gMin) gMin.textContent=euro(CONFIG.minOrder);
+  const gManque=$('gateManque');
+  if(gManque) gManque.innerHTML=under?`Il vous manque <b>${euro(CONFIG.minOrder-c.minBase)}</b> pour valider votre commande en ligne. `:'';
   gate.classList.toggle('show',under); submitBtn.disabled=c.minBase<CONFIG.minOrder;
 }
 
