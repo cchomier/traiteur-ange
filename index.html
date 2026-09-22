@@ -2351,6 +2351,7 @@ function repereBouchees(n){
 }
 
 function render(){
+  sauverPanier();
   const c=compute(); const conv=parseInt(convives.value)||0; const totalBites=c.bSale+c.bSucre;
   /* Panier modifiable : on met a jour les lignes EXISTANTES au lieu de tout
      reconstruire, sinon le bouton +/- disparait sous le doigt a chaque clic. */
@@ -2944,6 +2945,7 @@ $('orderForm').addEventListener('submit',async e=>{
   if(sent) memoriserCoordonnees(d);
   if(lastPDF && !ESTIOS){ try{ lastPDF.save(lastPDFName); }catch(err){ console.warn(err); } }
 
+  if(sent||enregistre) oublierPanier();
   zeroKeep.clear();
   $('suiviWrap').style.display='none';
   const titre=$('doneTitle'), coche=document.querySelector('#done .check');
@@ -3116,7 +3118,74 @@ async function chargerCatalogue(){
 }
 
 applyBakery(bakery); updateFormUI(); render(); showScreen('composer');
-chargerCatalogue();
+chargerCatalogue().then(restaurerPanier, restaurerPanier);
+
+/* =====================================================================
+   Panier retrouve au rechargement
+   Un client qui rafraichit, ferme un onglet par erreur ou revient une heure
+   plus tard retrouvait un panier VIDE et devait tout recomposer : c'est la
+   commande qu'on perd, pas seulement du confort.
+   On enregistre par NOM de produit, jamais par position : le catalogue peut
+   etre reordonne entre deux visites, et une position decalee ferait payer
+   autre chose que ce qui a ete choisi. Les TARIFS ne sont pas enregistres :
+   ils sont relus dans le catalogue du jour, donc un prix modifie entre-temps
+   s'applique.
+   ===================================================================== */
+const CLE_PANIER='ange-traiteur-panier';
+const PANIER_VALIDITE_MS=7*24*3600*1000;
+
+function sauverPanier(){
+  try{
+    if(!state.size){ localStorage.removeItem(CLE_PANIER); return; }
+    const lignes=[...state.entries()].map(([i,qty])=>({
+      nom:(PRODUITS[i]||{}).nom, qty, tranche:!!tranche.get(i),
+    })).filter(l=>l.nom);
+    const cv=$('convives');
+    localStorage.setItem(CLE_PANIER, JSON.stringify({
+      le:Date.now(), lignes, convives:(cv&&parseInt(cv.value))||null,
+    }));
+  }catch(e){ /* Navigation privee ou stockage plein : le parcours continue. */ }
+}
+
+function oublierPanier(){ try{ localStorage.removeItem(CLE_PANIER); }catch(e){} }
+
+function restaurerPanier(){
+  // Une reprise de devis (?reprise=) remplit deja le panier : elle prime.
+  if(new URLSearchParams(location.search).get('reprise')) return;
+  if(state.size) return;
+  let d=null;
+  try{ d=JSON.parse(localStorage.getItem(CLE_PANIER)||'null'); }catch(e){ d=null; }
+  if(!d||!Array.isArray(d.lignes)||!d.lignes.length) return;
+  // Un panier d'il y a trois semaines n'est plus un panier : c'est une surprise.
+  if(!d.le||(Date.now()-d.le)>PANIER_VALIDITE_MS){ oublierPanier(); return; }
+
+  let poses=0;
+  d.lignes.forEach(l=>{
+    const i=IDX_PAR_NOM.get(l.nom);
+    if(i===undefined) return; // Produit disparu du catalogue : on n'invente pas.
+    if(l.tranche) tranche.set(i,true);
+    setQty(i, Math.max(0, parseInt(l.qty)||0));
+    poses++;
+  });
+  if(!poses){ oublierPanier(); return; }
+  if(d.convives){ const cv=$('convives'); if(cv&&!cv.value) cv.value=d.convives; }
+  render();
+  annoncerPanierRetrouve(poses);
+}
+
+/* Le client doit SAVOIR que son panier vient d'etre retrouve, sinon il croit
+   avoir commande deux fois. Message discret, avec la sortie a cote. */
+function annoncerPanierRetrouve(poses){
+  const host=$('panierWrap'); if(!host||$('panierRetrouve')) return;
+  const b=document.createElement('div');
+  b.className='notice'; b.id='panierRetrouve';
+  b.innerHTML='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>'
+    +'<p>Nous avons retrouvé votre panier ('+poses+' produit'+(poses>1?'s':'')+'). '
+    +'<button type="button" id="viderPanierRetrouve" style="background:none;border:0;padding:0;color:inherit;font:inherit;font-weight:800;text-decoration:underline;cursor:pointer">Le vider</button> pour repartir de zéro.</p>';
+  host.insertBefore(b, host.firstChild);
+  const btn=$('viderPanierRetrouve');
+  if(btn) btn.onclick=()=>{ [...state.keys()].forEach(i=>setQty(i,0)); zeroKeep.clear(); oublierPanier(); b.remove(); render(); };
+}
 
 /* =====================================================================
    Reprise d'un devis — module 3
