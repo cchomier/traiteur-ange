@@ -160,7 +160,7 @@
   .steps{list-style:none; display:flex; gap:12px; padding:0; margin:14px 0 18px;}
   .steps li{flex:1; display:flex;}
   .step{position:relative; width:100%; display:flex; flex-direction:column; align-items:center; text-align:center; gap:6px; background:var(--creme-2); border:1.5px solid var(--line); border-radius:16px; padding:20px 10px 14px; cursor:pointer; font-family:inherit; transition:transform .15s, border-color .15s, box-shadow .15s;}
-  .step:hover{border-color:var(--vert-deep); transform:translateY(-3px); box-shadow:var(--shadow);}
+  .step:hover{border-color:var(--vert-deep); transform:translateY(-2px); box-shadow:var(--shadow);}
   .step:focus-visible{outline:3px solid var(--vert); outline-offset:2px;}
   .step .num{position:absolute; top:-13px; left:50%; transform:translateX(-50%); width:28px; height:28px; border-radius:50%; background:var(--vert); color:var(--noir); font-weight:900; font-size:15px; display:grid; place-items:center; box-shadow:0 2px 6px rgba(20,20,10,.18);}
   .step .ic{display:grid; place-items:center; line-height:0; color:var(--vert-deep);}
@@ -405,7 +405,7 @@
   .done .dl{transition:transform .16s, box-shadow .2s;}
   .done .dl:hover{transform:translateY(-2px); box-shadow:0 8px 20px rgba(205,219,0,.4);}
   .card{transition:transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .28s, border-color .2s;}
-  .card:hover{transform:translateY(-5px); box-shadow:0 16px 32px color-mix(in srgb, var(--c) 22%, transparent), 0 3px 8px rgba(20,20,10,.07);}
+  .card:hover{box-shadow:0 16px 32px color-mix(in srgb, var(--c) 22%, transparent), 0 3px 8px rgba(20,20,10,.07);}
   .photo img{transition:transform .6s cubic-bezier(.2,.8,.2,1);}
   /* Zoom au survol supprime (30/07/2026) : aucun element ne grossit au survol. */
   .photo .ph{transition:transform .35s cubic-bezier(.34,1.56,.64,1);}
@@ -445,7 +445,6 @@
   .cta-sub b{color:var(--vert);}
   body.reveal-on .card{opacity:0; transform:translateY(16px);}
   body.reveal-on .card.in{opacity:1; transform:translateY(0); transition:opacity .55s ease, transform .55s cubic-bezier(.2,.8,.2,1);}
-  body.reveal-on .card.in:hover{transform:translateY(-5px);}
   @keyframes bumpIn{0%{transform:scale(1);}45%{transform:scale(1.16);}100%{transform:scale(1);}}
   .bump{animation:bumpIn .32s ease;}
   .fly-dot{position:fixed; width:13px; height:13px; border-radius:50%; background:var(--vert); box-shadow:0 2px 10px rgba(180,192,0,.55); z-index:9999; pointer-events:none; will-change:transform,opacity;}
@@ -588,7 +587,7 @@
     <div class="convives" id="etapeConvives">
       <label for="convives"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3.6"/><path d="M2.5 20v-1.4A4.6 4.6 0 0 1 7 14h4a4.6 4.6 0 0 1 4.5 4.6V20"/><path d="M16.5 4.2a3.6 3.6 0 0 1 0 6.9M21.5 20v-1.4a4.6 4.6 0 0 0-3-4.3"/></svg> Pour combien de personnes&nbsp;?</label>
       <input type="number" id="convives" min="1" step="1" placeholder="ex. 25">
-      <span class="opt">Facultatif</span>
+      <span class="opt">Pour doser les quantités</span>
       <span class="conv-live" id="convLive"></span>
     </div>
   </div>
@@ -669,7 +668,7 @@
           <button type="button" class="submit screen-next" data-next="suivi">Valider ma commande</button>
         </div>
 
-        <div class="liv-reminder" id="livReminder">📍 Livraison : 30 € TTC dans un rayon maximum de 5 km autour de la boulangerie Ange Grand Epagny.</div>
+        <div class="liv-reminder" id="livReminder"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11Z"/><circle cx="12" cy="10" r="2.4"/></svg><span>Livraison : 30 € TTC dans un rayon maximum de 5 km autour de la boulangerie Ange du Grand Epagny.</span></div>
 
         <div class="remise-mgr" id="remiseMgr">
           <button type="button" id="remiseToggle" class="remise-link">Espace boulangerie</button>
@@ -798,7 +797,7 @@
       <div class="done" id="done">
         <div class="check"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
         <h2 id="doneTitle">Merci, c'est envoyé&nbsp;!</h2>
-        <p id="doneMsg">Merci, nous avons bien reçu votre demande. Nous revenons vers vous très vite pour la confirmer.</p>
+        <p id="doneMsg">Merci, nous avons bien reçu votre demande. Nous revenons vers vous <b>sous 48 h ouvrées</b> pour la confirmer.</p>
         <button class="dl" id="dlBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Retélécharger mon PDF</button>
         <div style="margin-top:14px"><button type="button" id="againBtn" style="background:none;border:0;color:var(--muted);font-weight:700;font-size:14px;cursor:pointer;text-decoration:underline">Faire un nouveau devis</button></div>
       </div>
@@ -2097,7 +2096,7 @@ function applyBakery(b){
   document.querySelectorAll('.bkphone2').forEach(el=>el.textContent=b.phone);
   const hn=$('hoursNote'); if(hn) hn.textContent="Horaires : "+(b.horaires||"");
   const fb=$('footBrand'); if(fb) fb.innerHTML='<b>Boulangerie Ange</b><br>du '+b.nom+'<br>'+b.adresse.replace(', ','<br>');
-  livReminder.innerHTML=`<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21.5s7-5.6 7-11.2a7 7 0 1 0-14 0c0 5.6 7 11.2 7 11.2Z"/><circle cx="12" cy="10.2" r="2.6"/></svg><span>Livraison : ${euro(CONFIG.deliveryFee)} TTC dans un rayon maximum de 5 km autour de la boulangerie Ange ${b.nom}.</span>`;
+  livReminder.innerHTML=`<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21.5s7-5.6 7-11.2a7 7 0 1 0-14 0c0 5.6 7 11.2 7 11.2Z"/><circle cx="12" cy="10.2" r="2.6"/></svg><span>Livraison : ${euro(CONFIG.deliveryFee)} TTC dans un rayon maximum de 5 km autour de la boulangerie Ange du ${b.nom}.</span>`;
   render();
 }
 
@@ -2400,7 +2399,7 @@ function render(){
   biteSalePP.textContent=parPers(c.bSale); biteSucrePP.textContent=parPers(c.bSucre);
   const cl=$('convLive');
   if(cl){
-    if(conv>0 && c.lignes.length){ cl.textContent='\u2705 \u2248 '+(totalBites/conv).toFixed(1).replace('.',',')+' pi\u00e8ces / personne \u2014 '+niveauBouchees(totalBites/conv).court; cl.classList.add('show'); }
+    if(conv>0 && c.lignes.length){ cl.textContent='\u2248 '+(totalBites/conv).toFixed(1).replace('.',',')+' pi\u00e8ces / personne \u2014 '+niveauBouchees(totalBites/conv).court; cl.classList.add('show'); }
     else if(conv>0){ cl.textContent='\u2192 Rep\u00e8re : 6 \u00e0 8 pi\u00e8ces/pers. pour un ap\u00e9ritif, 12 \u00e0 14 pour un repas complet.'; cl.classList.add('show'); }
     else cl.classList.remove('show');
   }
@@ -2582,7 +2581,12 @@ function filtrerCatalogue(){
       const hit = !q || (c.dataset.search||'').includes(q);
       c.style.display=hit?'':'none'; if(hit)vis++;
     });
-    sec.style.display=vis?'':'none'; total+=vis; });
+    sec.style.display=vis?'':'none'; total+=vis;
+    /* La pastille suit sa gamme : une gamme masquee par la recherche ne doit
+       pas laisser une pastille qui ne mene nulle part (scrollIntoView sur un
+       element masque ne fait rien). */
+    const pill=catnav.querySelector('.pill[data-target="'+sec.id.replace('sec-','')+'"]');
+    if(pill) pill.style.display=vis?'':'none'; });
   const no=$('searchNo'); if(no) no.style.display=(q&&total===0)?'block':'none';
 }
 const prodSearch=$('prodSearch');
@@ -2974,9 +2978,9 @@ $('orderForm').addEventListener('submit',async e=>{
     ? (ESTIOS?` Votre <b>devis</b> en PDF est prêt : bouton ci-dessous.`:` Votre <b>devis</b> en PDF vient d'être téléchargé.`)
     : ` Nous n'avons pas pu créer le PDF sur votre appareil : nous vous l'enverrons à la confirmation.`;
   if(sent){
-    doneMsg.innerHTML=`Merci ${d.prenom} ! Votre demande nous est bien parvenue. Nous vérifions les disponibilités et revenons vers vous très vite pour <b>confirmer ce devis</b>.`+phrasePdf
+    doneMsg.innerHTML=`Merci ${d.prenom} ! Votre demande nous est bien parvenue. Nous vérifions les disponibilités et revenons vers vous <b>sous 48 h ouvrées</b> pour <b>confirmer ce devis</b>.`+phrasePdf
       +(d.mentionReglement?` <b>Vous ne payez rien maintenant</b> : un règlement par avance pourra vous être demandé en boutique au moment de la confirmation.`:``)
-      +(pdfOk?`<br><br>Pensez à conserver votre PDF. \uD83E\uDD50`:``);
+      +(pdfOk?`<br><br>Pensez à conserver votre PDF.`:``);
   } else if(enregistre){
     doneMsg.innerHTML=`Merci ${d.prenom} ! Votre demande est bien <b>enregistrée</b> et apparaît dans notre suivi des commandes. En revanche, l'alerte e-mail vers la boulangerie n'est pas partie : si votre commande est pour <b>moins de 48 h</b>, appelez-nous au <b>${d.bakeryPhone}</b> pour être sûr qu'elle soit vue à temps.`
       +(pdfOk?`<br><br>Pensez à conserver votre PDF.`:``);
@@ -3112,6 +3116,9 @@ async function chargerCatalogue(){
     /* Les sections viennent d'etre recreees : l'observateur suivait les
        anciennes, il faut lui redonner les nouvelles. */
     document.querySelectorAll('.cat').forEach(s=>spy.observe(s));
+    /* Une recherche tapee avant l'arrivee du catalogue distant s'applique aussi
+       aux nouvelles cartes et pastilles. */
+    filtrerCatalogue();
     /* MEME PIEGE, EN PIRE : `body.reveal-on .card` met les cartes a opacity:0,
        et c'est un second observateur, cree au chargement, qui leur ajoute la
        classe `in` pour les faire apparaitre. Il n'a observe que les cartes

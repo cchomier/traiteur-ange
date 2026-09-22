@@ -73,7 +73,7 @@ function blocReponseClient({ ref, order }) {
         "N'hésitez pas si vous souhaitez un dernier ajustement.",
         "",
         "Belle journée,",
-        "Boulangerie Ange — Grand Epagny",
+        "Boulangerie Ange du Grand Epagny",
       ].join("\r\n")
     : [
         `Bonjour${prenom ? " " + prenom : ""},`,
@@ -84,7 +84,7 @@ function blocReponseClient({ ref, order }) {
         "Elle est prise en compte, nous revenons vers vous très vite.",
         "",
         "Belle journée,",
-        "Boulangerie Ange — Grand Epagny",
+        "Boulangerie Ange du Grand Epagny",
       ].join("\r\n");
 
   // L'adresse n'est PAS encodée : plusieurs messageries refusent un "@" transformé
