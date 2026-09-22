@@ -3117,9 +3117,6 @@ async function chargerCatalogue(){
   }
 }
 
-applyBakery(bakery); updateFormUI(); render(); showScreen('composer');
-chargerCatalogue().then(restaurerPanier, restaurerPanier);
-
 /* =====================================================================
    Panier retrouve au rechargement
    Un client qui rafraichit, ferme un onglet par erreur ou revient une heure
@@ -3133,8 +3130,15 @@ chargerCatalogue().then(restaurerPanier, restaurerPanier);
    ===================================================================== */
 const CLE_PANIER='ange-traiteur-panier';
 const PANIER_VALIDITE_MS=7*24*3600*1000;
+/* VERROU, et il n'est pas decoratif : le premier `render()` de la page part
+   avec un panier vide, et sans ce verrou il EFFACAIT le panier enregistre
+   avant meme qu'on ait essaye de le relire. Rien ne s'ecrit donc tant que la
+   restauration n'a pas eu lieu. Constate en ligne le 22/09/2026 : en local le
+   catalogue distant repondait 404, le bug ne se voyait pas. */
+let panierPret=false;
 
 function sauverPanier(){
+  if(!panierPret) return;
   try{
     if(!state.size){ localStorage.removeItem(CLE_PANIER); return; }
     const lignes=[...state.entries()].map(([i,qty])=>({
@@ -3151,8 +3155,9 @@ function oublierPanier(){ try{ localStorage.removeItem(CLE_PANIER); }catch(e){} 
 
 function restaurerPanier(){
   // Une reprise de devis (?reprise=) remplit deja le panier : elle prime.
+  panierPret=true; // A partir d'ici, toute modification s'enregistre.
   if(new URLSearchParams(location.search).get('reprise')) return;
-  if(state.size) return;
+  if(state.size){ sauverPanier(); return; }
   let d=null;
   try{ d=JSON.parse(localStorage.getItem(CLE_PANIER)||'null'); }catch(e){ d=null; }
   if(!d||!Array.isArray(d.lignes)||!d.lignes.length) return;
@@ -3186,6 +3191,10 @@ function annoncerPanierRetrouve(poses){
   const btn=$('viderPanierRetrouve');
   if(btn) btn.onclick=()=>{ [...state.keys()].forEach(i=>setQty(i,0)); zeroKeep.clear(); oublierPanier(); b.remove(); render(); };
 }
+
+
+applyBakery(bakery); updateFormUI(); render(); showScreen('composer');
+chargerCatalogue().then(restaurerPanier, restaurerPanier);
 
 /* =====================================================================
    Reprise d'un devis — module 3
