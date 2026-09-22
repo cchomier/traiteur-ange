@@ -9,7 +9,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Nunito+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<!-- jsPDF, avec un second CDN en repli : un reseau d'entreprise qui bloque cdnjs
+     laissait le client sans devis, et la page ne le disait pas. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"
+        onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js';document.head.appendChild(s);"></script>
 <style>
   :root{
     --noir:#0B0B0A; --vert:#CDDB00; --vert-deep:#B4C000; --vert-soft:#F3F7CF;
@@ -785,7 +788,7 @@
           </div>
 
           <button type="submit" class="submit" id="submitBtn" disabled>Valider et recevoir mon devis</button>
-          <p class="legal">Ce n'est pas un paiement. Un PDF récapitulatif est généré et téléchargé — <b>conservez-le, il n'est pas envoyé par e-mail</b>. Nous vous recontactons pour confirmer.</p>
+          <p class="legal">Ce n'est pas un paiement. Votre demande part tout de suite à la boulangerie, et votre devis en PDF est téléchargé sur cet appareil — <b>conservez-le, il ne vous est pas envoyé par e-mail</b>. Nous vous recontactons pour confirmer.</p>
         </form>
       </div>
 
@@ -2917,12 +2920,25 @@ $('orderForm').addEventListener('submit',async e=>{
     panier,
   };
 
-  const textFallback=`Devis ${d.ref} — ${d.prenom} ${d.nom} · ${euro(d.ttc)} TTC · voir PDF joint.`;
-  let sent=false;
+  const pdfOk=!!pdfB64;
+  const textFallback=`Devis ${d.ref} — ${d.prenom} ${d.nom} · ${euro(d.ttc)} TTC · ${pdfOk?'voir PDF joint.':'PDF NON JOINT (generation impossible chez le client) — detail ci-dessous.'}`;
+  /* Trois etats possibles, et le client doit voir le bon :
+     - sent : le mail est parti ;
+     - enregistre : le mail a echoue MAIS la demande est bien dans les journaux
+       (Airtable / Supabase), donc visible dans /suivi-commandes cote portail ;
+     - ni l'un ni l'autre : rien n'est arrive, il faut appeler.
+     Dire « c'est envoye » dans les deux derniers cas, c'est perdre une commande
+     sans que personne ne s'en apercoive. */
+  let sent=false, enregistre=false;
   try{
     const r=await fetch(CONFIG.apiEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({ref:d.ref,clientName:`${d.prenom} ${d.nom}`,bakeryName:d.bakeryNom,bakeryEmail:d.bakeryEmail,replyTo:d.email,html:emailHTML(d),text:textFallback,pdfBase64:pdfB64,filename:`Devis-${d.ref}.pdf`,order})});
     sent=r.ok;
+    if(!sent){
+      try{ const corps=await r.json();
+        enregistre=!!(corps&&((corps.journalSupabase&&corps.journalSupabase.logged)||(corps.journal&&corps.journal.logged)));
+      }catch(err){ console.warn('Reponse illisible :',err); }
+    }
   }catch(err){ console.warn('Envoi API indisponible :',err); }
 
   if(sent) memoriserCoordonnees(d);
@@ -2931,15 +2947,30 @@ $('orderForm').addEventListener('submit',async e=>{
   zeroKeep.clear();
   $('suiviWrap').style.display='none';
   const titre=$('doneTitle'), coche=document.querySelector('#done .check');
-  if(titre) titre.innerHTML=sent?'Merci, c\'est envoyé&nbsp;!':'Envoi non abouti';
-  if(coche) coche.style.display=sent?'':'none';
-  if(dlBtn) dlBtn.lastChild.textContent=ESTIOS?'Télécharger mon devis (PDF)':'Retélécharger mon PDF';
+  if(titre) titre.innerHTML=sent?'Merci, c\'est envoyé&nbsp;!':(enregistre?'Demande enregistrée':'Envoi non abouti');
+  // La coche verte ne s'affiche que si la demande est arrivee quelque part.
+  if(coche) coche.style.display=(sent||enregistre)?'':'none';
+  // Pas de PDF = pas de bouton de telechargement : un bouton qui ne fait rien
+  // est pire que pas de bouton.
+  if(dlBtn){
+    dlBtn.style.display=pdfOk?'':'none';
+    dlBtn.lastChild.textContent=ESTIOS?'Télécharger mon devis (PDF)':'Retélécharger mon PDF';
+  }
+  // Deux phrases separees : l'accuse de reception d'abord, le sort du PDF ensuite.
+  // Les coller en une seule phrase donnait « ...le detail de votre demande et
+  // votre demande nous est bien parvenue ».
+  const phrasePdf=pdfOk
+    ? (ESTIOS?` Votre <b>devis</b> en PDF est prêt : bouton ci-dessous.`:` Votre <b>devis</b> en PDF vient d'être téléchargé.`)
+    : ` Nous n'avons pas pu créer le PDF sur votre appareil : nous vous l'enverrons à la confirmation.`;
   if(sent){
-    doneMsg.innerHTML=`Merci ${d.prenom} ! ${ESTIOS?'Votre <b>devis</b> est prêt (bouton ci-dessous)':'Votre <b>devis</b> est téléchargé'} et votre demande nous est bien parvenue. Nous vérifions les disponibilités et revenons vers vous très vite pour <b>confirmer ce devis</b>.`
+    doneMsg.innerHTML=`Merci ${d.prenom} ! Votre demande nous est bien parvenue. Nous vérifions les disponibilités et revenons vers vous très vite pour <b>confirmer ce devis</b>.`+phrasePdf
       +(d.mentionReglement?` <b>Vous ne payez rien maintenant</b> : un règlement par avance pourra vous être demandé en boutique au moment de la confirmation.`:``)
-      +`<br><br>Pensez à conserver votre PDF. \uD83E\uDD50`;
+      +(pdfOk?`<br><br>Pensez à conserver votre PDF. \uD83E\uDD50`:``);
+  } else if(enregistre){
+    doneMsg.innerHTML=`Merci ${d.prenom} ! Votre demande est bien <b>enregistrée</b> et apparaît dans notre suivi des commandes. En revanche, l'alerte e-mail vers la boulangerie n'est pas partie : si votre commande est pour <b>moins de 48 h</b>, appelez-nous au <b>${d.bakeryPhone}</b> pour être sûr qu'elle soit vue à temps.`
+      +(pdfOk?`<br><br>Pensez à conserver votre PDF.`:``);
   } else {
-    doneMsg.innerHTML=`Votre <b>devis</b> est prêt, mais son envoi automatique à la boulangerie n'a pas abouti. Merci de nous <b>appeler au ${d.bakeryPhone}</b> (ou de nous transmettre votre PDF) pour que nous puissions le traiter. Toutes nos excuses pour ce contretemps.`;
+    doneMsg.innerHTML=`Votre demande n'a <b>pas pu être transmise</b> à la boulangerie. Merci de nous <b>appeler au ${d.bakeryPhone}</b>${pdfOk?` (ou de nous transmettre votre PDF)`:``} pour que nous puissions la traiter. Toutes nos excuses pour ce contretemps.`;
   }
   $('done').classList.add('show'); window.scrollTo({top:0,behavior:'smooth'});
 });
